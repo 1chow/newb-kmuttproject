@@ -2,21 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from "react-router-dom";
 import App from './App';
-import registerServiceWorker from './registerServiceWorker';
-import './index.css';
-import {whyDidYouUpdate} from 'why-did-you-update'
+import registerServiceWorker from './ServiceWorker/registerServiceWorker';
+import './styles/index.css';
 
-if (process.env.NODE_ENV !== 'production') {
-    let createClass = React.createClass;
-    Object.defineProperty(React, 'createClass', {
-      set: (nextCreateClass) => {
-        createClass = nextCreateClass;
-      }
-    });
-    whyDidYouUpdate(React)
-}
+const renderApp = Component =>
+	ReactDOM.render(
+      <BrowserRouter>
+          <Component />
+      </BrowserRouter>,
+		document.getElementById("root")
+	);
 
-ReactDOM.render(<BrowserRouter>
-                     <App />
-            </BrowserRouter>, document.getElementById('root'));
+renderApp(App);
 registerServiceWorker();
