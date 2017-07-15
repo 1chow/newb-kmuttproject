@@ -1,9 +1,6 @@
 import React from "react";
 
 export default class Projects extends React.Component {
-  componentDidMount() {
-    this.props.triggler()
-  }
 	render() {
 		return (
 			<div className="page missed">

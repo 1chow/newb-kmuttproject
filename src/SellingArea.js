@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import TransitionGroup from "react-transition-group/TransitionGroup";
 import * as Animated from "animated/lib/targets/react-dom";
+import TransitionGroup from "react-transition-group/TransitionGroup";
+import { Link } from 'react-router-dom'
 
-export default class Projects extends Component {
+export default class SellingArea extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -15,6 +15,7 @@ export default class Projects extends Component {
 	componentDidMount() {
 		this._renderProjects(this.props.projects);
 	}
+	
 	//For First Render
 	componentWillReceiveProps(nextProps) {
 		if (!this.props.projects.length && nextProps.projects.length) {
@@ -54,22 +55,22 @@ export default class Projects extends Component {
 							`
 						};
 						return (
-							<div key={i} className="small-6 medium-4 large-3 columns post-box">
-							   <Animated.div style={style}>
-									<Link to='/projects/1'>
-										<div className="post-box-top">
-											<img src="http://dummyimage.com/300x300/292929/e3e3e3&text=Your Mom Goes to College" alt=""/>
-										</div>
-										<div className="post-box-content">
-											<h3>SaltyCamel</h3>
-											<p className="desc">Sweety</p>
-											<span className="timecount red">00:00:00</span>
-											<p className="price">999<span className="curentcy">Bath</span></p>
-											<button><i className="fa fa2x "></i></button>
-										</div>
-									</Link>
-								</Animated.div>
-							</div>
+						<div key={i} className="small-6 medium-4 large-3 columns post-box">
+							<Animated.div style={style}>
+								<Link to='/item/1'>
+									<div className="post-box-top">
+										<img src="http://dummyimage.com/300x300/292929/e3e3e3&text=Your Mom Goes to College" alt=""/>
+									</div>
+									<div className="post-box-content">
+										<h3>SaltyCamel</h3>
+										<p className="desc">Sweety</p>
+										<span className="timecount red">00:00:00</span>
+										<p className="price">999<span className="curentcy">Bath</span></p>
+										<button><i className="fa fa2x "></i></button>
+									</div>
+								</Link>
+							</Animated.div>
+						</div>
 						);
 					})}
 				</TransitionGroup>

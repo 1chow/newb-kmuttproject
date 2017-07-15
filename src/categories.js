@@ -8,7 +8,7 @@ class Categories extends Component {
 			} else { return true }
 	}
     render() {
-    return this.props.location.pathname === '/projects/1' ? 
+    return this.props.location.pathname === '/item/1' ? 
       (
       <div className="row">
             <div className="home-cat">
