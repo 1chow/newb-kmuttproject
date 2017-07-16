@@ -1,14 +1,12 @@
 import React from 'react'
+import ModalChart from './modals/modalChart'
 
-const Modal = props => {
-    return (
-        <div>
-            <div className="page modal">
-                This is Modal Component
-            </div>
-            <button onClick={props.close}>Close Modal</button>
-        </div>     
-    )
+const Modals = props => {
+    return props.isOpen === true ? (
+	    	<div className="modal-container">
+	       		<ModalChart close={props.close} projects={props.projects} />
+	       	</div>
+	    ): null
+    
 }
-
-export default Modal
+export default Modals

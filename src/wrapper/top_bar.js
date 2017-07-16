@@ -26,7 +26,7 @@ class Header extends React.Component {
 										<i className="fa fa-shopping-basket fa-2x" aria-hidden="true"></i>
 									</span>
 								</button>
-								<b className="alert-top-btn" id="b-cart"></b>
+								<b className="alert-top-btn" id="b-cart">1</b>
 								<NavLink className="profile-botton" exact to="/Modal">
 									<span className="has-tip bottom" data-disable-hover="false">
 										<img src="https://scontent.fbkk12-2.fna.fbcdn.net/v/t1.0-1/p160x160/10590625_870609506283335_1688425455264656623_n.jpg?oh=29b4ec66619473227bed4d94f03a55e4&oe=59A32BD3" alt=""></img>

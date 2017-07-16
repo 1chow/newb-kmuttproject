@@ -8,8 +8,17 @@ class Categories extends Component {
 			} else { return true }
 	}
     render() {
-    return this.props.location.pathname === '/item/1' ? 
-      (
+    return this.props.location.pathname === '/item/1' ? (
+
+      <div className="row">
+            <div className="home-cat">
+                <ul>
+                    
+                </ul>
+            </div>
+        </div>
+)
+: this.props.location.pathname === '/' ? (
       <div className="row">
             <div className="home-cat">
                 <ul>
@@ -52,8 +61,9 @@ class Categories extends Component {
                 </ul>
             </div>
         </div>
-    )
-    : this.props.location.pathname === '/' ? (
+)
+: this.props.location.pathname === '/' ? (
+
       <div className="row">
             <div className="home-cat">
                 <ul>
@@ -72,7 +82,7 @@ class Categories extends Component {
                     <li>
                         <Link to="/">
                             <i className="fa fa-plug"></i>
-                            <p className="show-for-large">Electric	Gadget</p>
+                            <p className="show-for-large">Electric  Gadget</p>
                         </Link>
                     </li>
                     <li>
@@ -96,8 +106,8 @@ class Categories extends Component {
                 </ul>
             </div>
         </div>
-    )
-    : null
+)
+: null
   }
 }
 

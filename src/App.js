@@ -1,16 +1,16 @@
 import React, { Component } from "react"
 import Perf from 'react-addons-perf'
 import { Route } from "react-router-dom"
-import ReactModal from 'react-modal'
 import TransitionGroup from "react-transition-group/TransitionGroup"
 import AnimatedSwitch from "./Animated_switch"
+
 
 import Navigator from "./wrapper/top_bar"
 import Categories from './Categories'
 import SellingArea from "./SellingArea"
 import ProjectItem from "./Project_item"
 import FourZeroFour from "./FourZeroFour"
-import Modal from './Main_modal'
+import Modals from './Main_modal'
 
 window.Perf = Perf;
 
@@ -19,7 +19,7 @@ export default class App extends Component {
 		super(props);
 		this.state = {
 			projects: [],
-			showModal: false
+			showModal: false,
 		};
 	}
 	componentDidMount() {
@@ -33,6 +33,7 @@ export default class App extends Component {
 				});
 			});
 	}
+
 	handleOpenModal = () => {
     	this.setState({ showModal: true });
 		document.body.style.overflow = "hidden"
@@ -42,57 +43,53 @@ export default class App extends Component {
     	this.setState({ showModal: false });
 		document.body.style.overflow = null
 	}
+
+
 	render() {
 		return (
-			<section className="warpper">
+			<div>
+			<section className={"warpper " + (this.state.showModal === true  && 'blur-for-modal')}>
 				{/* Navigator Bar */}
 				<Navigator triggler={this.handleOpenModal} />
 				<Categories />
-
-				{/* Modal Zone */}
 				
-				<ReactModal 
-					isOpen={this.state.showModal}
-					contentLabel="?"
-					className="ReactModal__Content"
-					overlayClassName="ReactModal__Overlay"
-					>
-					<Modal close={this.handleCloseModal} />
-				</ReactModal>
-				
-
 				{/* Application Routes Zone */}
-				<div className="row relative">
-				<Route
-					render={({ location }) => (
-						<TransitionGroup>
-							<AnimatedSwitch
-								key={location.key}
-								location={location}
-							>
-								<Route
-									exact
-									path="/"
-									render={props => (
-										<SellingArea {...props} projects={this.state.projects} />
-									)}
-								/>
-								<Route
-									path="/item/:itemid"
-									render={props => (
-										<ProjectItem {...props} projects={this.state.projects} />
-									)}
-								/>
-								<Route 
-									render={() => (
-										<FourZeroFour/>
-								)} />
-							</AnimatedSwitch>
-						</TransitionGroup>
-					)}
-				/>
-				</div>
+					<div className="row relative">
+						<Route
+						render ={ ({ location }) => (
+
+							<TransitionGroup>
+								<AnimatedSwitch
+									key={location.key}
+									location={location}
+								>
+									<Route
+										exact
+										path="/"
+										render={props => (
+											<SellingArea {...props} projects={this.state.projects} />
+										)}
+									/>
+									<Route
+										path="/item/:itemid"
+										render={props => (
+											<ProjectItem {...props} projects={this.state.projects} />
+										)}
+									/>
+									<Route 
+										render={() => (
+											<FourZeroFour/>
+									)} />
+								</AnimatedSwitch>
+							</TransitionGroup>
+
+						) }/>
+					</div>
+				
 			</section>
+			<Modals close={this.handleCloseModal} isOpen={this.state.showModal} projects={this.state.projects}/>
+			</div>
+
 		);
 	}
 }
