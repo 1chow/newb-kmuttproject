@@ -3,9 +3,11 @@ import { Link , withRouter } from "react-router-dom";
 
 class Categories extends Component {
     shouldComponentUpdate(nextProps, nextState) {
-		if (this.props.location.pathname === nextProps.location.pathname) {
-				return false
-			} else { return true }
+        if (this.props.location.pathname === nextProps.location.pathname) {
+            if (this.props.isActive === nextProps.isActive) {
+                return false
+            } else { return true }
+        } else { return true }
 	}
     render() {
     return this.props.location.pathname === '/item/1' ? 
@@ -13,40 +15,40 @@ class Categories extends Component {
       <div className="row">
             <div className="home-cat">
                 <ul>
-                    <li className="active">
-                        <Link to="/">
+                    <li className={(this.props.isActive === "LE"  && 'active')}>
+                        <Link to="/" onClick={ () => this.props.filter("LE")}>
                             <i className="fa fa-clock-o"></i>
-                            <p className="show-for-medium">Last Ending</p>
+                            <p className={(this.props.isActive === "LE"  ? 'show-for-medium' : 'show-for-large')}>Last Ending</p>
                         </Link>
                     </li>
-                    <li>
-                        <Link to="/">
+                    <li className={(this.props.isActive === "HH"  && 'active')}>
+                        <Link to="/" onClick={() => this.props.filter("HH")}>
                             <i className="fa fa-home"></i>
-                            <p className="show-for-large">House Hold</p>
+                            <p className={(this.props.isActive === "HH"  ? 'show-for-medium' : 'show-for-large')}>House Hold</p>
                         </Link>
                     </li>
-                    <li>
-                        <Link to="/">
+                    <li className={(this.props.isActive === "EG"  && 'active')}>
+                        <Link to="/" onClick={() => this.props.filter("EG")}>
                             <i className="fa fa-plug"></i>
-                            <p className="show-for-large">Electric	Gadget</p>
+                            <p className={(this.props.isActive === "EG"  ? 'show-for-medium' : 'show-for-large')}>Electric	Gadget</p>
                         </Link>
                     </li>
-                    <li>
-                        <Link to="/">
+                    <li className={(this.props.isActive === "JB"  && 'active')}>
+                        <Link to="/" onClick={() => this.props.filter("JB")}>
                             <i className="fa fa-diamond"></i>
-                            <p className="show-for-large">Jewery & Beautyware</p>
+                            <p className={(this.props.isActive === "JB"  ? 'show-for-medium' : 'show-for-large')}>Jewery & Beautyware</p>
                         </Link>
                     </li>
-                    <li>
-                        <Link to="/">
+                    <li className={(this.props.isActive === "AP"  && 'active')}>
+                        <Link to="/" onClick={() => this.props.filter("AP")}>
                             <i className="fa fa-bicycle"></i>
-                            <p className="show-for-large">Activity Product</p>
+                            <p className={(this.props.isActive === "AP"  ? 'show-for-medium' : 'show-for-large')}>Activity Product</p>
                         </Link>
                     </li>
-                    <li>
-                        <Link to="/">
+                    <li className={(this.props.isActive === "FB"  && 'active')}>
+                        <Link to="/" onClick={() => this.props.filter("FB")}>
                             <i className="fa fa-cutlery"></i>
-                            <p className="show-for-large">Food & Beverage</p>
+                            <p className={(this.props.isActive === "FB"  ? 'show-for-medium' : 'show-for-large')}>Food & Beverage</p>
                         </Link>
                     </li>
                 </ul>
@@ -57,40 +59,40 @@ class Categories extends Component {
       <div className="row">
             <div className="home-cat">
                 <ul>
-                    <li className="active">
-                        <Link to="/">
+                    <li className={(this.props.isActive === "LE"  && 'active')}>
+                        <Link to="/" onClick={ () => this.props.filter("LE")}>
                             <i className="fa fa-clock-o"></i>
-                            <p className="show-for-medium">Last Ending</p>
+                            <p className={(this.props.isActive === "LE"  ? 'show-for-medium' : 'show-for-large')}>Last Ending</p>
                         </Link>
                     </li>
-                    <li>
-                        <Link to="/">
+                    <li className={(this.props.isActive === "HH"  && 'active')}>
+                        <Link to="/" onClick={() => this.props.filter("HH")}>
                             <i className="fa fa-home"></i>
-                            <p className="show-for-large">House Hold</p>
+                            <p className={(this.props.isActive === "HH"  ? 'show-for-medium' : 'show-for-large')}>House Hold</p>
                         </Link>
                     </li>
-                    <li>
-                        <Link to="/">
+                    <li className={(this.props.isActive === "EG"  && 'active')}>
+                        <Link to="/" onClick={() => this.props.filter("EG")}>
                             <i className="fa fa-plug"></i>
-                            <p className="show-for-large">Electric	Gadget</p>
+                            <p className={(this.props.isActive === "EG"  ? 'show-for-medium' : 'show-for-large')}>Electric	Gadget</p>
                         </Link>
                     </li>
-                    <li>
-                        <Link to="/">
+                    <li className={(this.props.isActive === "JB"  && 'active')}>
+                        <Link to="/" onClick={() => this.props.filter("JB")}>
                             <i className="fa fa-diamond"></i>
-                            <p className="show-for-large">Jewery & Beautyware</p>
+                            <p className={(this.props.isActive === "JB"  ? 'show-for-medium' : 'show-for-large')}>Jewery & Beautyware</p>
                         </Link>
                     </li>
-                    <li>
-                        <Link to="/">
+                    <li className={(this.props.isActive === "AP"  && 'active')}>
+                        <Link to="/" onClick={() => this.props.filter("AP")}>
                             <i className="fa fa-bicycle"></i>
-                            <p className="show-for-large">Activity Product</p>
+                            <p className={(this.props.isActive === "AP"  ? 'show-for-medium' : 'show-for-large')}>Activity Product</p>
                         </Link>
                     </li>
-                    <li>
-                        <Link to="/">
+                    <li className={(this.props.isActive === "FB"  && 'active')}>
+                        <Link to="/" onClick={() => this.props.filter("FB")}>
                             <i className="fa fa-cutlery"></i>
-                            <p className="show-for-large">Food & Beverage</p>
+                            <p className={(this.props.isActive === "FB"  ? 'show-for-medium' : 'show-for-large')}>Food & Beverage</p>
                         </Link>
                     </li>
                 </ul>

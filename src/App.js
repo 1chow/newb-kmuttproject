@@ -19,7 +19,8 @@ export default class App extends Component {
 		super(props);
 		this.state = {
 			projects: [],
-			showModal: false
+			showModal: false,
+			isActive: 'LE',
 		};
 	}
 	componentDidMount() {
@@ -42,12 +43,15 @@ export default class App extends Component {
     	this.setState({ showModal: false });
 		document.body.style.overflow = null
 	}
+	filter = type => {
+		this.setState({ isActive: type });
+	}
 	render() {
 		return (
 			<section className="warpper">
 				{/* Navigator Bar */}
 				<Navigator triggler={this.handleOpenModal} />
-				<Categories />
+				<Categories isActive={this.state.isActive} filter={this.filter} />
 
 				{/* Modal Zone */}
 				
