@@ -21,17 +21,17 @@ class Header extends React.Component {
 							</NavLink>
 
 							<div className="title-bar-right nav-right">
-								<button onClick={this.props.triggler} className="profile-botton">
+								<button onClick={ () => this.props.triggler("checkout")} className="profile-botton">
 									<span className="has-tip bottom" tabIndex="2" title="Your Cart!">
 										<i className="fa fa-shopping-basket fa-2x" aria-hidden="true"></i>
 									</span>
 								</button>
-								<b className="alert-top-btn" id="b-cart"></b>
-								<NavLink className="profile-botton" exact to="/Modal">
+								<b className="alert-top-btn" id="b-cart">1</b>
+								<button className="profile-botton" onClick={ () => this.props.triggler("login")}>
 									<span className="has-tip bottom" data-disable-hover="false">
 										<img src="https://scontent.fbkk12-2.fna.fbcdn.net/v/t1.0-1/p160x160/10590625_870609506283335_1688425455264656623_n.jpg?oh=29b4ec66619473227bed4d94f03a55e4&oe=59A32BD3" alt=""></img>
 									</span>
-								</NavLink>
+								</button>
 							</div>
 						</div>
 					</div>

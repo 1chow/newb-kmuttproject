@@ -42,7 +42,7 @@ export default class SellingArea extends Component {
 	}
 	render() {
 		return (
-			<div className="page projects">
+			<div className="page projects post-feed">
 				<TransitionGroup>
 					{this.state.projects.map((p, i) => {
 						const style = {
