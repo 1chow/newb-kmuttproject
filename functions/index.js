@@ -11,10 +11,11 @@ admin.initializeApp(functions.config().firebase);
 
 const db = admin.database();
 const timeStart = new Date().getTime();
-const timeEnd = new Date().getTime() + (30 * 60 * 1000);
+const timeEnd = new Date().getTime() + (1 * 60 * 1000);
 
-// mockup Service 
+// mockup Service //
 
+//https://us-central1-auctkmutt.cloudfunctions.net/addMockup
 exports.addMockup = functions.https.onRequest((req, res) => {
 
 	for (var i = 0; i <= 10; i++) {
@@ -29,7 +30,7 @@ exports.addMockup = functions.https.onRequest((req, res) => {
 			  	},
 			  	bid:{
 			  		startTime: timeStart,
-			  		endTime: timeEnd,
+			  		endTime: timeEnd * i+1,
 			  		stepBid: 5,
 			  		openBid: 30
 			  	},
@@ -48,15 +49,16 @@ exports.addMockup = functions.https.onRequest((req, res) => {
 
 });
 
-
-exports.resetMockup = functions.https.onRequest((req, res) => {
+//https://us-central1-auctkmutt.cloudfunctions.net/resetItem
+exports.resetItem = functions.https.onRequest((req, res) => {
 
 	db.ref('/item').once("value" ,function(snapshot) {
 	    snapshot.forEach(function(childSnapshot) {
+	    	var time = time+1
 	    	db.ref('/item/'+ childSnapshot.key ).update({
 		    	bid:{
 			  		start: timeStart,
-			  		end: timeEnd,
+			  		end: timeEnd * time,
 			  		step:"30"
 			  	}
 	    	})
@@ -67,13 +69,13 @@ exports.resetMockup = functions.https.onRequest((req, res) => {
 				bidTimestamp : timeStart
 			});
 	  	});
-		res.status(200).end();
+		res.status(200).json("Reset Now !!");
 	});
 
 });
 
-
-exports.getMockup = functions.https.onRequest((req, res) => {
+//https://us-central1-auctkmutt.cloudfunctions.net/getItem
+exports.getItem = functions.https.onRequest((req, res) => {
 
   res.set('Cache-Control', 'public, max-age=60, s-maxage=180');
   res.set('Access-Control-Allow-Origin', '*');
