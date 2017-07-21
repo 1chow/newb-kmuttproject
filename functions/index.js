@@ -94,7 +94,4 @@ exports.getItem = functions.https.onRequest((req, res) => {
 
 });
 
-
-
-
 // mockup Service 
