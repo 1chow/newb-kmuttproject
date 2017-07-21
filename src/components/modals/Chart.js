@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 
 import SellingArea from "../SellingArea"
 
-export default class ModalChart extends Component {
+export default class Chart extends Component {
 
 	constructor(props) {
 		super(props);
