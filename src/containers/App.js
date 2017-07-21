@@ -25,7 +25,7 @@ export default class App extends Component {
 		};
 	}
 	componentDidMount() {
-		fetch("https://jsonplaceholder.typicode.com/posts")
+		fetch("https://us-central1-auctkmutt.cloudfunctions.net/getMessage")
 			.then(response => {
 				return response.json();
 			})
