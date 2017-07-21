@@ -2,15 +2,15 @@ import React, { Component } from "react"
 import Perf from 'react-addons-perf'
 import { Route } from "react-router-dom"
 import TransitionGroup from "react-transition-group/TransitionGroup"
-import AnimatedSwitch from "../components/Animated_switch"
+import AnimatedSwitch from "../components/animate/MainAnimated"
 
 
-import Navigator from "../components/wrapper/top_bar"
+import Navigator from "../components/wrapper/Navigator"
 import Categories from '../components/Categories'
 import SellingArea from "../components/SellingArea"
-import ProjectItem from "../components/Project_item"
+import Item from "../components/Item"
 import FourZeroFour from "../components/FourZeroFour"
-import Modals from '../components/Main_modal'
+import Modals from '../components/Mainmodal'
 
 window.Perf = Perf;
 
@@ -22,6 +22,7 @@ export default class App extends Component {
 			showModal: false,
 			isActive: 'LE',
 			typeModal: 'checkout',
+			isLogin: false,
 		};
 	}
 	componentDidMount() {
@@ -36,6 +37,7 @@ export default class App extends Component {
 			});
 	}
 
+	//Modal Logic
 	handleOpenModal = type => {
 		this.setState({ showModal: true });
 		this.setState({ typeModal: type });
@@ -49,12 +51,27 @@ export default class App extends Component {
 	filter = type => {
 		this.setState({ isActive: type });
 	}
+	changeType = type => {
+		this.setState({ typeModal: type });
+	}
+
+	//Authentucate Logic
+	authentication = () =>{
+		//Autenticate Logic Here
+		this.setState({ isLogin: true });
+		this.handleCloseModal()
+	}
+	logout = () =>{
+		this.setState({ isLogin: false });
+	}
+
+
 	render() {
 		return (
 			<div>
 			<section className={"warpper " + (this.state.showModal === true  && 'blur-for-modal')}>
 				{/* Navigator Bar */}
-				<Navigator triggler={this.handleOpenModal} />
+				<Navigator triggler={this.handleOpenModal} isLogin={this.state.isLogin} logout={this.logout} />
 				<Categories isActive={this.state.isActive} filter={this.filter} />
 				
 				{/* Application Routes Zone */}
@@ -77,7 +94,7 @@ export default class App extends Component {
 									<Route
 										path="/item/:itemid"
 										render={props => (
-											<ProjectItem projects={this.state.projects} />
+											<Item projects={this.state.projects} />
 										)}
 									/>
 									<Route 
@@ -91,7 +108,14 @@ export default class App extends Component {
 					</div>
 				
 			</section>
-			<Modals close={this.handleCloseModal} isOpen={this.state.showModal} projects={this.state.projects} type={this.state.typeModal}/>
+			<Modals 
+				close={this.handleCloseModal} 
+				isOpen={this.state.showModal} 
+				projects={this.state.projects} 
+				type={this.state.typeModal}
+				authentication={this.authentication}
+				changeType={this.changeType}
+			/>
 			</div>
 
 		);
