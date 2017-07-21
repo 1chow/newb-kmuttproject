@@ -1,7 +1,7 @@
 import React , { Component }  from 'react'
 import { Link } from "react-router-dom"
 
-import SellingArea from "../SellingArea"
+import SellingArea from "../Sellingarea"
 
 export default class Chart extends Component {
 

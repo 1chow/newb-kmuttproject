@@ -19,6 +19,8 @@ class Header extends React.Component {
 									<div className="nav-toggle-btn"></div>
 								</div>
 							</NavLink>
+							<NavLink exact to="/checkout-info">checkout-info</NavLink>
+							<NavLink exact to="/checkout">checkout</NavLink>
 
 							<div className="title-bar-right nav-right">
 								<button onClick={ () => this.props.triggler("checkout")} className="profile-botton">

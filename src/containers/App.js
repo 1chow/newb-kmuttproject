@@ -7,7 +7,8 @@ import AnimatedSwitch from "../components/animate/MainAnimated"
 
 import Navigator from "../components/wrapper/Navigator"
 import Categories from '../components/Categories'
-import SellingArea from "../components/SellingArea"
+import CheckOutinfo from '../components/Checkoutinfo'
+import SellingArea from "../components/Sellingarea"
 import Item from "../components/Item"
 import FourZeroFour from "../components/FourZeroFour"
 import Modals from '../components/Mainmodal'
@@ -37,7 +38,7 @@ export default class App extends Component {
 			});
 	}
 
-	//Modal Logic
+	//Modal function
 	handleOpenModal = type => {
 		this.setState({ showModal: true });
 		this.setState({ typeModal: type });
@@ -55,7 +56,7 @@ export default class App extends Component {
 		this.setState({ typeModal: type });
 	}
 
-	//Authentucate Logic
+	//Authentucate function
 	authentication = () =>{
 		//Autenticate Logic Here
 		this.setState({ isLogin: true });
@@ -95,6 +96,12 @@ export default class App extends Component {
 										path="/item/:itemid"
 										render={props => (
 											<Item projects={this.state.projects} />
+										)}
+									/>
+									<Route
+										path="/checkout-info"
+										render={props => (
+											<CheckOutinfo/>
 										)}
 									/>
 									<Route 
