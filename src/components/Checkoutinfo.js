@@ -19,7 +19,7 @@ class Checkoutinfo extends Component {
 										<a href=""><i className="fa fa-pencil-square-o edit"></i> Edit</a>
 										</span>
 									</p>
-									<textarea className="checkout-address" name="" id="" rows="5" readOnly>{this.props.Lorem}</textarea>
+									<textarea className="checkout-address" name="" id="" rows="5" defaultValue={this.props.Lorem} readOnly></textarea>
 								</div>
 							</div>
 						<hr/>
@@ -72,7 +72,7 @@ class Checkoutinfo extends Component {
 											        <input type="text" placeholder="E-mail Address"></input>
 										      	</label>
 										        <label>
-											        <textarea className="checkout-address" name="" id="" rows="5" autoCorrect="off" spellCheck="false" >{this.props.Lorem}</textarea>
+											        <textarea className="checkout-address" name="" id="" rows="5" autoCorrect="off" defaultValue={this.props.Lorem} spellCheck="false" ></textarea>
 											    </label>
 											    <label>
 											        <input type="password" id="password" placeholder="Postcode"></input>

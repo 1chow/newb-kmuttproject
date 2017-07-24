@@ -7,8 +7,17 @@ const Modals = props => {
 	    	<div className="modal-container">
 				{
 				props.type === 'checkout' ?
-	       		<ModalChart close={props.close} projects={props.projects} />
-				   : <ModalLoginSignUp type={props.type} changeType={props.changeType} close={props.close} authentication={props.authentication} />
+					<ModalChart 
+					close={props.close} 
+					items={props.items} 
+					filter={props.filter} 
+					/>
+					: 
+					<ModalLoginSignUp 
+						type={props.type} 
+						changeType={props.changeType} 
+						close={props.close} 
+					/>
 				}
 	       	</div>
 	    ): null

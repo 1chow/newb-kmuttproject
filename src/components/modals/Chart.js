@@ -1,7 +1,7 @@
 import React , { Component }  from 'react'
-import { Link } from "react-router-dom"
 
 import SellingArea from "../Sellingarea"
+import ModalChartWin from "./modalChartWin"
 
 export default class Chart extends Component {
 
@@ -37,26 +37,30 @@ export default class Chart extends Component {
 							<div className="home-cat">
 								<ul>
 									<li className={(this.state.cartType === "nowAuction"  && 'active')}>
-									<Link to="/" onClick={this.handlenowAuction}>
+									<button onClick={this.handlenowAuction}>
 										<i className="fa fa-gavel"></i>
 										<p className="">Now Auction</p>
-									</Link>
+									</button>
 									</li>
 									<li className={(this.state.cartType === "winOrder"  && 'active')}>
-									<Link to="/" onClick={this.handlewinOrder}>
+									<button onClick={this.handlewinOrder}>
 										<i className="fa fa-trophy"></i>
 										<p className="">Win Orders</p>
-									</Link>
+									</button>
 									</li>
 								</ul>
 							</div>
 
-						{/*nowAuction*/}
-							<SellingArea projects={this.props.projects} />
-
-						{/*winOrder*/}
-
-
+						    {(() => {
+						        switch (this.state.cartType) {
+						        	case 'nowAuction':
+						                return <SellingArea items={this.props.items} close={this.props.close} />
+						            case 'winOrder':
+						                return <ModalChartWin items={this.props.items} close={this.props.close} filter={this.props.filter} />
+						            default :
+						                return 'You Not Have The Cart'
+						        }
+						    })()}
 					</div>
 				</div>				
 	    )

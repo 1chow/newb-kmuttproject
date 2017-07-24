@@ -13,6 +13,21 @@ class Categories extends Component {
     return (
         <div className="row">
                 <div className="home-cat">
+                { (this.props.location.pathname === '/checkout-info' || this.props.location.pathname === '/checkout' ) ?
+                    <ul>
+                        <li className={(this.props.isActive === "YD"  && 'active')}>
+                            <Link to="/checkout-info" onClick={ () => this.props.filter("YD")}>
+                                <i className="fa fa-vcard-o"></i>
+                                <p className={(this.props.isActive === "YD"  ? 'show-for-medium' : 'show-for-large')}>Your Detail</p>
+                            </Link>
+                        </li>
+                        <li className={(this.props.isActive === "CS"  && 'active')}>
+                            <Link to="/checkout" onClick={() => this.props.filter("CS")}>
+                                <i className="fa fa-check"></i>
+                                <p className={(this.props.isActive === "CS"  ? 'show-for-medium' : 'show-for-large')}>Checkout Sucess</p>
+                            </Link>
+                        </li>
+                    </ul>  :
                     <ul>
                         <li className={(this.props.isActive === "LE"  && 'active')}>
                             <Link to="/" onClick={ () => this.props.filter("LE")}>
@@ -51,6 +66,7 @@ class Categories extends Component {
                             </Link>
                         </li>
                     </ul>
+                }
                 </div>
             </div>
          )

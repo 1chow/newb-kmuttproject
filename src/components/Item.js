@@ -1,23 +1,23 @@
 import React, { Component } from "react";
 
-export default class ProjectItem extends Component {
+export default class Item extends Component {
 	render() {
-		return (
-			<section className="warpper">
+		return this.props.items[0] ? (
+			<div>
 				<div className="row auct-content">
 					<div className="small-9 columns">
-						<h1>Lorem ipsum dolor sit amet</h1>
-						<p className="show-for-medium">Consectetur adipisicing elit. Est sed.</p>
+						<h1>{this.props.items[0].name}</h1>
+						<p className="show-for-medium">{this.props.items[0].desc.short}</p>
 					</div>
 					<div className="small-3 columns">
-						<p className="price">999<span className="curentcy">Bath</span></p>
+						<p className="price">{this.props.items[0].bid.openBid}<span className="curentcy">Bath</span></p>
 					</div>
 				</div>
 				<div className="row ">
 					<div className="small-12 medium-5 large-7 columns auct-l-container">
 						<div className="item-warper">
 							<div className="item">
-								<img src="http://dummyimage.com/670x580/292929/e3e3e3&text=Your Mom Goes to College" alt=""></img>
+								<img src={this.props.dummyimage} alt=""></img>
 							</div>
 						</div>
 				</div>
@@ -38,7 +38,7 @@ export default class ProjectItem extends Component {
 										</label>
 										<button className="button" type="submit" value="Submit">Bid</button>
 									</form>
-									<p className="helper">Bids More Than 999฿ To Win This Auction</p>
+									<p className="helper">Bids More Than {this.props.items[0].bid.openBid}฿ To Win This Auction</p>
 								</div>
 							</div>
 							<div className="row auct-from-warp">
@@ -53,12 +53,12 @@ export default class ProjectItem extends Component {
 											</tr>
 											<tr>
 												<td>Oatteeraphat</td>
-												<td>999 <span>THB</span></td>
+												<td>35 <span>THB</span></td>
 												<td>00:00:00</td>
 											</tr>
 											<tr>
 												<td>Oatteeraphat</td>
-												<td>999 <span>THB</span></td>
+												<td>30 <span>THB</span></td>
 												<td>00:00:00</td>
 											</tr>
 										</tbody>
@@ -67,14 +67,16 @@ export default class ProjectItem extends Component {
 							</div>
 							<div className="row auct-from-markdown">
 								<div className="small-12 medium-12 columns">
-									<h3>Lorem ipsum dolor sit amet</h3>
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique accusantium magni cupiditate dolorem, iusto aspernatur odio ipsa cumque sed ullam voluptatibus quas velit! Voluptatibus quod ea reiciendis maiores, at deleniti.</p>
+									<h3>{this.props.items[0].desc.fullHeader}</h3>
+									<p>{this.props.items[0].desc.fullDesc}</p>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</section>
-		);
+			</div>
+		) : <div className="spinning"></div>
 	}
 }
+
+Item.defaultProps = {dummyimage:'http://dummyimage.com/700x600/292929/e3e3e3&text=Your Mom Goes to College'}

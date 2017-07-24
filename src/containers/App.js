@@ -8,10 +8,13 @@ import AnimatedSwitch from "../components/animate/MainAnimated"
 import Navigator from "../components/wrapper/Navigator"
 import Categories from '../components/Categories'
 import CheckOutinfo from '../components/Checkoutinfo'
+import CheckOut from '../components/Checkout'
 import SellingArea from "../components/Sellingarea"
 import Item from "../components/Item"
 import FourZeroFour from "../components/FourZeroFour"
 import Modals from '../components/Mainmodal'
+
+import { firebaseAuth } from '../helpers/firebase'
 
 window.Perf = Perf;
 
@@ -19,23 +22,42 @@ export default class App extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			projects: [],
+			items: [],
 			showModal: false,
 			isActive: 'LE',
 			typeModal: 'checkout',
 			isLogin: false,
+			User: "Guest",
 		};
 	}
-	componentDidMount() {
-		fetch("https://jsonplaceholder.typicode.com/posts")
+	componentWillMount() {
+		fetch("https://us-central1-auctkmutt.cloudfunctions.net/getItems")
 			.then(response => {
 				return response.json();
 			})
 			.then(json => {
 				this.setState({
-					projects: json.slice(0, 8)
+					items: json.slice(0, 8)
 				});
 			});
+
+		this.removeListener = firebaseAuth().onAuthStateChanged((user) => {
+			if (user) {
+				this.setState({
+					isLogin: true,
+					User: user.email
+				})
+			} else {
+				this.setState({
+					isLogin: false,
+					User: "Guest"
+				})
+			}
+		})
+	}
+
+	componentWillUnmount () {
+		this.removeListener()
 	}
 
 	//Modal function
@@ -55,76 +77,77 @@ export default class App extends Component {
 	changeType = type => {
 		this.setState({ typeModal: type });
 	}
-
-	//Authentucate function
-	authentication = () =>{
-		//Autenticate Logic Here
-		this.setState({ isLogin: true });
-		this.handleCloseModal()
-	}
-	logout = () =>{
-		this.setState({ isLogin: false });
-	}
-
-
 	render() {
+		let { items } = this.state
+		let test = items.filter( (i,n) =>{
+					console.log(i._id)
+					console.log(n)
+					return i.bid
+		});
 		return (
 			<div>
-			<section className={"warpper " + (this.state.showModal === true  && 'blur-for-modal')}>
-				{/* Navigator Bar */}
-				<Navigator triggler={this.handleOpenModal} isLogin={this.state.isLogin} logout={this.logout} />
-				<Categories isActive={this.state.isActive} filter={this.filter} />
-				
-				{/* Application Routes Zone */}
-					<div className="row">
-						<Route
-						render ={ ({ location }) => (
+				<section className={"warpper " + (this.state.showModal === true  && 'blur-for-modal')}>
+					{/* Navigator Bar */}
+					<Navigator triggler={this.handleOpenModal} isLogin={this.state.isLogin} filter={this.filter} />
+					<Categories isActive={this.state.isActive} filter={this.filter} />
+					
+					{/* Application Routes Zone */}
+						<div className="row">
+							<Route
+							render ={ ({ location }) => (
+								<TransitionGroup>
+									<AnimatedSwitch
+										key={location.key}
+										location={location}
+									>
+										<Route
+											exact
+											path="/"
+											render={props => (
+												<SellingArea close={this.handleCloseModal} items={this.state.items} />
+											)}
+										/>
+										<Route
+											path="/item/:id"
+											render={props => (
+												<Item {...props} items={this.state.items} />
+											)}
+										/>
+										<Route
+											path="/checkout-info"
+											render={props => (
+												<CheckOutinfo/>
+											)}
+										/>
+										<Route
+											path="/checkout"
+											render={props => (
+												<CheckOut/>
+											)}
+										/>
+										<Route 
+											render={() => (
+												<FourZeroFour/>
+										)} />
+									</AnimatedSwitch>
+								</TransitionGroup>
+							) }/>
+						</div>
+					
+				</section>
+				<Modals 
+					close={this.handleCloseModal} 
+					isOpen={this.state.showModal} 
+					items={this.state.items} 
+					type={this.state.typeModal}
+					changeType={this.changeType}
+					filter={this.filter}
+				/>
 
-							<TransitionGroup>
-								<AnimatedSwitch
-									key={location.key}
-									location={location}
-								>
-									<Route
-										exact
-										path="/"
-										render={props => (
-											<SellingArea projects={this.state.projects} />
-										)}
-									/>
-									<Route
-										path="/item/:itemid"
-										render={props => (
-											<Item projects={this.state.projects} />
-										)}
-									/>
-									<Route
-										path="/checkout-info"
-										render={props => (
-											<CheckOutinfo/>
-										)}
-									/>
-									<Route 
-										render={() => (
-											<FourZeroFour/>
-									)} />
-								</AnimatedSwitch>
-							</TransitionGroup>
-
-						) }/>
-					</div>
-				
-			</section>
-			<Modals 
-				close={this.handleCloseModal} 
-				isOpen={this.state.showModal} 
-				projects={this.state.projects} 
-				type={this.state.typeModal}
-				authentication={this.authentication}
-				changeType={this.changeType}
-			/>
+				<div className="alert-bar-top">
+					<p className="green">Login Sucessfuly</p>
+				</div>
 			</div>
-
-		);
+		) 
 	}
 }
