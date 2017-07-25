@@ -62,13 +62,13 @@ i.alert{color: #ffae00;}
 .modal-login .button.success{width: 100%;margin: 5px 0;padding: 12px;font-size: 1.5em;}
 .modal-login .button.facebook{width: 100%;margin: 15px 0;font-size: 1.5em;padding: 12px 0;}
 .modal-login .button.hollow{color: #1779ba !important;font-size: 1.25em;margin: 0;width: 100%;}
-.modal-login .button.hollow:hover{color: #14679e !important;border: 2px solid #14679e;}
+.modal-login .button.hollow:hover,.modal-login .button.hollow:focus{color: #14679e !important;border: 2px solid #14679e;}
 .modal-login .signup{font-size: 1.25em;text-align: center;color: #3b3b3b;}
 
 .modal-login .head{font-size: 1.75em;font-family: 'sukhumvit_semi_bold';margin: 15px 0;padding: 0 15px;display: inline-block;background: #fff;position: relative;z-index: 2;}
 .modal-login .hr-head{position: relative;margin-bottom: -2.25em;margin-top: 25px;z-index: 1;}
 
-.modal-container{position: fixed;z-index: 10001;width: 100%;top: 0;left: 0;min-height: 100vh;background: rgba(255, 255, 255, 0.75);overflow-y: scroll;overflow-x: hidden;}
+.modal-container{position: fixed;z-index: 10001;width: 100%;top: 0;left: 0;min-height: 100vh;background: rgba(118, 118, 118, 0.58);overflow-y: scroll;overflow-x: hidden;}
 .blur-for-modal{-webkit-filter: blur(5px);-moz-filter: blur(5px);filter: blur(5px);overflow: scroll;}
 
 .modal-core{position: absolute;width: 50%;left: 0;right: 0;margin: 5vh auto;background: #fff;padding: 15px 30px;border: 1px solid rgba(0, 0, 0, 0.1);color: #1779ba;}

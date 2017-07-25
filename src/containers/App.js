@@ -26,7 +26,7 @@ export default class App extends Component {
 		};
 	}
 	componentDidMount() {
-		fetch("https://us-central1-auctkmutt.cloudfunctions.net/getItem")
+		fetch("https://us-central1-auctkmutt.cloudfunctions.net/getItems")
 			.then(response => {
 				return response.json();
 			})
