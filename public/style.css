@@ -6,7 +6,8 @@ input[type=text],[type=email],[type=password]{font-size: 1.125em;border-radius: 
 input[type=checkbox]{zoom: 1.5;position: relative;top: 3px;}
 label{font-size: 1.125em;}
 a:focus{outline: 0;}
-header{position: relative;z-index: 10000;}
+.warpper{padding-top:80px;}
+header{position: fixed;z-index: 10000;width: 100%;top: 0;}
 button:focus {outline: none;}
 input::-webkit-input-placeholder{color:#777;font-size: 0.9em;}
 input::-moz-placeholder{font-size: 0.9em;opacity: 1;color:#777;}
@@ -34,6 +35,26 @@ h3.print{color: #5f5f5f !important;}
 .hr-text-center p.title{font-size: 1.25em;position: absolute;top: -0.75em;left: calc(50% - 25px);background: #fff;padding: 0 15px;color: #5e5e5e;}
 i.success{color: #3adb76;}
 i.alert{color: #ffae00;}
+
+.alert-bar-top{
+    position: fixed;
+    width: 50%;
+    min-width: 300px;
+    overflow: hidden;
+    text-align: center;
+    z-index: 10005;
+    top: -50px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    background: #3adb76;
+    font-size: 1vw;
+    color: #fff;
+    border-radius:5px;
+    transition: all 0.25s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+.alert-bar-top p {margin: 5px 0;font-size: 1.33em;}
+.alert-bar-top .green{display: inline-block;}
 
 /* nav */
 .title-bar{color: #1779ba;background: #fff;padding: 0.75em;position: relative;z-index: 10000;transition: all 0.15s ease;}

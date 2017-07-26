@@ -7,28 +7,28 @@ export default class SellingArea extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			projects: [],
+			items: [],
 			animations: []
 		};
 	}
 	//For After First Render
 	componentDidMount() {
-		this._renderProjects(this.props.projects);
+		this._renderProjects(this.props.items);
 	}
 	
 	//For First Render
 	componentWillReceiveProps(nextProps) {
-		if (!this.props.projects.length && nextProps.projects.length) {
-			this._renderProjects(nextProps.projects);
+		if (!this.props.items.length && nextProps.items.length) {
+			this._renderProjects(nextProps.items);
 		}
 	}
 
 	// Animation Logic
-	_renderProjects(projects) {
+	_renderProjects(items) {
 		this.setState(
 			{
-				projects: projects,
-				animations: projects.map((_, i) => new Animated.Value(0))
+				items: items,
+				animations: items.map((_, i) => new Animated.Value(0))
 			},
 			() => {
 				Animated.stagger(
@@ -40,11 +40,23 @@ export default class SellingArea extends Component {
 			}
 		);
 	}
+
+	handleClose = () => {
+		this.props.close()
+		window.scrollTo(0,0);
+	}
+
+	timeDiff = (timestamp1, timestamp2) => {
+		let difference = timestamp1 - timestamp2;
+		let daysDifference = Math.floor(difference/1000/60/60/24);
+		return new Date(daysDifference * 1e3).toISOString().slice(-13, -5);
+	}
+
 	render() {
 		return (
-			<div className="page projects post-feed">
+			<div className="page items post-feed">
 				<TransitionGroup>
-					{this.state.projects.map((p, i) => {
+					{this.state.items.map((p, i) => {
 						const style = {
 							opacity: this.state.animations[i],
 							transform: Animated.template`
@@ -54,18 +66,20 @@ export default class SellingArea extends Component {
 							})},0)
 							`
 						};
+						let Magic = this.timeDiff(this.state.items[i].bid.endTime,this.state.items[i].bid.startTime);
+						//console.log(Magic)
 						return (
 						<div key={i} className="small-6 medium-4 large-3 columns post-box">
 							<Animated.div style={style}>
-								<Link to='/item/1'>
+								<Link onClick={this.handleClose} to={'/item/'+ this.state.items[i]._id}>
 									<div className="post-box-top">
-										<img src="http://dummyimage.com/300x300/292929/e3e3e3&text=Your Mom Goes to College" alt=""/>
+										<img src={this.props.dummyimage} alt=""/>
 									</div>
 									<div className="post-box-content">
-										<h3>SaltyCamel</h3>
-										<p className="desc">Sweety</p>
-										<span className="timecount red">00:00:00</span>
-										<p className="price">999<span className="curentcy">Bath</span></p>
+										<h3>{this.state.items[i].name}</h3>
+										<p className="desc">{this.state.items[i].desc.short}</p>
+										<span className="timecount red">{Magic}</span>
+										<p className="price">{this.state.items[i].bid.current}<span className="curentcy">Bath</span></p>
 										<button><i className="fa fa2x "></i></button>
 									</div>
 								</Link>
@@ -78,3 +92,5 @@ export default class SellingArea extends Component {
 		);
 	}
 }
+
+SellingArea.defaultProps = {dummyimage:'http://dummyimage.com/300x300/292929/e3e3e3&text=Your Mom Goes to College'}

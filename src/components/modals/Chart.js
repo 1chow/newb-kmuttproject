@@ -1,7 +1,6 @@
 import React , { Component }  from 'react'
-import { Link } from "react-router-dom"
 
-import SellingArea from "../SellingArea"
+import SellingArea from "../Sellingarea"
 import ModalChartWin from "./modalChartWin"
 
 export default class Chart extends Component {
@@ -55,9 +54,9 @@ export default class Chart extends Component {
 						    {(() => {
 						        switch (this.state.cartType) {
 						        	case 'nowAuction':
-						                return <SellingArea projects={this.props.projects} />
+						                return <SellingArea items={this.props.items} close={this.props.close} />
 						            case 'winOrder':
-						                return <ModalChartWin projects={this.props.projects} />
+						                return <ModalChartWin items={this.props.items} close={this.props.close} filter={this.props.filter} />
 						            default :
 						                return 'You Not Have The Cart'
 						        }

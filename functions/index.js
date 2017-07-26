@@ -11,8 +11,7 @@ admin.initializeApp(functions.config().firebase);
 
 const db = admin.database();
 
-const timeCurrent = admin.database.ServerValue.TIMESTAMP 
-
+const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 
 ////// mockup Service //////
 
@@ -23,16 +22,20 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP
 		const iconCat = ['fa-home','fa-plug','fa-diamond','fa-bicycle','fa-cutlery']
 
 		for (var i = 0; i <= 4; i++) {
+
 			
 			db.ref('/catagories').push({
 				  	name: nameCat[i],
 				  	icon: iconCat[i],
-
 				})				
 			.then(snapshot => {
 			});
 
 				for (var j = 0; j <= 4; j++) {
+
+				db.ref('/time').update({
+				  	timeNow : timeCurrent
+				})
 
 					db.ref('/items').push({
 						  	name: 'Salty Camel',
@@ -45,20 +48,30 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP
 						  	},
 						  	bid:{
 						  		startTime: timeCurrent,
-						  		endTime: timeCurrent,
-						  		stepBid: 5,
-						  		openBid: 30
+						  		step: 30,
+						  		open: 5,
+						  		current : '30'
 						  	},
 						  	img:['a', 'b', 'c'],
+						  	bouded : 15,
 						  	own : 'jByPD6RZW2UUgTx7M305k2BrSrr2',
 						})
 					.then(snapshot => {
-							db.ref('/items/' + snapshot.key + '/bidList').push({
-								userId : '',
-								bid : 30,
-								bidTimestamp : timeCurrent
+						db.ref('/items/' + snapshot.key + '/bidList').push({
+							userId : '',
+							bid : 30,
+							bidTimestamp : timeCurrent
+						});
+						
+						db.ref('/time').once("value" ,function(Csnapshot) {
+							var fkTime = Csnapshot.val();
+							var fk = fkTime.timeNow + ((3) * 60 * 1000)
+							db.ref('/items/' + snapshot.key + '/bid').update({
+								endTime: fk
+							})
 						});
 				  	});
+				//db.ref('/time').remove();
 				};
 		};
 
@@ -70,12 +83,14 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP
 
 		db.ref('/items').once("value" ,function(snapshot) {
 		    snapshot.forEach(function(childSnapshot) {
-		    	var time = time +1
+		    	var i = i + 1;
 		    	db.ref('/items/'+ childSnapshot.key ).update({
 			    	bid:{
-				  		start: timeCurrent,
-				  		end: timeCurrent + (time * 2 * 60 * 1000),
-				  		step: 30
+				  		startTime: timeCurrent,
+				  		endTime: timeStack,
+				  		step: 30,
+				  		open: 5,
+				  		current : '30'
 				  	}
 		    	})
 		    	db.ref('/items/' + childSnapshot.key + '/bidList').remove();
@@ -95,6 +110,7 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP
 	//https://us-central1-auctkmutt.cloudfunctions.net/getItems?itemId=XXXXXXX >> specific Items
 	exports.getItems = functions.https.onRequest((req, res) => {
 
+	  //res.set('Cache-Control', 'public, max-age=60, s-maxage=180');
 	  res.set('Access-Control-Allow-Origin', '*');
 
 	  const itemKey = req.query.itemId;
@@ -109,63 +125,193 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP
 		  		 
 		  		 	db.ref('/items/'+ itemKey ).update({
 		  		 		timeNow :  timeCurrent,
-		  		 	}).then(childsnapshot => {
-		  		 		var tOut = data.timeNow - timeEnd ;
-		  		 		if ( tOut <= 0 && active != 0){
-			  				db.ref('/items/'+ itemKey ).update({
-			  					isActive :  0
-			  				})
-		  				}
-		  		 	});
-		  		 
-			     const listArrays = [];
-				      snapshot.child('bidList').forEach(function(listSnapshot) {
-				      	var listKey = listSnapshot.key;
-				      	var listData = listSnapshot.val();
-				      	listData['_id'] = listKey;
-				      	listArrays.push(listData);
-				      });
-				 data['bidList'] = listArrays;
-				 res.status(200).send(data);
+		  		 	})
+
+	  		 		var tOut = timeEnd - data.timeNow ;
+	  		 		if ( tOut <= 0 && active != 0){
+		  				db.ref('/items/'+ itemKey ).update({
+		  					isActive :  0
+		  				})
+	  				}
+
+	  			 var helpp = {
+	  			 	_id: snapshot.key,
+	  			 	endTime: timeEnd,
+	  			 	current: data.bid.current,
+	  			 	isActive: data.isActive
+	  			 }
+				 res.status(200).send(helpp);
 			});
 		}
 		else {
 
 		  	db.ref('/items').once('value', function(snapshot) {
+
 		  		const arrays = [];
+
 			  		snapshot.forEach(function(childSnapshot) {
-				      var key_ = childSnapshot.key;
-				      var childData = childSnapshot.val();
-				      childData['_id'] = key_;
 
-				      const listArrays = [];
+					    var key_ = childSnapshot.key;
+					    var childData = childSnapshot.val();
+					    var active = childData.isActive;
+		  		 		//var timeEnd = childData.bid.endTime;
+		  		 		//console.log(childData.bid.endTime);
+				      	childData['_id'] = key_;
 
-				      childSnapshot.child('bidList').forEach(function(listSnapshot) {
-				      	var listKey = listSnapshot.key;
-				      	var listData = listSnapshot.val();
-				      	listData['_id'] = listKey;
-				      	listArrays.push(listData);
-				      })
+				      	const listArrays = [];
 
-					  childData['bidList'] = listArrays;
-				      arrays.push(childData);
+				      	childSnapshot.child('bidList').forEach(function(listSnapshot) {
+					      	var listKey = listSnapshot.key;
+					      	var listData = listSnapshot.val();
+					      	listData['_id'] = listKey;
+					      	listArrays.push(listData);
+				      	})
 
 				      	db.ref('/items').child(key_).update({
 			  		 		timeNow :  timeCurrent,
 			  		 	})
 
-		  		 		var tOut = childData.timeNow - childData.startTime
-		  		 		if ( tOut <= 0 && active != 0){
-			  				db.ref('/items/'+ itemKey ).update({
+		  		 		var tOut = childData.bid.endTime - childData.timeNow ;
+		  		 		if ( tOut <= 0 && active != 0) {
+			  				db.ref('/items/'+ key_ ).update({
 			  					isActive :  0
 			  				})
 		  				}
+
+		  				childData['bidList'] = listArrays;
+				      	arrays.push(childData);
+
 				  	});
+
 			   	res.status(200).send(arrays);
-			   	res.set('Cache-Control', 'public, max-age=60, s-maxage=180');
 			});
 	   	}
 	});
+
+
+	//https://us-central1-auctkmutt.cloudfunctions.net/getCurrentPrice?itemId=XXXXXXX >> specific Items
+	exports.getCurrent = functions.https.onRequest((req, res) => {
+		res.set('Access-Control-Allow-Origin', '*');
+		const itemKey = req.query.itemId;
+
+	  	if(itemKey != null){
+
+			db.ref('/items/'+ itemKey ).once('value', function(snapshot) {
+
+		  		 var data = snapshot.val();
+		  		 var active = data.isActive;
+		  		 var timeEnd = data.bid.endTime;
+		  		 
+		  		 	db.ref('/items/'+ itemKey ).update({
+		  		 		timeNow :  timeCurrent,
+		  		 	})
+
+	  		 		var tOut = timeEnd - data.timeNow ;
+	  		 		if ( tOut <= 0 && active != 0){
+		  				db.ref('/items/'+ itemKey ).update({
+		  					isActive :  0
+		  				})
+	  				}
+
+	  			 var helpp = {
+	  			 	_id: snapshot.key,
+	  			 	endTime: timeEnd,
+	  			 	current: data.bid.current,
+	  			 	isActive: data.isActive
+	  			 }
+				 res.status(200).send(helpp);
+			});
+
+		} else{
+			res.status(200).send([404]);
+		}
+	});
+
+	//https://us-central1-auctkmutt.cloudfunctions.net/postEndTime?itemId=XXXXXXX&endAt=XXXXXXXX >> specific Items
+	exports.postEndTime = functions.https.onRequest((req, res) => {
+		res.set('Access-Control-Allow-Origin', '*');
+
+		const end_ = req.query.endAt;
+		const itemKey = req.query.itemId;
+
+	  	if(itemKey != null){
+
+		  		 	db.ref('/items/'+ itemKey '/bid' ).update({
+		  		 		endTime  :  end_,
+		  		 	})
+				 res.status(200);
+		} else{
+			res.status(200).send([404]);
+		}
+	});
+
+
+////// Bit Service ///////
+
+	//https://us-central1-auctkmutt.cloudfunctions.net/bidOrder?itemId=-KpnlbR3SbEGDnNqzDI7&bid=999&uId=jByPD6RZW2UUgTx7M305k2BrSrr2
+	exports.bidOrder = functions.https.onRequest((req, res) => {
+
+		var itemKey = req.query.itemId;
+		var newBid 	= parseInt(req.query.bid);
+		var uid	= req.query.uId;
+
+		if ( itemKey != null && uid != 0 && newBid != null ){
+
+		  	db.ref('/items/' + itemKey ).once('value', function(snapshot) {
+
+				var data = snapshot.val();
+				var active = data.isActive;
+				var bidEndTime = data.bid.endTime;
+
+
+				db.ref('/items/' + itemKey + '/bidList').orderByChild('bid').limitToLast(1)
+				.once('value', function(childSnapshot) {
+
+					var bidLast = [];
+					childSnapshot.forEach((duckSnap) => {
+						const duck = duckSnap.val();
+						bidLast.push(duck);
+					});
+
+					var mfk = bidLast[0];//bidLastWin
+
+					db.ref('/items/'+ itemKey).update({
+		  		 		  timeNow :  timeCurrent,
+		  		 		}).then(timeSnapshot => {
+		  		 		var tOut_ = bidEndTime - data.timeNow;
+		  		 		//var tOut = 0;
+	  		 			var checkBid = newBid - mfk.bid;
+	  		 			var bouded_ = parseInt(data.bouded) * 1000
+	  		 			var expandTime = (data.timeNow) + (bouded_); //boudded
+	  		 			var message = [];
+		  		 		if ( checkBid > 0 && active != 0 && tOut_ > 1000 ){
+			  				db.ref('/items/'+ itemKey + '/bidList').push({
+			  					bid : newBid,
+			  					bidTimestamp : data.timeNow,
+			  					userId : uid
+			  				})
+			  				db.ref('/items/'+ itemKey + '/bid').update({
+			  					current : newBid ,
+			  				})
+			  				if (tOut_ < bouded_) {
+			  					db.ref('/items/'+ itemKey + '/bid').update({
+			  						endTime : expandTime ,
+			  					})
+			  				}
+			  				message.push('200,wellDone')
+			  			} else {
+			  				message.push('403,Forbidden')
+			  			}
+			  			res.status(200).send(message);
+	 				})
+		  		});
+	
+			})
+	  	} else {
+	  		res.status(200).send(['404,Not Found']);
+	  	}
+	});
+
 
 //// catagories Service ////
 
@@ -289,7 +435,9 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP
 	//https://us-central1-auctkmutt.cloudfunctions.net/addMockup
 	exports.createOrder = functions.https.onRequest((req, res) => {
 
-	  	db.ref('/orders/').push({
+		var userId = req.query.uId;
+
+	  	db.ref('/orders/' + userId ).push({
 	  		orderPrice: 0,// sumPrice
 	  		orderCount: 0,// countList
 	  		orderOwnerId:'',
@@ -312,6 +460,54 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP
 			});
 		res.status(200).send('createOrder '+snapshot.key);
 		});		
+	});
+
+/*	var eventSnapshot = event.data;
+	var profilePictureSnapshot = eventSnapshot.child('profilePicture');
+	if (profilePictureSnapshot.changed()) {
+	  return createThumbnail(profilePictureSnapshot.val())
+	    .then(url => {
+	      return eventSnapshot.ref.update({ profileThumbnail: url });
+	    });
+	}*/
+
+
+	exports.winOrder = functions.database.ref('/items/{Itemid}/isActive')
+	  .onUpdate(event => {
+
+	  	var itemKey = event.params.Itemid
+
+		db.ref('/items/' + itemKey + '/bidList').orderByChild('bid').limitToLast(1)
+		.once('value', function(childSnapshot) {
+
+			var bidLast = [];
+			childSnapshot.forEach((duckSnap) => {
+				const duck = duckSnap.val();
+				bidLast.push(duck);
+			});
+
+			var totalPrice = 0;
+
+			var mfk = bidLast[0];//bidLastWin
+			var userId = mfk.userId;
+			var data = {orderPrice : ''};
+			data.orderPrice
+
+			db.ref('/orders/' + userId ).once('value', function(childSnapshot) {
+
+				var data = childSnapshot.val();
+				var totalPrice = 39 + parseInt( mfk.bid + data.orderPrice );
+
+			  	db.ref('/orders/' + userId ).push({
+			  		orderPrice: totalPrice,// sumPrice
+			  		itemId : event.params.Itemid,
+			  		item
+				})
+
+			})//ref order by uid data
+		    
+		});// ref current by item win
+
 	});
 
 
@@ -366,58 +562,5 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP
 	});
 
 
-////// Bit Service ///////
-
-	//https://us-central1-auctkmutt.cloudfunctions.net/bidOrder?itemId=-KpnlbR3SbEGDnNqzDI7&bid=999&uId=jByPD6RZW2UUgTx7M305k2BrSrr2
-	exports.bidOrder = functions.https.onRequest((req, res) => {
-
-		var itemKey = req.query.itemId;
-		var newBid 	= req.query.bid;
-		var uid	= req.query.uId;
-
-	  	db.ref('/items/' + itemKey ).once('value', function(snapshot) {
-
-			var data = snapshot.val();
-			var active = data.isActive;
-			var bidEndTime = data.bid.endTime;
-			console.log('timeend : ' + bidEndTime )
-
-			//var bidLast = [];
-
-			db.ref('/items/' + itemKey + '/bidList').orderByChild('bid').limitToLast(1).once('value', function(childSnapshot) {
-				var bidLast = [];
-				childSnapshot.forEach((duckSnap) => {
-					const duck = duckSnap.val();
-					bidLast.push(duck);
-				});
-
-				var mfk = bidLast[0];//bidLastWin
-
-				db.ref('/items/'+ itemKey).update({
-	  		 		  timeNow :  timeCurrent,
-	  		 		}).then(timeSnapshot => {
-	  		 		var tOut_ = bidEndTime - data.timeNow;
-	  		 		var tOut = 0;
-  		 			var checkBid = newBid - mfk.bid;
-  		 			var message = [];
-	  		 		if ( checkBid > 0 && active != 0 && tOut > -1000 ){
-		  				db.ref('/items/'+ itemKey + '/bidList').push({
-		  					bid : newBid,
-		  					bidTimestamp : data.timeNow,
-		  					userId : uid
-		  				})
-		  				message.push('200,wellDone')
-		  			} else {
-		  				message.push('403,Forbidden')
-		  			}
-		  			res.status(200).send(message);
- 				})
-
-	  		});
-			
-		})
-
-
-	});
 
 

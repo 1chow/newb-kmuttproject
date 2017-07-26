@@ -7,28 +7,28 @@ export default class ModalChartWin extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			projects: [],
+			items: [],
 			animations: []
 		};
 	}
 	//For After First Render
 	componentDidMount() {
-		this._renderProjects(this.props.projects);
+		this._renderProjects(this.props.items);
 	}
 	
 	//For First Render
 	componentWillReceiveProps(nextProps) {
-		if (!this.props.projects.length && nextProps.projects.length) {
-			this._renderProjects(nextProps.projects);
+		if (!this.props.items.length && nextProps.items.length) {
+			this._renderProjects(nextProps.items);
 		}
 	}
 
 	// Animation Logic
-	_renderProjects(projects) {
+	_renderProjects(items) {
 		this.setState(
 			{
-				projects: projects,
-				animations: projects.map((_, i) => new Animated.Value(0))
+				items: items,
+				animations: items.map((_, i) => new Animated.Value(0))
 			},
 			() => {
 				Animated.stagger(
@@ -40,12 +40,16 @@ export default class ModalChartWin extends Component {
 			}
 		);
 	}
+	handleLinktoCheckOut = () => {
+		this.props.close()
+		this.props.filter('YD')
+	}
 	render() {
 		return (
 			<div className="row">
 					<div className="small-12 large-6 columns post-feed win-list">
 						<TransitionGroup>
-								{this.state.projects.map((p, i) => {
+								{this.state.items.map((p, i) => {
 									const style = {
 										opacity: this.state.animations[i],
 										transform: Animated.template`
@@ -58,7 +62,7 @@ export default class ModalChartWin extends Component {
 									return (
 									<div key={i} className="small-12 columns post-list">
 										<Animated.div style={style}>
-											<Link to='/item/1'>
+											<Link onClick={this.props.close} to='/item/1'>
 												<div className="post-list-l">
 													<img src="http://placehold.it/300x300" alt="" />
 												</div>
@@ -76,26 +80,26 @@ export default class ModalChartWin extends Component {
 								})}
 						</TransitionGroup>
 					</div>
-						<div className="small-12 large-6 columns post-feed post-feed-checkout">
-							<div className="small-12 columns post-checkout">
-								<h3>Your Order</h3>
-								<p className="desc">Payment Pending</p><br/>
-								<Link to="/" className="button success">Checkout</Link>
-								<ul>
-									<li>Your Order 4 Item<span>999 THB</span></li>
-									<li>Delivery Charge<span>39 THB</span></li>
-								</ul>
-								<hr/>
-								<ul>
-									<li className="price">Total<span>9,999 THB</span><p>(VAT incl.)</p></li>
-								</ul>
-							</div>
-							<div className="small-12 columns post-checkout" style={{background:'#fff'}}>
-								<div className="desc-box">
-									<p><i className="fa fa-truck fa-2x"> </i> Get Your Order, 1-2 Days Delivery</p>
-								</div>
+					<div className="small-12 large-6 columns post-feed post-feed-checkout">
+						<div className="small-12 columns post-checkout">
+							<h3>Your Order</h3>
+							<p className="desc">Payment Pending</p><br/>
+							<Link onClick={this.handleLinktoCheckOut} to="/checkout-info" className="button success">Checkout</Link>
+							<ul>
+								<li>Your Order 4 Item<span>999 THB</span></li>
+								<li>Delivery Charge<span>39 THB</span></li>
+							</ul>
+							<hr/>
+							<ul>
+								<li className="price">Total<span>9,999 THB</span><p>(VAT incl.)</p></li>
+							</ul>
+						</div>
+						<div className="small-12 columns post-checkout" style={{background:'#fff'}}>
+							<div className="desc-box">
+								<p><i className="fa fa-truck fa-2x"> </i> Get Your Order, 1-2 Days Delivery</p>
 							</div>
 						</div>
+					</div>
 			</div>
 		);
 	}
