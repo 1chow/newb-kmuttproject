@@ -9,20 +9,23 @@ const config = {
 
 firebase.initializeApp(config)
 
-const db = firebase.database().ref()
+export const db = firebase.database().ref()
+export const db2 = firebase.database()
 export const firebaseAuth = firebase.auth
 
-export function auth (email, pw, displayName, close) {
+export function auth (email, pw, displayName) {
   return firebaseAuth().createUserWithEmailAndPassword(email, pw)
-    .then( function(user) {
-        return db.child(`users/${user.uid}/info`)
-            .update({
-                displayName: displayName,
-                email: user.email,
-                uid: user.uid
-            })
+    .then( user =>  {
+      db.child(`users/${user.uid}/info`)
+        .update({
+            displayName: displayName,
+            email: user.email,
+            uid: user.uid
+        })
+        .then(user.updateProfile({
+          displayName: displayName,
+        }))
     })
-    .then(close)
 }
 
 export function login (email, pw , close) {

@@ -63,3 +63,7 @@
     padding: 25vh;
 }
 
+.hidden {
+    display: none;
+}
+

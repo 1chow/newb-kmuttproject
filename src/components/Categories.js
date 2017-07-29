@@ -1,16 +1,20 @@
 import React, { Component } from 'react'
 import { Link , withRouter } from "react-router-dom";
+import Loading from './Loading'
 
 class Categories extends Component {
     shouldComponentUpdate(nextProps, nextState) {
-        if (this.props.location.pathname === nextProps.location.pathname) {
-            if (this.props.isActive === nextProps.isActive) {
-                return false
+        if (this.props.categories === nextProps.categories) {
+            if (this.props.location.pathname === nextProps.location.pathname) {
+                if (this.props.isActive === nextProps.isActive) {
+                    return false
+                } else { return true }
             } else { return true }
         } else { return true }
 	}
     render() {
-    return (
+    return this.props.categories ? (
+        (this.props.location.pathname === '/admin1' || this.props.location.pathname === '/admin2' || this.props.location.pathname === '/admin3' || this.props.location.pathname === '/admin4' ) ? null : (
         <div className="row">
                 <div className="home-cat">
                 { (this.props.location.pathname === '/checkout-info' || this.props.location.pathname === '/checkout' ) ?
@@ -29,48 +33,28 @@ class Categories extends Component {
                         </li>
                     </ul>  :
                     <ul>
-                        <li className={(this.props.isActive === "LE"  && 'active')}>
-                            <Link to="/" onClick={ () => this.props.filter("LE")}>
+                        <li className={(this.props.isActive === "default"  && 'active')}>
+                            <Link to="/" onClick={ () => this.props.filter("default")}>
                                 <i className="fa fa-clock-o"></i>
-                                <p className={(this.props.isActive === "LE"  ? 'show-for-medium' : 'show-for-large')}>Last Ending</p>
+                                <p className={(this.props.isActive === "default"  ? 'show-for-medium' : 'show-for-large')}>Last Ending</p>
                             </Link>
                         </li>
-                        <li className={(this.props.isActive === "HH"  && 'active')}>
-                            <Link to="/" onClick={() => this.props.filter("HH")}>
-                                <i className="fa fa-home"></i>
-                                <p className={(this.props.isActive === "HH"  ? 'show-for-medium' : 'show-for-large')}>House Hold</p>
-                            </Link>
-                        </li>
-                        <li className={(this.props.isActive === "EG"  && 'active')}>
-                            <Link to="/" onClick={() => this.props.filter("EG")}>
-                                <i className="fa fa-plug"></i>
-                                <p className={(this.props.isActive === "EG"  ? 'show-for-medium' : 'show-for-large')}>Electric	Gadget</p>
-                            </Link>
-                        </li>
-                        <li className={(this.props.isActive === "JB"  && 'active')}>
-                            <Link to="/" onClick={() => this.props.filter("JB")}>
-                                <i className="fa fa-diamond"></i>
-                                <p className={(this.props.isActive === "JB"  ? 'show-for-medium' : 'show-for-large')}>Jewery & Beautyware</p>
-                            </Link>
-                        </li>
-                        <li className={(this.props.isActive === "AP"  && 'active')}>
-                            <Link to="/" onClick={() => this.props.filter("AP")}>
-                                <i className="fa fa-bicycle"></i>
-                                <p className={(this.props.isActive === "AP"  ? 'show-for-medium' : 'show-for-large')}>Activity Product</p>
-                            </Link>
-                        </li>
-                        <li className={(this.props.isActive === "FB"  && 'active')}>
-                            <Link to="/" onClick={() => this.props.filter("FB")}>
-                                <i className="fa fa-cutlery"></i>
-                                <p className={(this.props.isActive === "FB"  ? 'show-for-medium' : 'show-for-large')}>Food & Beverage</p>
-                            </Link>
-                        </li>
+                        {this.props.categories.map( category => {
+                            return ( 
+                            <li key={category._id} className={(this.props.isActive === category.name  && 'active')} >
+                                <Link to='/' onClick={() => this.props.filter(category.name)} >
+                                    <i className={"fa " + category.icon}></i>
+                                    <p className={(this.props.isActive === category.name  ? 'show-for-medium' : 'show-for-large')}>{category.name}</p>
+                                </Link>
+                            </li>
+                            );
+                        })}
                     </ul>
                 }
                 </div>
-            </div>
-         )
-    }
+            </div>)
+         ) : <Loading />
+    } 
 }
 
 export default withRouter(Categories)

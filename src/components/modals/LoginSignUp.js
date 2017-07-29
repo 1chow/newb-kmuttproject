@@ -22,7 +22,8 @@ export default class LoginSignUp extends Component {
 	handleSubmit = (e) => {
 		e.preventDefault()
 		this.props.type === 'signup' ? (
-			auth(this.email.value, this.pw.value , this.user.value , this.props.close)
+			auth(this.email.value, this.pw.value , this.user.value)
+			.then(this.props.close)
 			.catch( err => this.setState({registerError: err.message }))
 		) : (
 			login(this.email.value, this.pw.value , this.props.close)

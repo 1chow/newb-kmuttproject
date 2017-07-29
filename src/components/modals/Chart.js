@@ -1,7 +1,8 @@
 import React , { Component }  from 'react'
 
-import SellingArea from "../Sellingarea"
+import Sellingareas from "../Sellingareas"
 import ModalChartWin from "./modalChartWin"
+import * as Animated from "animated/lib/targets/react-dom";
 
 export default class Chart extends Component {
 
@@ -13,6 +14,14 @@ export default class Chart extends Component {
 	}
 
 	componentDidMount() {
+		this._sortModalItems(this.props.items);
+	}
+	
+	//For First Render
+	componentWillReceiveProps(nextProps) {
+		if (!this.props.items.length && nextProps.items.length) {
+			this._sortModalItems(nextProps.items);
+		}
 	}
 
 	handlenowAuction = () => {
@@ -20,6 +29,20 @@ export default class Chart extends Component {
 	}
 	handlewinOrder = () => {
     	this.setState({ cartType : 'winOrder' });
+	}
+
+	_sortModalItems = ( items ) => {
+		if (this.state.cartType === 'nowAuction')
+		var newitems = items.filter( (item,n) => {
+			return item.catagory === this.props.isActive
+		})
+		else newitems = items
+		this.setState(
+			{
+				items: newitems,
+				animations: newitems.map((_, i) => new Animated.Value(0))
+			}
+		)
 	}
 
 
@@ -54,9 +77,9 @@ export default class Chart extends Component {
 						    {(() => {
 						        switch (this.state.cartType) {
 						        	case 'nowAuction':
-						                return <SellingArea items={this.props.items} close={this.props.close} />
+						                return <Sellingareas current={this.props.current} isActive={this.props.isActive} items={this.props.items} close={this.props.close} />
 						            case 'winOrder':
-						                return <ModalChartWin items={this.props.items} close={this.props.close} filter={this.props.filter} />
+						                return <ModalChartWin timeDiff={this.props.timeDiff} orderLists={this.props.orderLists} close={this.props.close} filter={this.props.filter} />
 						            default :
 						                return 'You Not Have The Cart'
 						        }
