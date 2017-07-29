@@ -9,14 +9,14 @@ import Navigator from "../components/wrapper/Navigator"
 import Categories from '../components/Categories'
 import CheckOutinfo from '../components/Checkoutinfo'
 import CheckOut from '../components/Checkout'
-import Sellingareas from "../components/Sellingareas"
+import SellingArea from "../components/Sellingarea"
 import Item from "../components/Item"
+import Admin1 from "../components/Admin1"
+import Admin2 from "../components/Admin2"
 import FourZeroFour from "../components/FourZeroFour"
 import Modals from '../components/Mainmodal'
-import Toggle from '../components/Toggle'
-import Admin from "../components/admin/Admin"
 
-import { firebaseAuth , db , db2 , logout } from '../helpers/firebase'
+import { firebaseAuth , db } from '../helpers/firebase'
 
 window.Perf = Perf;
 
@@ -29,7 +29,6 @@ export default class App extends Component {
 			orderLists:[],
 			current:[],
 			showModal: false,
-			showToggle: false,
 			isActive: 'default',
 			typeModal: 'checkout',
 			isLogin: false,
@@ -81,25 +80,15 @@ export default class App extends Component {
 				})
 			}
 		})
-		  db2.ref('/items').on('value', Snapshot => {
-	        let current_a = [];
-
+		db.child('items').on('value', Snapshot => {
+	        let current_ = []
 	        Snapshot.forEach( childSnapshot => {
 			  let data = childSnapshot.val();
-			  let key = childSnapshot.key;
-			  let current_ = data.bid.current;
-			  let catagory_ = data.catagory;
-			  let isActive_ = data.isActive;
-	          let obj = {
-	          	current  : current_,
-				itemId : key,
-				catagory: catagory_,
-				isActive: isActive_ 			
-	          }
-	          current_a.push(obj);
+	          let current = data.bid.current;
+	          current_.push(current);
 			})
-		    this.setState({current:current_a})
-		  })
+		    this.setState({current:current_})
+      	})
 	}
 
 	componentWillUnmount () {
@@ -132,20 +121,10 @@ export default class App extends Component {
 
 	//Timer Function
 
-	timeDiff = (timestamp) => {
-		let change = timestamp/1000;
-		return new Date(change * 1e3).toISOString().slice(-13, -5);
-	}
-
-	toggle = () => {
-		this.setState({ showToggle: true });
-	}
-	closetoggle = () => {
-		this.setState({ showToggle: false });
-	}
-	logout = () => {
-		this.setState({ showToggle: false });
-		logout()
+	timeDiff = (timestamp1, timestamp2) => {
+		let difference = timestamp1 - timestamp2;
+		let daysDifference = difference/1000;
+		return new Date(daysDifference * 1e3).toISOString().slice(-13, -5);
 	}
 
 	render() {
@@ -153,9 +132,9 @@ export default class App extends Component {
 			<div>
 				<section className={"warpper " + (this.state.showModal === true  && 'blur-for-modal')}>
 					{/* Navigator Bar */}
-					<Navigator toggle={this.toggle} triggler={this.handleOpenModal} isLogin={this.state.isLogin} filter={this.filter} />
+					<Navigator triggler={this.handleOpenModal} isLogin={this.state.isLogin} filter={this.filter} />
 					<Categories categories={this.state.categories} isActive={this.state.isActive} filter={this.filter} />
-					<Toggle logout={this.logout} closetoggle={this.closetoggle} showToggle={this.state.showToggle} />
+					
 					{/* Application Routes Zone */}
 						<div className="row">
 							<Route
@@ -169,13 +148,13 @@ export default class App extends Component {
 											exact
 											path="/"
 											render={props => (
-												<Sellingareas current={this.state.current} isActive={this.state.isActive} close={this.handleCloseModal} items={this.state.items} timeDiff={this.timeDiff} />
+												<SellingArea isActive={this.state.isActive} close={this.handleCloseModal} items={this.state.items} timeDiff={this.timeDiff} />
 											)}
 										/>
 										<Route
 											path="/item/:id"
 											render={props => (
-												<Item current={this.state.current} {...props} items={this.state.items} timeDiff={this.timeDiff} />
+												<Item {...props} items={this.state.items} timeDiff={this.timeDiff} />
 											)}
 										/>
 										<Route
@@ -191,9 +170,27 @@ export default class App extends Component {
 											)}
 										/>
 										<Route
-											path="/admin"
+											path="/admin1"
 											render={props => (
-												<Admin/>
+												<Admin1 isActive={this.state.isActive} filter={this.filter} />
+											)}
+										/>
+										<Route
+											path="/admin2"
+											render={props => (
+												<Admin2 isActive={this.state.isActive} filter={this.filter} />
+											)}
+										/>
+										<Route
+											path="/admin3"
+											render={props => (
+												<Admin1 isActive={this.state.isActive} filter={this.filter} />
+											)}
+										/>
+										<Route
+											path="/admin4"
+											render={props => (
+												<Admin2 isActive={this.state.isActive} filter={this.filter} />
 											)}
 										/>
 										<Route 
@@ -215,9 +212,11 @@ export default class App extends Component {
 					filter={this.filter}
 					isActive={this.state.isActive}
 					orderLists={this.state.orderLists}
-					current={this.state.current}
-					timeDiff={this.timeDiff}
 				/>
+
+				<div className="alert-bar-top">
+					<p className="green">Login Sucessfuly</p>
+				</div>
 			</div>
 		) 
 	}

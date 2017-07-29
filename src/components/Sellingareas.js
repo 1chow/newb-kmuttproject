@@ -33,7 +33,7 @@ export default class Sellingareas extends Component {
 	_renderProjects(items,isActive,currents) {
 		if(isActive !== 'default') {
 		var newitems = items.filter( item => {
-			return item.catagory === isActive
+			return item.catagory === isActive && item.isActive !== 0
 		})} else newitems = items
 		this.setState(
 			{
@@ -108,6 +108,5 @@ export default class Sellingareas extends Component {
 	}
 }
 
-//this.props.current[i].current
 
 Sellingareas.defaultProps = {dummyimage:'http://dummyimage.com/300x300/292929/e3e3e3&text=Your Mom Goes to College'}
