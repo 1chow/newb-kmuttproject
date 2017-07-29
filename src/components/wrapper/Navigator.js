@@ -32,7 +32,7 @@ class Header extends React.Component {
 				<div data-sticky-container>
 					<div className={"title-bar " + (this.state.scrollTop ? 'nav-fix' : null)} data-sticky data-options="marginTop:0;" style={{width:100+'%'}}>
 						<div className="row">
-							<NavLink  onClick={ () => this.props.filter("LE")} exact to="/">
+							<NavLink  onClick={ () => this.props.filter("default")} exact to="/">
 								<div className="title-bar-left nav-left">
 									<h1><i className="fa fa-gavel fa-1x"></i> AUCT</h1>
 									<div className="nav-toggle-btn"></div>
@@ -50,7 +50,7 @@ class Header extends React.Component {
 								{ this.props.isLogin === true ?
 								<button className="profile-botton" onClick={() => {logout()}}>
 									<span className="has-tip bottom" data-disable-hover="false">
-										<img src="http://via.placeholder.com/160x160/1779ba/ffffff?text=N" alt=""></img>
+										<img src="https://scontent.fbkk12-2.fna.fbcdn.net/v/t1.0-1/p160x160/10590625_870609506283335_1688425455264656623_n.jpg?oh=29b4ec66619473227bed4d94f03a55e4&oe=59A32BD3" alt=""></img>
 									</span>
 								</button> :
 								<button className="button success" onClick={() => this.props.triggler("login")}>

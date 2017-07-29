@@ -2,33 +2,42 @@ import React, { Component } from "react";
 import * as Animated from "animated/lib/targets/react-dom";
 import TransitionGroup from "react-transition-group/TransitionGroup";
 import { Link } from 'react-router-dom'
+import { firebaseAuth , db } from '../../helpers/firebase'
 
 export default class ModalChartWin extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			items: [],
-			animations: []
+			orderLists: [],
+			animations: [],
+			orderPrice:''
 		};
 	}
 	//For After First Render
 	componentDidMount() {
-		this._renderProjects(this.props.items);
+		this._renderProjects(this.props.orderLists);
+		let user = firebaseAuth().currentUser
+		if (user) {
+		db.child(`orders/${user.uid}/orderPrice`).once('value', dataSnapshot => {
+			let orderPrice = dataSnapshot.val();
+				this.setState({orderPrice:orderPrice})
+			})
+		}
 	}
-	
+
 	//For First Render
 	componentWillReceiveProps(nextProps) {
-		if (!this.props.items.length && nextProps.items.length) {
-			this._renderProjects(nextProps.items);
+		if (!this.props.orderLists.length && nextProps.orderLists.length) {
+			this._renderProjects(nextProps.orderLists);
 		}
 	}
 
 	// Animation Logic
-	_renderProjects(items) {
+	_renderProjects(orderLists) {
 		this.setState(
 			{
-				items: items,
-				animations: items.map((_, i) => new Animated.Value(0))
+				orderLists: orderLists,
+				animations: orderLists.map((_, i) => new Animated.Value(0))
 			},
 			() => {
 				Animated.stagger(
@@ -49,7 +58,7 @@ export default class ModalChartWin extends Component {
 			<div className="row">
 					<div className="small-12 large-6 columns post-feed win-list">
 						<TransitionGroup>
-								{this.state.items.map((p, i) => {
+								{this.state.orderLists.map((orderList, i) => {
 									const style = {
 										opacity: this.state.animations[i],
 										transform: Animated.template`
@@ -62,15 +71,14 @@ export default class ModalChartWin extends Component {
 									return (
 									<div key={i} className="small-12 columns post-list">
 										<Animated.div style={style}>
-											<Link onClick={this.props.close} to='/item/1'>
+											<Link onClick={this.props.close} to={'/item/'+orderList.itemId}>
 												<div className="post-list-l">
-													<img src="http://placehold.it/300x300" alt="" />
+													<img src={require("../../images/mockup.JPG")} alt=""></img>
 												</div>
 												<div className="post-list-r">
-													<h3>Lorem Ipsum</h3>
-													<p className="desc">350มล.</p>
-													<p className="time">asdfghjkloiuyt<span>00:00:00 01/01/01</span></p>
-													<p className="price">999<span className="curentcy">Bath</span></p>
+													<h3>{orderList.itemName}</h3>
+													<p className="time">{orderList.itemId}<span>{this.props.timeDiff(orderList.itemWinTime)}</span></p>
+													<p className="price">{orderList.itemPrice}<span className="curentcy">Bath</span></p>
 													<i className="fa fa-shopping-basket fa-2x"></i>
 												</div>
 											</Link>
@@ -86,12 +94,12 @@ export default class ModalChartWin extends Component {
 							<p className="desc">Payment Pending</p><br/>
 							<Link onClick={this.handleLinktoCheckOut} to="/checkout-info" className="button success">Checkout</Link>
 							<ul>
-								<li>Your Order 4 Item<span>999 THB</span></li>
+								<li>Your Order {this.state.orderLists.length} Item<span>{this.state.orderPrice} THB</span></li>
 								<li>Delivery Charge<span>39 THB</span></li>
 							</ul>
 							<hr/>
 							<ul>
-								<li className="price">Total<span>9,999 THB</span><p>(VAT incl.)</p></li>
+								<li className="price">Total<span>{this.state.orderPrice + 39} THB</span><p>(VAT incl.)</p></li>
 							</ul>
 						</div>
 						<div className="small-12 columns post-checkout" style={{background:'#fff'}}>

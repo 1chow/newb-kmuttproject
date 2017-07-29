@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 
 class Checkout extends Component {
+	componentDidMount() {
+		this.props.filter("CS")
+	}
     render() {
         return (
         <div className="row ">

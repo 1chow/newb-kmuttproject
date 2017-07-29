@@ -9,13 +9,14 @@ import Navigator from "../components/wrapper/Navigator"
 import Categories from '../components/Categories'
 import CheckOutinfo from '../components/Checkoutinfo'
 import CheckOut from '../components/Checkout'
-import SellingArea from "../components/Sellingarea"
+import Sellingareas from "../components/Sellingareas"
 import Item from "../components/Item"
 import FourZeroFour from "../components/FourZeroFour"
 import Modals from '../components/Mainmodal'
-import Admin from '../components/Admin'
 
-import { firebaseAuth } from '../helpers/firebase'
+import Admin from "../components/admin/Admin"
+
+import { firebaseAuth , db } from '../helpers/firebase'
 
 window.Perf = Perf;
 
@@ -24,31 +25,53 @@ export default class App extends Component {
 		super(props);
 		this.state = {
 			items: [],
+			categories:[],
+			orderLists:[],
+			current:[],
 			showModal: false,
-			isActive: 'LE',
+			isActive: 'default',
 			typeModal: 'checkout',
 			isLogin: false,
 			User: "Guest",
 		};
 	}
-
 	componentWillMount() {
-
 		fetch("https://us-central1-auctkmutt.cloudfunctions.net/getItems")
 			.then(response => {
 				return response.json();
 			})
 			.then(json => {
 				this.setState({
-					items: json.slice(0, 16)
+					items: json
 				});
 			});
 
-		this.removeListener = firebaseAuth().onAuthStateChanged((user) => {
+		fetch("https://us-central1-auctkmutt.cloudfunctions.net/getCatagories")
+			.then(response => {
+				return response.json();
+			})
+			.then(json => {
+				this.setState({
+					categories: json
+				});
+			});
+
+		this.removeListener = firebaseAuth().onAuthStateChanged( user => {
 			if (user) {
 				this.setState({
 					isLogin: true,
-					User: user.email
+					User: user.email,
+				})
+				db.child(`orders/${user.uid}/orderList`).on('value', dataSnapshot => {
+				let orderLists = [];
+					dataSnapshot.forEach( childSnapshot => {
+						let orderList = childSnapshot.val();
+						orderList['.key'] = orderList.key;
+						orderLists.push(orderList);
+					})
+					 this.setState({
+						orderLists: orderLists
+					})
 				})
 			} else {
 				this.setState({
@@ -57,6 +80,16 @@ export default class App extends Component {
 				})
 			}
 		})
+		db.child('items').on('value', Snapshot => {
+	        let current_ = []
+	        Snapshot.forEach( childSnapshot => {
+			  let data = childSnapshot.val();
+	          let current = data.bid.current;
+	          current_.push(current);
+			})
+		    this.setState({current:current_})
+		  })
+
 	}
 
 	componentWillUnmount () {
@@ -64,6 +97,7 @@ export default class App extends Component {
 	}
 
 	//Modal function
+
 	handleOpenModal = type => {
 		this.setState({ showModal: true });
 		this.setState({ typeModal: type });
@@ -80,13 +114,26 @@ export default class App extends Component {
 	changeType = type => {
 		this.setState({ typeModal: type });
 	}
+	getOrderLists = Obj => {
+		this.setState({ orderLists: Obj });
+	}
+
+
+
+	//Timer Function
+
+	timeDiff = (timestamp) => {
+		let change = timestamp/1000;
+		return new Date(change * 1e3).toISOString().slice(-13, -5);
+	}
+
 	render() {
 		return (
 			<div>
 				<section className={"warpper " + (this.state.showModal === true  && 'blur-for-modal')}>
 					{/* Navigator Bar */}
 					<Navigator triggler={this.handleOpenModal} isLogin={this.state.isLogin} filter={this.filter} />
-					<Categories isActive={this.state.isActive} filter={this.filter} />
+					<Categories categories={this.state.categories} isActive={this.state.isActive} filter={this.filter} />
 					
 					{/* Application Routes Zone */}
 						<div className="row">
@@ -101,25 +148,25 @@ export default class App extends Component {
 											exact
 											path="/"
 											render={props => (
-												<SellingArea close={this.handleCloseModal} items={this.state.items} />
+												<Sellingareas current={this.state.current} isActive={this.state.isActive} close={this.handleCloseModal} items={this.state.items} timeDiff={this.timeDiff} />
 											)}
 										/>
 										<Route
 											path="/item/:id"
 											render={props => (
-												<Item {...props} items={this.state.items} />
+												<Item current={this.state.current} {...props} items={this.state.items} timeDiff={this.timeDiff} />
 											)}
 										/>
 										<Route
 											path="/checkout-info"
 											render={props => (
-												<CheckOutinfo/>
+												<CheckOutinfo filter={this.filter}/>
 											)}
 										/>
 										<Route
 											path="/checkout"
 											render={props => (
-												<CheckOut/>
+												<CheckOut filter={this.filter}/>
 											)}
 										/>
 										<Route
@@ -145,6 +192,10 @@ export default class App extends Component {
 					type={this.state.typeModal}
 					changeType={this.changeType}
 					filter={this.filter}
+					isActive={this.state.isActive}
+					orderLists={this.state.orderLists}
+					current={this.state.current}
+					timeDiff={this.timeDiff}
 				/>
 
 				<div className="alert-bar-top">

@@ -10,7 +10,6 @@ admin.initializeApp(functions.config().firebase);
 
 
 const db = admin.database();
-
 const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 
 ////// mockup Service //////
@@ -27,7 +26,8 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 			db.ref('/catagories').push({
 				  	name: nameCat[i],
 				  	icon: iconCat[i],
-				})				
+				})
+
 			.then(snapshot => {
 			});
 
@@ -65,7 +65,7 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 						
 						db.ref('/time').once("value" ,function(Csnapshot) {
 							var fkTime = Csnapshot.val();
-							var fk = fkTime.timeNow + ((3) * 60 * 1000)
+							var fk = fkTime.timeNow + ((7) * 60 * 1000)
 							db.ref('/items/' + snapshot.key + '/bid').update({
 								endTime: fk
 							})
@@ -191,6 +191,7 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 
 	//https://us-central1-auctkmutt.cloudfunctions.net/getCurrentPrice?itemId=XXXXXXX >> specific Items
 	exports.getCurrent = functions.https.onRequest((req, res) => {
+		res.set('Cache-Control', 'public, max-age=0, s-maxage=0');
 		res.set('Access-Control-Allow-Origin', '*');
 		const itemKey = req.query.itemId;
 
@@ -236,7 +237,7 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 
 	  	if(itemKey != null){
 
-		  		 	db.ref('/items/'+ itemKey '/bid' ).update({
+		  		 	db.ref('/items/'+ itemKey +'/bid' ).update({
 		  		 		endTime  :  end_,
 		  		 	})
 				 res.status(200);
@@ -250,6 +251,9 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 
 	//https://us-central1-auctkmutt.cloudfunctions.net/bidOrder?itemId=-KpnlbR3SbEGDnNqzDI7&bid=999&uId=jByPD6RZW2UUgTx7M305k2BrSrr2
 	exports.bidOrder = functions.https.onRequest((req, res) => {
+
+		res.set('Cache-Control', 'public, max-age=0, s-maxage=0');
+		res.set('Access-Control-Allow-Origin', '*');
 
 		var itemKey = req.query.itemId;
 		var newBid 	= parseInt(req.query.bid);
@@ -274,15 +278,19 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 					});
 
 					var mfk = bidLast[0];//bidLastWin
+					console.log('mfk ' + mfk.bid);
 
 					db.ref('/items/'+ itemKey).update({
 		  		 		  timeNow :  timeCurrent,
 		  		 		}).then(timeSnapshot => {
 		  		 		var tOut_ = bidEndTime - data.timeNow;
+		  		 		console.log('checkBid ' + tOut_);
 		  		 		//var tOut = 0;
 	  		 			var checkBid = newBid - mfk.bid;
+	  		 			console.log('checkBid ' + checkBid);
 	  		 			var bouded_ = parseInt(data.bouded) * 1000
 	  		 			var expandTime = (data.timeNow) + (bouded_); //boudded
+	  		 			console.log('expandTime ' + expandTime);
 	  		 			var message = [];
 		  		 		if ( checkBid > 0 && active != 0 && tOut_ > 1000 ){
 			  				db.ref('/items/'+ itemKey + '/bidList').push({
@@ -293,14 +301,9 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 			  				db.ref('/items/'+ itemKey + '/bid').update({
 			  					current : newBid ,
 			  				})
-			  				if (tOut_ < bouded_) {
-			  					db.ref('/items/'+ itemKey + '/bid').update({
-			  						endTime : expandTime ,
-			  					})
-			  				}
-			  				message.push('200,wellDone')
+			  				message.push(200)
 			  			} else {
-			  				message.push('403,Forbidden')
+			  				message.push(403)
 			  			}
 			  			res.status(200).send(message);
 	 				})
@@ -308,7 +311,7 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 	
 			})
 	  	} else {
-	  		res.status(200).send(['404,Not Found']);
+	  		res.status(200).send([404]);
 	  	}
 	});
 
@@ -318,7 +321,7 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 	//https://us-central1-auctkmutt.cloudfunctions.net/addMockup
 	exports.getCatagories = functions.https.onRequest((req, res) => {
 
-		res.set('Cache-Control', 'public, max-age=60, s-maxage=180');
+		res.set('Cache-Control', 'public, max-age=0, s-maxage=0');
 		res.set('Access-Control-Allow-Origin', '*');
 
 	  	db.ref('/catagories').once('value', function(snapshot) {
@@ -334,32 +337,6 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 	});
 
 /////// users Service //////
-
-	//on Create Account
-	exports.onCreateAccount = functions.auth.user().onCreate(event => {
-
-		const user = event.data;
-		const email_ = (user.email).toLowerCase();
-
-			db.ref('/users/' + user.uid ).update({
-				info :{
-					email : email_,
-					photoUrl : 'default',//create thumbnail
-					role : 'member',// member & admin
-					address : '',
-					tel : ''
-				},
-				cart :['-Kpg7gBzgMTIfS5IjmO-','-Kpg7gBwbPyzf036qhk'],//itemID 
-			})
-			.then(snapshot => {
-					db.ref('/users/' + user.uid + '/history').push({
-						OrderId : '',
-						OrderAmount: '',
-						OrderCreateDate: timeCurrent,
-						OrderTitle: '',
-				});
-		  	});		
-	});
 
 	//https://us-central1-auctkmutt.cloudfunctions.net/getAccount
 	//https://us-central1-auctkmutt.cloudfunctions.net/getAccount?userId=xxxxxxxx
@@ -419,19 +396,6 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 
 ////// Order Service ///////
 
-	//on Create Order
-	exports.onCreateOrder = functions.database.ref('/orders/{ordersId}')    
-   	 .onCreate( event => {
-
-   	 	const order = event.data.val();
-   	 	const eParam = event.params.ordersId;	 	 
-
-		db.ref('/orders/'+ eParam ).update({
-			orderCreateDate: timeCurrent,
-		});
-	});
-
-
 	//https://us-central1-auctkmutt.cloudfunctions.net/addMockup
 	exports.createOrder = functions.https.onRequest((req, res) => {
 
@@ -486,25 +450,46 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 				bidLast.push(duck);
 			});
 
-			var totalPrice = 0;
+			db.ref('/items/' + itemKey ).once('value',function(snap){
 
-			var mfk = bidLast[0];//bidLastWin
-			var userId = mfk.userId;
-			var data = {orderPrice : ''};
-			data.orderPrice
+				var data_ = snap.val();
+				var totalPrice = 0;
 
-			db.ref('/orders/' + userId ).once('value', function(childSnapshot) {
+				var mfk = bidLast[0];//bidLastWin
+				var userId = mfk.userId;
 
-				var data = childSnapshot.val();
-				var totalPrice = 39 + parseInt( mfk.bid + data.orderPrice );
+				db.ref('/orders/' + userId ).once('value', function(childSnapshot) {
 
-			  	db.ref('/orders/' + userId ).push({
-			  		orderPrice: totalPrice,// sumPrice
-			  		itemId : event.params.Itemid,
-			  		item
-				})
+					var data = childSnapshot.val();
+					console.log(data)
+					
+					if (data !== null) {
+						var price_ = data.orderPrice;
+						var totalPrice = parseInt( mfk.bid + price_ );
+						var count_ = parseInt( data.orderCount ) + 1;
+					} else {
+						var totalPrice = parseInt( mfk.bid );
+						var count_ = 1;
+					}
 
-			})//ref order by uid data
+				  	db.ref('/orders/' + userId ).update({
+				  		orderPrice: totalPrice,// sumPrice
+				  		orderCount : count_,
+
+					})
+
+					db.ref('/orders/' + userId + '/orderList').push({
+		  				itemId : event.params.Itemid,
+		  				itemName : data_.name,
+		  				itemWinTime : mfk.bidTimestamp,
+		  				itemPrice : data_.bid.current,
+		  				itemPic : data_.img
+					})
+
+				})//ref order by uid data
+
+
+			})//ref item win
 		    
 		});// ref current by item win
 

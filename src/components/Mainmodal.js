@@ -11,11 +11,15 @@ const Modals = props => {
 					close={props.close} 
 					items={props.items} 
 					filter={props.filter} 
+					isActive={props.isActive}
+					orderLists={props.orderLists}
+					current={props.current}
+					timeDiff={props.timeDiff}
 					/>
 					: 
 					<ModalLoginSignUp 
 						type={props.type} 
-						changeType={props.changeType} 
+						changeType={props.changeType}
 						close={props.close} 
 					/>
 				}
