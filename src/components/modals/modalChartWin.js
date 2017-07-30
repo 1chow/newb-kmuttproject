@@ -4,6 +4,7 @@ import TransitionGroup from "react-transition-group/TransitionGroup";
 import { Link } from 'react-router-dom'
 import { firebaseAuth , db } from '../../helpers/firebase'
 
+
 export default class ModalChartWin extends Component {
 	constructor(props) {
 		super(props);

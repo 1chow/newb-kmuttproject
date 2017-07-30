@@ -15,9 +15,10 @@ class bidForm extends Component {
 
     Validation = (oldItem,itemId,current,open,endTime,life,validatecurrent) => {
 		var user = firebaseAuth().currentUser
+		console.log(user)
 		if (user) {
-			let email = user.email
-			let postBid = "https://us-central1-auctkmutt.cloudfunctions.net/bidOrder?itemId="+itemId+"&bid="+current+"&uId="+email
+			let userID = user.uid
+			let postBid = "https://us-central1-auctkmutt.cloudfunctions.net/bidOrder?itemId="+itemId+"&bid="+current+"&uId="+userID
 
 			var myInit =  { method: 'GET',
                 mode: 'no-cors',

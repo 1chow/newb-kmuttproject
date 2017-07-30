@@ -292,24 +292,31 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 					db.ref('/items/'+ itemKey).update({
 		  		 		  timeNow :  timeCurrent,
 		  		 		}).then(timeSnapshot => {
+
 		  		 		var tOut_ = bidEndTime - data.timeNow;
-		  		 		console.log('checkBid ' + tOut_);
 		  		 		//var tOut = 0;
 	  		 			var checkBid = newBid - mfk.bid;
-	  		 			console.log('checkBid ' + checkBid);
 	  		 			var bouded_ = parseInt(data.bouded) * 1000
 	  		 			var expandTime = (data.timeNow) + (bouded_); //boudded
-	  		 			console.log('expandTime ' + expandTime);
 	  		 			var message = [];
 		  		 		if ( checkBid > 0 && active != 0 && tOut_ > 1000 ){
+
+		  		 		db.ref('/users/' + uid ).once('value', function(userSnapshot) {
+		  		 		
+						var _data = userSnapshot.val();
+						var _info = _data.info;
+
 			  				db.ref('/items/'+ itemKey + '/bidList').push({
 			  					bid : newBid,
 			  					bidTimestamp : data.timeNow,
-			  					userId : uid
+			  					userId : uid,
+			  					userName : _info.displayName
 			  				})
 			  				db.ref('/items/'+ itemKey + '/bid').update({
-			  					current : newBid ,
+			  					current : newBid,
+			  					userName : _info.displayName
 			  				})
+			  			})
 			  				message.push(200)
 			  			} else {
 			  				message.push(403)
@@ -474,7 +481,6 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 				db.ref('/orders/' + userId ).once('value', function(childSnapshot) {
 
 					var data = childSnapshot.val();
-					console.log(data)
 					
 					if (data !== null) {
 						var price_ = data.orderPrice;
@@ -487,8 +493,7 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 
 				  	db.ref('/orders/' + userId ).update({
 				  		orderPrice: totalPrice,// sumPrice
-				  		orderCount : count_,
-
+				  		orderCount : count_
 					})
 
 					db.ref('/orders/' + userId + '/orderList').push({

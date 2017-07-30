@@ -34,6 +34,7 @@ export default class App extends Component {
 			typeModal: 'checkout',
 			isLogin: false,
 			User: "Guest",
+			userUID: '',
 		};
 	}
 	componentWillMount() {
@@ -62,6 +63,7 @@ export default class App extends Component {
 				this.setState({
 					isLogin: true,
 					User: user.email,
+					userUID: user.uid
 				})
 				db.child(`orders/${user.uid}/orderList`).on('value', dataSnapshot => {
 				let orderLists = [];
@@ -77,7 +79,8 @@ export default class App extends Component {
 			} else {
 				this.setState({
 					isLogin: false,
-					User: "Guest"
+					User: "Guest",
+					userUID:''
 				})
 			}
 		})
@@ -187,7 +190,7 @@ export default class App extends Component {
 										<Route
 											path="/checkout"
 											render={props => (
-												<CheckOut filter={this.filter}/>
+												<CheckOut userUID={this.state.userUID} filter={this.filter}/>
 											)}
 										/>
 										<Route
