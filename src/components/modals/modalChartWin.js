@@ -92,7 +92,7 @@ export default class ModalChartWin extends Component {
 						<div className="small-12 columns post-checkout">
 							<h3>Your Order</h3>
 							<p className="desc">Payment Pending</p><br/>
-							<Link onClick={this.handleLinktoCheckOut} to="/checkout-info" className="button success">Checkout</Link>
+							<Link onClick={this.handleLinktoCheckOut} to="/checkout" className="button success">Checkout</Link>
 							<ul>
 								<li>Your Order {this.state.orderLists.length} Item<span>{this.state.orderPrice} THB</span></li>
 								<li>Delivery Charge<span>39 THB</span></li>

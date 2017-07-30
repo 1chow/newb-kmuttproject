@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import * as firebase from 'firebase'
 
 
@@ -56,7 +55,6 @@ class CategoriesL extends Component {
   }
 
   render() {
-    var _this = this;
     return (
       <div className="row">
           <div className="row auct-from-warp admin-table">

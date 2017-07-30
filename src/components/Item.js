@@ -85,7 +85,7 @@ export default class Item extends Component {
 					<div className="small-12 medium-5 large-7 columns auct-l-container">
 						<div className="item-warper">
 							<div className="item">
-								<img src={this.props.dummyimage} alt=""></img>
+								<img src={require("../images/mockup.JPG")} alt=""/>
 							</div>
 						</div>
 				</div>
@@ -133,4 +133,3 @@ export default class Item extends Component {
 	}
 }
 
-Item.defaultProps = {dummyimage:'http://lorempixel.com/700/600/'}

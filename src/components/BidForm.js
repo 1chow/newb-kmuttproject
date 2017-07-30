@@ -16,18 +16,25 @@ class bidForm extends Component {
     Validation = (oldItem,itemId,current,open,endTime,life,validatecurrent) => {
 		var user = firebaseAuth().currentUser
 		if (user) {
-			let uid = user.uid
-			let postBid = "http://us-central1-auctkmutt.cloudfunctions.net/bidOrder?itemId="+itemId+"&bid="+current+"&uId="+uid
+			let email = user.email
+			let postBid = "https://us-central1-auctkmutt.cloudfunctions.net/bidOrder?itemId="+itemId+"&bid="+current+"&uId="+email
+
+			var myInit =  { method: 'GET',
+                mode: 'no-cors',
+                headers: new Headers(
+                   {"Content-Type": "*"}
+                ),
+             }
 			if (life === 1){ //fininsh gate1 : Item expired
 				if (oldItem._id === itemId){ //fininsh gate2 : Item is Equal
 					if(validatecurrent < current){ //fininsh gate3 : Check Over Old Cost?
-							fetch(postBid, { mode: 'no-cors'})
+							fetch(postBid, myInit)
 								.then( res => res && open('good','Congrat! You win in this round'))
-								.catch( err => err && open('bad','err'))
+								.catch( err => err && open('bad','Unfortunately Bad Request'))
 					} else open('bad','Make sure you bid enough')
 				} else open('bad','Its a bad path pls refresh')
 			} else open('bad','Item expired')
-		} 
+		} else open('bad','Please LogIn')
 	}
 
 	handleSubmit = (e) => {

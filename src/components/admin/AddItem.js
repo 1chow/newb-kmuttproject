@@ -6,7 +6,7 @@ import ItemL from './ItemL'
 class Category extends Component {
   render(){
     return (
-      <option value={this.props.dbkey}>{this.props.text}</option>
+      <option value={this.props.name}>{this.props.name}</option>
     );
   }
 }
@@ -16,22 +16,12 @@ class Edit extends Component {
   constructor () {
     super();
     this.state = {
-      newitemtext : '', 
-      prize : '', 
-      desc : '', 
-      timetoauct : '', 
-      status: '', 
-      auctround: '', 
-      categories: [], 
-      categoriestype: null,
-      User: '',
-      ReserveBid:'',
-      avatar: '',
-      isUploading: false,
-      progress: 0,
-      avatarURL: '',
-      reserveTime:''
-
+      User:'',
+      productname : '',
+      catagoriesselect:'', 
+      desc: '',
+      catagories:[],
+      Error: null 
     }
   }
 
@@ -39,62 +29,72 @@ class Edit extends Component {
      let user = firebase.auth().currentUser;
         if (user) {
         this.setState({
-        User: user.email
+        User: user.uid
         })}
-    firebase.database().ref().child('items').on('value', dataSnapshot => {
-      let categories = [];
+    firebase.database().ref().child('catagories').on('value', dataSnapshot => {
+      let catagories = [];
       dataSnapshot.forEach( childSnapshot => {
         let category = childSnapshot.val();
         category['.key'] = childSnapshot.key;
-        categories.push(category);
+        catagories.push(category);
       })
       this.setState({
-        categories: categories
+        catagories: catagories
       })
     })
   }
 
   componentWillUnmount() {
-    firebase.database().ref().child('category').off();
+    firebase.database().ref().child('catagories').off();
   }
 
   
   handleNewItemSubmit = (e) => {
-    this.dbItems = firebase.database().ref().child('items');
-    this.categoryRef = firebase.database().ref().child('category');
     e.preventDefault();
-    if (this.state.newitemtext && this.state.newitemtext.trim().length !== 0) {
+    this.dbItems = firebase.database().ref().child('items');
+    if (this.state.productname && this.state.productname.trim().length !== 0 && this.state.desc.trim().length && this.state.catagoriesselect) {
       this.dbItems.push({
-        text: this.state.newitemtext,
-        prize : this.state.prize,
-        desc : this.state.desc,
-        startauct : new Date().getTime(),
-        timetoauct : this.state.timetoauct,
-        status: 1,
-        auctround: 1,
-        categories: this.state.categoriestype,
-        User: this.state.User,
-        Winner:'',
-        ReserveBid: 0,
-        ReserveUser:'',
-        avatarURL: this.state.avatarURL,
-        reserveTime: this.state.reserveTime
+        name: this.state.productname,
+        category: this.state.catagoriesselect,
+        isActive: 1,
+        desc:{
+              short:this.state.desc,
+              fullHeader:'Consectetur adipisicing elit. Est sed.',
+              fullDesc :'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo'
+        },
+        bid:{
+            current : '30',
+            endTime: '1501448590662',
+            open: 5,
+            startTime: new Date().getTime(),
+            step: 30,
+        },
+        img:['a', 'b', 'c'],
+        bouded : 15,
+        own : this.state.User,
+        timenow: new Date().getTime(),
       })
+      .then(snapshot => {
+            firebase.database().ref('/items/' + snapshot.key + '/bidList').push({
+              userId : '',
+              bid : 30,
+              bidTimestamp : new Date().getTime()
+            });
+            
+            firebase.database().ref('/time').once("value" ,function(Csnapshot) {
+              var fkTime = Csnapshot.val();
+              var fk = fkTime.timeNow + ((7) * 60 * 1000)
+              firebase.database().ref('/items/' + snapshot.key + '/bid').update({
+                endTime: fk
+              })
+            });
+        });
       this.setState({
-        newitemtext: '',
-        prize : '',
-        desc : '',
-        timetoauct : '',
-        status: '',
-        auctround: '',
-        ReserveBid:'',
-        ReserveUser:'',
-        avatarURL: '',
-        avatar: '',
-        isUploading: false,
-        progress: 0,
+        productname: '',
+        catagoriesselect:'',
+        desc: '',
       })
-    }
+    } else this.setState({Error: 'Please filled a valid form' })
   }
 
   onNewItemChange = (e) => {
@@ -124,11 +124,20 @@ class Edit extends Component {
               <div className="hr-text-center"><hr/></div>
             </div>
           <div className="small-12 columns profile-main">
+            { this.state.Error &&
+              <div className="small-12 columns">
+              <div className="small-12 columns">
+                <div className="alert callout">
+                  <p><i className="fi-alert"></i>{this.state.Error}</p>
+                </div>
+              </div>
+              </div>
+            }
             <form data-abide noValidate onSubmit={ this.handleNewItemSubmit } >
              <div className="small-12 medium-6 columns">
                 <div className="small-12 columns">
                   <label>Product Name
-                    <input type="text" placeholder="Product Name" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={ this.onNewItemChange } value={ this.state.newitemtext } name="newitemtext"/>
+                    <input type="text" placeholder="Product Name" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={ this.onNewItemChange } value={ this.state.productname } name="productname"/>
                     <span className="form-error">Yo, Product name required!!</span>
                   </label>
                 </div>
@@ -143,13 +152,13 @@ class Edit extends Component {
                   <label>First Bit
                     <div className="input-group">
                       <span className="input-group-label">$</span>
-                      <input className="input-group-field" id="exampleNumberInput" type="number" required pattern="number" onChange={ this.onNewItemChange } value={ this.state.prize } name="prize"/>
+                      <input className="input-group-field" id="exampleNumberInput" type="number" onChange={ this.onNewItemChange } value={ this.state.prize } name="prize"/>
                     </div>
                   </label>
                   <span className="form-error" data-form-error-for="exampleNumberInput">Amount is required.</span>
                 </div>
                 <div className="small-12 medium-6 columns">
-                  <label>Reserve time
+                  <label>Bounded Time
                     <div className="input-group">
                       <span className="input-group-label">$</span>
                       <input className="input-group-field" id="exampleNumberInput" type="number" required pattern="number" onChange={ this.onNewItemChange } value={ this.state.reserveTime } name="reserveTime"/>
@@ -158,14 +167,14 @@ class Edit extends Component {
                   <span className="form-error" data-form-error-for="exampleNumberInput">Amount is required.</span>
                 </div>
                 <div className="small-12 medium-6 columns">
-                  <label>Time Bit
-                    <input type="text" placeholder="Product Name" aria-describedby="help-signup" required pattern="text" onChange={ this.onNewItemChange } value={ this.state.timetoauct } name="timetoauct"/>
+                  <label>Time Start
+                    <input type="text" placeholder="Timestamp" aria-describedby="help-signup" required pattern="text" onChange={ this.onNewItemChange } value={ this.state.timetoauct } name="timetoauct"/>
                     <span className="form-error">Yo, Product name required!!</span>
                   </label>
                 </div>
                 <div className="small-12 medium-6 columns">
                   <label>Time End
-                    <input type="text" placeholder="Product Name" aria-describedby="help-signup" required pattern="text" onChange={ this.onNewItemChange } value={ this.state.timetoauct } name="timetoauct"/>
+                    <input type="text" placeholder="Timestamp" aria-describedby="help-signup" required pattern="text" onChange={ this.onNewItemChange } value={ this.state.timetoauct } name="timetoauct"/>
                     <span className="form-error">Yo, Product name required!!</span>
                   </label>
                 </div>
@@ -199,9 +208,9 @@ class Edit extends Component {
                 <div className="small-12 columns">
                     <label>Catagory
                       <select id="select" required onChange={ this.onNewItemChange } 
-                        value={ this.state.categoriestype || "" } name="categoriestype">
-                        <option value=''></option>
-                        {this.state.categories.map((category) => {
+                        value={ this.state.catagoriesselect || "" } name="catagoriesselect">
+                        <option value=''>Plese Select Category</option>
+                        {this.state.catagories.map((category) => {
                             return ( 
                             <Category  key={ category['.key'] } dbkey={ category['.key'] }  {...category} />
                             );

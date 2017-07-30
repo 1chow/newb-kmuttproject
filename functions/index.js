@@ -12,6 +12,8 @@ admin.initializeApp(functions.config().firebase);
 const db = admin.database();
 const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 
+
+
 ////// mockup Service //////
 
 	//https://us-central1-auctkmutt.cloudfunctions.net/addMockups >> add Item & catagories
@@ -111,7 +113,8 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 	exports.getItems = functions.https.onRequest((req, res) => {
 
 	  //res.set('Cache-Control', 'public, max-age=60, s-maxage=180');
-	  res.set('Access-Control-Allow-Origin', '*');
+	 res.header("Access-Control-Allow-Origin", "*");
+	 res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
 	  const itemKey = req.query.itemId;
 
@@ -193,6 +196,8 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 	exports.getCurrent = functions.https.onRequest((req, res) => {
 		res.set('Cache-Control', 'public, max-age=0, s-maxage=0');
 		res.set('Access-Control-Allow-Origin', '*');
+		res.header("Access-Control-Allow-Origin", "*");
+	  	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		const itemKey = req.query.itemId;
 
 	  	if(itemKey != null){
@@ -231,6 +236,8 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 	//https://us-central1-auctkmutt.cloudfunctions.net/postEndTime?itemId=XXXXXXX&endAt=XXXXXXXX >> specific Items
 	exports.postEndTime = functions.https.onRequest((req, res) => {
 		res.set('Access-Control-Allow-Origin', '*');
+		res.header("Access-Control-Allow-Origin", "*");
+	  	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
 		const end_ = req.query.endAt;
 		const itemKey = req.query.itemId;
@@ -254,6 +261,8 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 
 		res.set('Cache-Control', 'public, max-age=0, s-maxage=0');
 		res.set('Access-Control-Allow-Origin', '*');
+		res.header("Access-Control-Allow-Origin", "*");
+	  	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
 		var itemKey = req.query.itemId;
 		var newBid 	= parseInt(req.query.bid);
@@ -323,6 +332,8 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 
 		res.set('Cache-Control', 'public, max-age=0, s-maxage=0');
 		res.set('Access-Control-Allow-Origin', '*');
+		res.header("Access-Control-Allow-Origin", "*");
+	  	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
 	  	db.ref('/catagories').once('value', function(snapshot) {
 		    const arrays = [];
@@ -344,6 +355,8 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 
 		res.set('Cache-Control', 'public, max-age=60, s-maxage=180');
 		res.set('Access-Control-Allow-Origin', '*');
+		res.header("Access-Control-Allow-Origin", "*");
+	  	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
 		const userKey = req.query.userId;
 
@@ -502,6 +515,8 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 
 	  res.set('Cache-Control', 'public, max-age=60, s-maxage=180');
 	  res.set('Access-Control-Allow-Origin', '*');
+	  res.header("Access-Control-Allow-Origin", "*");
+	  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
 	  const ordersKey = req.query.ordersId;
 

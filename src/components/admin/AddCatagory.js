@@ -8,22 +8,24 @@ class AddCatagoriy extends Component {
   state = {
       newitemtext : '', 
       icon: '',
+      Error: null 
   }
 
   handleNewItemSubmit = (e) => {
     e.preventDefault();
-    if (this.state.newitemtext && this.state.newitemtext.trim().length !== 0) {
-      firebase.database().ref().child('catagories').push({
-        name: this.state.newitemtext,
-        allitem: 0,
-        avaliableitem: 0,
-        remainitem: 0,
-        icon: this.state.icon,
-      })
-      this.setState({
-        newitemtext: '',
-      })
-    }
+    this.setState({registerError: null })
+      if (this.state.newitemtext && this.state.newitemtext.trim().length !== 0) {
+            if (this.state.icon && this.state.icon.trim().length !== 0){
+               firebase.database().ref().child('catagories').push({
+                name: this.state.newitemtext,
+                allitem: 0,
+                avaliableitem: 0,
+                remainitem: 0,
+                icon: this.state.icon,
+            })} else this.setState({Error: 'Please select icon' })
+      } else this.setState({Error: 'Please enter a valid category name' })
+    this.setState({  newitemtext: '',  })
+    this.setState({  icon: '',  })
   }
 
   onNewItemChange = (e) => {
@@ -34,12 +36,19 @@ class AddCatagoriy extends Component {
     return (
 
         <div className="row">
-            <div className="small-12 columns profile-main">
+            <div className="small-12 columns">
                 <h1>Catagories</h1>
                 <p>for Product</p>
                 <div className="hr-text-center"><hr/></div>
             </div>
             <div className="small-12 large-6 columns">
+               { this.state.Error &&
+                  <div className="small-12 columns">
+                    <div className="alert callout">
+                      <p><i className="fi-alert"></i>{this.state.Error}</p>
+                    </div>
+                  </div>
+                }
               <form  onSubmit={ this.handleNewItemSubmit }>
                 <div className="small-9 columns">
                     <label>Catagory Name
@@ -48,7 +57,7 @@ class AddCatagoriy extends Component {
                 </div>
                 <div className="small-3 columns">
                   <label>Icon
-                    <select id="select" className="icon-font" required onChange={ this.onNewItemChange } value={ this.state.icon } name="icon" >
+                    <select id="select" className="icon-font" onChange={ this.onNewItemChange } value={ this.state.icon } name="icon" >
                         <option value=''></option>
                         <option value="fa-home">&#xf015;</option>
                         <option value="fa-plug">&#xf1e6;</option>

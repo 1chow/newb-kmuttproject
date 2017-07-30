@@ -133,7 +133,7 @@ export default class App extends Component {
 	//Timer Function
 
 	timeDiff = (timestamp) => {
-		let change = timestamp/1000;
+		let change = (timestamp/1000)+(60*60*7);
 		return new Date(change * 1e3).toISOString().slice(-13, -5);
 	}
 
@@ -178,12 +178,12 @@ export default class App extends Component {
 												<Item current={this.state.current} {...props} items={this.state.items} timeDiff={this.timeDiff} />
 											)}
 										/>
-										<Route
+										{/*<Route
 											path="/checkout-info"
 											render={props => (
 												<CheckOutinfo filter={this.filter}/>
 											)}
-										/>
+										/>*/}
 										<Route
 											path="/checkout"
 											render={props => (

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import * as firebase from 'firebase'
 
 
@@ -8,7 +7,7 @@ class CategoryL extends Component {
     return (
         
           <tr>
-              <td><i className={"fa " + this.props.icon + "fa-2x" }></i></td>
+              <td><i className={"fa " + this.props.icon + " fa-2x" }></i></td>
               <td>{this.props.name}</td>
               <td><button onClick={()=> this.props.hell(this.props.dbkey)} ><i className="fa fa-trash"></i></button></td>
           </tr>
@@ -51,7 +50,6 @@ class CategoriesL extends Component {
   }
 
   render() {
-    var _this = this;
     return (
       <div className="row">
           <div className="row auct-from-warp admin-table">

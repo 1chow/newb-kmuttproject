@@ -1,12 +1,18 @@
 import React, { Component } from 'react'
-import { Link , withRouter } from "react-router-dom";
-
 
 import AddCatagory from './AddCatagory'
 import AddItem from './AddItem'
+import Setting from './Setting'
 
 
 export default class Admin extends Component {
+	state = {
+		select:'setting'
+	}
+
+	selected = what => {
+		this.setState({select:what})
+	}
 
 
 	render() {
@@ -17,16 +23,22 @@ export default class Admin extends Component {
 	        <div className="small-2 large-2 admin-l columns">
 		        <div className="home-cat setting-cat">
 		        	 <ul>
-	                    <li className="active">
-	                        <button onClick={ () => this.props.filter("YD")}>
-	                            <i className="fa fa-bookmark"> </i>
-	                            <p className={(this.props.isActive === "YD"  ? 'show-for-medium' : 'show-for-large')}> Add Catagories</p>
+		        	     <li className={(this.state.select === "setting"  && 'active')}>
+	                        <button onClick={ () => this.selected("setting")}>
+	                            <i className="fa fa-user"></i>
+	                            <p className='show-for-large'> Setting</p>
 	                        </button>
 	                    </li>
-	                    <li className={(this.props.isActive === "YD"  && 'active')}>
-	                        <button onClick={ () => this.props.filter("YD")}>
+	                    <li className={(this.state.select === "category"  && 'active')}>
+	                        <button onClick={ () => this.selected("category")}>
+	                            <i className="fa fa-bookmark"> </i>
+	                            <p className='show-for-large'> Add Catagories</p>
+	                        </button>
+	                    </li>
+	                    <li className={(this.state.select === "item"  && 'active')}>
+	                        <button onClick={ () => this.selected("item")}>
 	                            <i className="fa fa-suitcase"></i>
-	                            <p className={(this.props.isActive === "YD"  ? 'show-for-medium' : 'show-for-large')}> Add Item</p>
+	                            <p className='show-for-large'> Add Item</p>
 	                        </button>
 	                    </li>
 	                 </ul>
@@ -37,8 +49,10 @@ export default class Admin extends Component {
 	        	
 		        <div className="small-12 columns profile-main">
 		            <div className="small-12 columns">
-		            	{/*<AddCatagory/>*/}
-		            	<AddItem/>
+		            	{ this.state.select === 'category' ?
+			            	<AddCatagory />
+			            	: this.state.select === 'item' ? <AddItem /> : <Setting />
+		            	}
 		            </div>            
 		        </div>
 

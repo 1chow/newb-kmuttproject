@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { logout } from '../helpers/firebase'
 
 const Toggle = props => (
@@ -8,21 +9,20 @@ const Toggle = props => (
                         <button onClick={props.closetoggle} className="close">
                             <i className="fa fa-close fa-2x" aria-hidden="true"></i>
                         </button>	
-                        <button className="button">
-                            <i className="fa fa-address-card-o fa-2x" aria-hidden="true"></i>
-                            <p>lorem</p>
-                        </button>		
-
-                        <button className="button">
-                            <i className="fa fa-address-card-o fa-2x" aria-hidden="true"></i>
-                            <p>lorem</p>
-                        </button>		
-                        <button className="button">
-                            <i className="fa fa-address-card-o fa-2x" aria-hidden="true"></i>
-                            <p>lorem</p>
-                        </button>		
-                        <button onClick={() => {logout()}} className="button">
-                            <i className="fa fa-address-card-o fa-2x" aria-hidden="true"></i>
+                        <Link onClick={props.closetoggle} to='/' className="button">
+                            <i className="fa fa-gavel fa-2x" aria-hidden="true"></i>
+                            <p>Now Auct.</p>
+                        </Link> 				
+                        <Link onClick={props.closetoggle} to='/admin' className="button">
+                            <i className="fa fa-cogs fa-2x" aria-hidden="true"></i>
+                            <p>Setting</p>
+                        </Link>	
+                        {/* <Link onClick={props.closetoggle} to='/admin' className="button">
+                            <i className="fa fa-cogs fa-2x" aria-hidden="true"></i>
+                            <p>Admin</p>
+                        </Link> */}	
+                        <button onClick={() => {logout(),props.closetoggle()}} className="button">
+                            <i className="fa fa-sign-out fa-2x" aria-hidden="true"></i>
                             <p>Log Out</p>
                         </button>		
                     </div>

@@ -86,7 +86,7 @@ export default class Sellingareas extends Component {
 							<Animated.div style={style}>
 								<Link onClick={this.handleClose} to={'/item/'+ item._id}>
 									<div className="post-box-top">
-										<img src={this.props.dummyimage} alt=""/>
+										<img src={require("../images/mockup.JPG")} alt=""/>
 									</div>
 									<div className="post-box-content">
 										<h3>{item.name}</h3>
@@ -108,5 +108,3 @@ export default class Sellingareas extends Component {
 	}
 }
 
-
-Sellingareas.defaultProps = {dummyimage:'http://dummyimage.com/300x300/292929/e3e3e3&text=Your Mom Goes to College'}
