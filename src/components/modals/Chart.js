@@ -1,6 +1,5 @@
 import React , { Component }  from 'react'
 
-import Sellingareas from "../Sellingareas"
 import ModalChartWin from "./modalChartWin"
 import * as Animated from "animated/lib/targets/react-dom";
 
@@ -22,13 +21,6 @@ export default class Chart extends Component {
 		if (!this.props.items.length && nextProps.items.length) {
 			this._sortModalItems(nextProps.items);
 		}
-	}
-
-	handlenowAuction = () => {
-    	this.setState({ cartType : 'nowAuction' });
-	}
-	handlewinOrder = () => {
-    	this.setState({ cartType : 'winOrder' });
 	}
 
 	_sortModalItems = ( items ) => {
@@ -56,34 +48,8 @@ export default class Chart extends Component {
 					
 					<div className="row">
 
-						{/*catagories*/}
-							<div className="home-cat">
-								<ul>
-									<li className={(this.state.cartType === "nowAuction"  && 'active')}>
-									<button onClick={this.handlenowAuction}>
-										<i className="fa fa-gavel"></i>
-										<p className="">Now Auction</p>
-									</button>
-									</li>
-									<li className={(this.state.cartType === "winOrder"  && 'active')}>
-									<button onClick={this.handlewinOrder}>
-										<i className="fa fa-trophy"></i>
-										<p className="">Win Orders</p>
-									</button>
-									</li>
-								</ul>
-							</div>
-
-						    {(() => {
-						        switch (this.state.cartType) {
-						        	case 'nowAuction':
-						                return <Sellingareas current={this.props.current} isActive={this.props.isActive} items={this.props.items} close={this.props.close} />
-						            case 'winOrder':
-						                return <ModalChartWin timeDiff={this.props.timeDiff} orderLists={this.props.orderLists} close={this.props.close} filter={this.props.filter} />
-						            default :
-						                return 'You Not Have The Cart'
-						        }
-						    })()}
+						<ModalChartWin timeDiff={this.props.timeDiff} orderLists={this.props.orderLists} close={this.props.close} filter={this.props.filter} />
+					
 					</div>
 				</div>				
 	    )

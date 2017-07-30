@@ -14,7 +14,7 @@ class Categories extends Component {
 	}
     render() {
     return this.props.categories ? (
-        (this.props.location.pathname === '/admin' || this.props.location.pathname === '/checkout' || this.props.location.pathname === '/user' ) ? null : (
+        (this.props.location.pathname === '/admin' || this.props.location.pathname === '/checkout' || this.props.location.pathname === '/user' || this.props.location.pathname === '/setting' ) ? null : (
         <div className="row">
                 <div className="home-cat">
                 { (this.props.location.pathname === '/checkout-info' || this.props.location.pathname === '/checkout' ) ?

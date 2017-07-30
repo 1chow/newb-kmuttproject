@@ -19,6 +19,7 @@ export default class Item extends Component {
 			let data = childSnapshot.val();
 			table_.push(data)
 			})
+			console.log(table_)
 			if(this.state)				
 			this.setState({bidLists:table_.reverse()})
 		})
@@ -59,7 +60,7 @@ export default class Item extends Component {
 				<div className="row auct-content">
 					<div className="small-9 columns">
 						<h1>{this.state.item[0].name}</h1>
-						<p className="show-for-medium">{this.state.item[0].desc.short}</p>
+						<p className="p-desc">{this.state.item[0].desc.short}</p>
 					</div>
 					<div className="small-3 columns">
 						{ this.state.newcurrent !== 0 &&
@@ -67,15 +68,15 @@ export default class Item extends Component {
 						}
 					</div>
 				</div>
-				<div className="row ">
-					<div className="small-12 medium-5 large-7 columns auct-l-container">
+				<div>
+					<div className="small-12 medium-5 large-6 columns auct-l-container">
 						<div className="item-warper">
 							<div className="item">
 								<img src={require("../images/mockup.JPG")} alt=""/>
 							</div>
 						</div>
-				</div>
-					<div className="small-12 medium-7 large-5 columns auct-r-container">
+					</div>
+					<div className="small-12 medium-7 large-6 columns auct-r-container">
 						<div className="auct-content">
 							<div className="row auct-from-warp">
 								<div className="small-5 medium-5 columns">
@@ -96,9 +97,9 @@ export default class Item extends Component {
 										<tbody>
 											{ this.state.bidLists.map( (bidList,i) => {
 											return	<tr key={i}>
-													<td>{bidList.userName}</td>
-													<td>{bidList.bid}<span>THB</span></td>
-													<td>{this.props.timeDiff(bidList.bidTimestamp)}</td>
+													<td width="150">{bidList.userName}</td>
+													<td width="75">{bidList.bid}<span>THB</span></td>
+													<td width="75">{this.props.timeDiff(bidList.bidTimestamp)}</td>
 												</tr>
 											})}
 										</tbody>

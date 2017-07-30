@@ -94,7 +94,7 @@ export default class Setting extends Component {
 	}
 
   render(){
-    return this.state.address ? (
+    return (
 	          <div className="row">
 	            <div className="small-12 columns user-container">
 	              <h1> Your Profile</h1>
@@ -155,7 +155,7 @@ export default class Setting extends Component {
 	            </form>
 	            </div>
 	          </div>
-    ) : null
+    )
   }
 
 }

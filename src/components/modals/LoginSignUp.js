@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom"
 import { auth , login } from '../../helpers/firebase'
+import firebase from 'firebase'
 
 export default class LoginSignUp extends Component {
 	state = { 
@@ -22,12 +23,34 @@ export default class LoginSignUp extends Component {
 	handleSubmit = (e) => {
 		e.preventDefault()
 		this.props.type === 'signup' ? (
-			auth(this.email.value, this.pw.value , this.user.value)
-			.then(this.props.close)
-			.catch( err => this.setState({registerError: err.message }))
+
+			firebase.database().ref('/users').once('value', snapshot => {
+				var matchU = [];
+				snapshot.forEach((childSnapshot) => {
+					
+					var data = childSnapshot.val()
+					var uName = data.info.displayName
+					var uName_ = this.user.value
+
+					if (uName === uName_) {
+						matchU.push(uName)
+					}
+
+				})//child
+
+				if (matchU.length > 0) {					
+					this.setState({registerError: 'Username already been used '})
+				}else{
+					auth(this.email.value, this.pw.value , this.user.value)
+					.then(this.props.close)
+					 .catch( err => this.setState({registerError: err.message }))
+				}
+
+			})
+
 		) : (
 			login(this.email.value, this.pw.value , this.props.close)
-			.catch( err => this.setState({registerError: 'Invalid username/password.' }))
+			.catch( err => this.setState({registerError: 'Invalid Uername Or Password.' }))
 		)
 	}
 

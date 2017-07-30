@@ -36,7 +36,8 @@ export default class App extends Component {
 			profilePicture: null,
 			role:null,
 			feel:null,
-			message:null
+			message:null,
+			userUID: '',
 		};
 	}
 	componentWillMount() {
@@ -68,7 +69,8 @@ export default class App extends Component {
 							isLogin: true,
 							User: user.email,
 							profilePicture: user.photoUrl,
-							role:user.role
+							role:user.role,
+							userUID: user.uid
 						})
 				})
 				db.child(`orders/${user.uid}/orderList`).on('value', dataSnapshot => {
@@ -87,7 +89,8 @@ export default class App extends Component {
 					isLogin: false,
 					User: "Guest",
 					profilePicture:null,
-					role:null
+					role:null,
+					userUID:''
 				})
 			}
 		})
@@ -209,7 +212,7 @@ export default class App extends Component {
 										<Route
 											path="/checkout"
 											render={props => (
-												<CheckOut filter={this.filter}/>
+												<CheckOut userUID={this.state.userUID} filter={this.filter}/>
 											)}
 										/>
 										<Route

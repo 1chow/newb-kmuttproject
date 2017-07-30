@@ -1,0 +1,4 @@
+@media print {
+header, footer, .home-cat, .print-none, .toggle{display: none !important;}
+.print-warpper{font-size: 0.5em;}
+}
