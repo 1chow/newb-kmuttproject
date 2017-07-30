@@ -29,12 +29,12 @@ class bidForm extends Component {
 				if (oldItem._id === itemId){ //fininsh gate2 : Item is Equal
 					if(validatecurrent < current){ //fininsh gate3 : Check Over Old Cost?
 							fetch(postBid, myInit)
-								.then( res => res && open('good','Congrat! You win in this round'))
-								.catch( err => err && open('bad','Unfortunately Bad Request'))
-					} else open('bad','Make sure you bid enough')
-				} else open('bad','Its a bad path pls refresh')
-			} else open('bad','Item expired')
-		} else open('bad','Please LogIn')
+								.then( res => res && open('alert','good','Congrat! You win in this round'))
+								.catch( err => err && open('alert','bad','Unfortunately Bad Request'))
+					} else open('alert','bad','Make sure you bid enough')
+				} else open('alert','bad','Its a bad path pls refresh')
+			} else open('alert','bad','Item expired')
+		} else open('alert','bad','Please LogIn')
 	}
 
 	handleSubmit = (e) => {

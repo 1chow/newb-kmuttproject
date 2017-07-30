@@ -1,6 +1,7 @@
 import React from 'react'
 import ModalChart from './modals/Chart'
 import ModalLoginSignUp from './modals/LoginSignUp'
+import Allinone from './modals/Modal-All'
 
 const Modals = props => {
     return props.isOpen === true ? (
@@ -16,11 +17,16 @@ const Modals = props => {
 					current={props.current}
 					timeDiff={props.timeDiff}
 					/>
-					: 
+					: props.type === 'login' ?
 					<ModalLoginSignUp 
 						type={props.type} 
 						changeType={props.changeType}
 						close={props.close} 
+					/> : 
+					<Allinone 
+					close={props.alertCloseModal}
+					feel={props.feel}	
+					message={props.message}
 					/>
 				}
 	       	</div>

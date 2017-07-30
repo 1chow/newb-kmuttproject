@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import * as firebase from 'firebase'
+import ImageUploader from 'react-firebase-image-uploader'
 import ItemL from './ItemL'
-//import ImageUploader from 'react-firebase-image-uploader';
 
 class Category extends Component {
   render(){
@@ -18,10 +18,12 @@ class Edit extends Component {
     this.state = {
       User:'',
       productname : '',
+      productimage:'',
+      productimageURL:'',
       catagoriesselect:'', 
       desc: '',
       catagories:[],
-      Error: null 
+      Error: null,
     }
   }
 
@@ -52,7 +54,7 @@ class Edit extends Component {
   handleNewItemSubmit = (e) => {
     e.preventDefault();
     this.dbItems = firebase.database().ref().child('items');
-    if (this.state.productname && this.state.productname.trim().length !== 0 && this.state.desc.trim().length && this.state.catagoriesselect) {
+    if (this.state.productname && this.state.productname.trim().length !== 0 && this.state.desc.trim().length && this.state.catagoriesselect && this.state.productimageURL.length !== 0) {
       this.dbItems.push({
         name: this.state.productname,
         category: this.state.catagoriesselect,
@@ -69,7 +71,7 @@ class Edit extends Component {
             startTime: new Date().getTime(),
             step: 30,
         },
-        img:['a', 'b', 'c'],
+        img: this.state.productimageURL,
         bouded : 15,
         own : this.state.User,
         timenow: new Date().getTime(),
@@ -101,17 +103,14 @@ class Edit extends Component {
     this.setState({ [e.target.name]: e.target.value })
   }
 
-  handleUploadStart = () => this.setState({isUploading: true, progress: 0})
-  handleProgress = (progress) => this.setState({progress})
   handleUploadError = (error) => {
       this.setState({isUploading: false})
       console.error(error)
   }
   handleUploadSuccess = (filename) => {
-      this.setState({avatar: filename, progress: 100, isUploading: false});
-      firebase.storage().ref('images').child(filename).getDownloadURL().then(url => this.setState({avatarURL: url}))
+      this.setState({productimage: filename, progress: 100, isUploading: false});
+      firebase.storage().ref('images').child(filename).getDownloadURL().then(url => this.setState({productimageURL: url}))
   }
-
  
   render() {
 
@@ -183,15 +182,8 @@ class Edit extends Component {
                 <div className="small-12 columns img-uploader">
                    <label>Product Image
                     <div className="box-img">
-                        {this.state.isUploading &&
-                            <p>{this.state.progress}%</p>
-                        }
-                        {this.state.avatarURL &&
-                            <img src={this.state.avatarURL} alt="PreviewPic" />
-                        }
                         <label className="button btn-file">
                         + ADD Photo
-                        {/*
                             <ImageUploader
                                 name="avatar"
                                 storageRef={firebase.storage().ref('images')}
@@ -200,7 +192,6 @@ class Edit extends Component {
                                 onUploadSuccess={this.handleUploadSuccess}
                                 onProgress={this.handleProgress}
                             />
-                        */}
                         </label>
                      </div>
                     </label>
@@ -212,7 +203,7 @@ class Edit extends Component {
                         <option value=''>Plese Select Category</option>
                         {this.state.catagories.map((category) => {
                             return ( 
-                            <Category  key={ category['.key'] } dbkey={ category['.key'] }  {...category} />
+                            <Category key={category.icon} dbkey={category['.key']}  {...category} />
                             );
                           })}
                       </select>
@@ -227,6 +218,9 @@ class Edit extends Component {
           <div className="small-12 columns profile-main">
             <ItemL/>
           </div>
+             {this.state.productimageURL &&
+                            <img src={this.state.productimageURL} alt="PreviewPic" />
+              }
         </div>
     );
   }

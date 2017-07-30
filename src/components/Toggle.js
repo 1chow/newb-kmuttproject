@@ -17,10 +17,6 @@ const Toggle = props => (
                             <i className="fa fa-cogs fa-2x" aria-hidden="true"></i>
                             <p>Setting</p>
                         </Link>	
-                        {/* <Link onClick={props.closetoggle} to='/admin' className="button">
-                            <i className="fa fa-cogs fa-2x" aria-hidden="true"></i>
-                            <p>Admin</p>
-                        </Link> */}	
                         <button onClick={() => {logout(),props.closetoggle()}} className="button">
                             <i className="fa fa-sign-out fa-2x" aria-hidden="true"></i>
                             <p>Log Out</p>

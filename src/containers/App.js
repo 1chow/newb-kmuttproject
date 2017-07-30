@@ -7,7 +7,6 @@ import AnimatedSwitch from "../components/animate/MainAnimated"
 
 import Navigator from "../components/wrapper/Navigator"
 import Categories from '../components/Categories'
-import CheckOutinfo from '../components/Checkoutinfo'
 import CheckOut from '../components/Checkout'
 import Sellingareas from "../components/Sellingareas"
 import Item from "../components/Item"
@@ -34,6 +33,8 @@ export default class App extends Component {
 			typeModal: 'checkout',
 			isLogin: false,
 			User: "Guest",
+			feel:null,
+			message:null
 		};
 	}
 	componentWillMount() {
@@ -127,6 +128,24 @@ export default class App extends Component {
 	getOrderLists = Obj => {
 		this.setState({ orderLists: Obj });
 	}
+	alertOpenModal = (type,feel,message) => {
+		this.setState({ 
+			typeModal: type,
+			showModal: true,
+			feel: feel,
+			message: message,
+		 });
+		document.body.style.overflow = "hidden"
+	}
+	alertCloseModal = () => {
+		this.setState({ 
+			typeModal: 'checkout',
+			showModal: false,
+			feel: null,
+			message: null,
+		 });
+		document.body.style.overflow = null
+	}
 
 
 
@@ -175,15 +194,9 @@ export default class App extends Component {
 										<Route
 											path="/item/:id"
 											render={props => (
-												<Item current={this.state.current} {...props} items={this.state.items} timeDiff={this.timeDiff} />
+												<Item triggler={this.alertOpenModal} current={this.state.current} {...props} items={this.state.items} timeDiff={this.timeDiff} />
 											)}
 										/>
-										{/*<Route
-											path="/checkout-info"
-											render={props => (
-												<CheckOutinfo filter={this.filter}/>
-											)}
-										/>*/}
 										<Route
 											path="/checkout"
 											render={props => (
@@ -217,6 +230,9 @@ export default class App extends Component {
 					orderLists={this.state.orderLists}
 					current={this.state.current}
 					timeDiff={this.timeDiff}
+					alertCloseModal={this.alertCloseModal}
+					feel={this.state.feel}	
+					message={this.state.message}			
 				/>
 			</div>
 		) 

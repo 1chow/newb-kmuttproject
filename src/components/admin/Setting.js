@@ -105,8 +105,8 @@ export default class Setting extends Component {
 	                  <label>Address
 	                    { this.state.setting === true ?
 	                    	this.state.address &&
-	                    <textarea className="checkout-address" name="" id="" rows="5" autocorrect="off" spellcheck="false" defaultValue={ this.state.address } ></textarea>
-	                    : this.state.address && <textarea className="checkout-address" name="" id="" rows="5" autocorrect="off"  readOnly defaultValue={ this.state.address }></textarea>
+	                    <textarea className="checkout-address" name="" id="" rows="5" autoCorrect="off" spellcheck="false" defaultValue={ this.state.address } ></textarea>
+	                    : this.state.address && <textarea className="checkout-address" name="" id="" rows="5" autoCorrect="off"  readOnly defaultValue={ this.state.address }></textarea>
 	                   }
 	                  </label>
     	     		</div>

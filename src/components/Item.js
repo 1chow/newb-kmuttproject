@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Loading from './Loading'
 import Clock from './Clock'
 import BidForm from './BidForm'
-import Allinone from './modals/Modal-All'
 import firebase from 'firebase'
 
 export default class Item extends Component {
@@ -10,8 +9,6 @@ export default class Item extends Component {
 		item:[],
 		bidLists:[],
 		newcurrent:[],
-		feel:null,
-		message: null,
 	}
 
 	componentDidMount() {
@@ -56,20 +53,9 @@ export default class Item extends Component {
 		newcurrent.length !== 0 && this.setState({newcurrent: newcurrent[0].current})
 	}
 
-	trigg = ( feel , message ) => {
-		this.setState({message: message})
-		this.setState({feel:feel})
-	}
-
-	untrigg = () => {
-		this.setState({message: null})
-		this.setState({feel:null})
-	}
-
 	render() {
 		return this.state.item[0] ? (
 			<div>
-				{this.state.feel ? <Allinone feel={this.state.feel} message={this.state.message} close={this.untrigg} /> : null}
 				<div className="row auct-content">
 					<div className="small-9 columns">
 						<h1>{this.state.item[0].name}</h1>
@@ -97,7 +83,7 @@ export default class Item extends Component {
 								</div>
 								<div className="small-7 medium-7 columns auct-from-bit">
 									<p className="time">Place Your Bid</p>
-									<BidForm newcurrent={this.state.newcurrent} open={this.trigg} item={this.state.item[0]} params={this.props.match.params.id} />
+									<BidForm newcurrent={this.state.newcurrent} open={this.props.triggler} item={this.state.item[0]} params={this.props.match.params.id} />
 									{ this.state.newcurrent !== 0 &&
 										<p className="helper">Bids More Than {this.state.newcurrent}฿ To Win This Auction</p>
 									}

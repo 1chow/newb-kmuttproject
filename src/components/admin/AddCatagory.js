@@ -17,11 +17,8 @@ class AddCatagoriy extends Component {
       if (this.state.newitemtext && this.state.newitemtext.trim().length !== 0) {
             if (this.state.icon && this.state.icon.trim().length !== 0){
                firebase.database().ref().child('catagories').push({
-                name: this.state.newitemtext,
-                allitem: 0,
-                avaliableitem: 0,
-                remainitem: 0,
                 icon: this.state.icon,
+                name: this.state.newitemtext,
             })} else this.setState({Error: 'Please select icon' })
       } else this.setState({Error: 'Please enter a valid category name' })
     this.setState({  newitemtext: '',  })

@@ -62,7 +62,7 @@ class CategoriesL extends Component {
                 </tr>
                 {this.state.categories.map((category) => {
                   return ( 
-                    <CategoryL dbkey={category['.key']} hell={this.removeItem} {...category} />
+                    <CategoryL key={category['.key']} dbkey={category['.key']} hell={this.removeItem} {...category} />
                     );})}
                 </tbody>
               </table>
