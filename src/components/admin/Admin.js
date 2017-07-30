@@ -7,7 +7,7 @@ import Setting from './Setting'
 
 export default class Admin extends Component {
 	state = {
-		select:'setting'
+		select : 'setting',
 	}
 
 	selected = what => {
@@ -15,11 +15,11 @@ export default class Admin extends Component {
 	}
 
 
+
 	render() {
 
 		return (
 		<div>
-
 	        <div className="small-2 large-2 admin-l columns">
 		        <div className="home-cat setting-cat">
 		        	 <ul>
@@ -29,18 +29,22 @@ export default class Admin extends Component {
 	                            <p className='show-for-large'> Setting</p>
 	                        </button>
 	                    </li>
-	                    <li className={(this.state.select === "category"  && 'active')}>
-	                        <button onClick={ () => this.selected("category")}>
-	                            <i className="fa fa-bookmark"> </i>
-	                            <p className='show-for-large'> Add Catagories</p>
-	                        </button>
-	                    </li>
-	                    <li className={(this.state.select === "item"  && 'active')}>
-	                        <button onClick={ () => this.selected("item")}>
-	                            <i className="fa fa-suitcase"></i>
-	                            <p className='show-for-large'> Add Item</p>
-	                        </button>
-	                    </li>
+						{ this.props.role === 'admin' &&
+							<li className={(this.state.select === "category"  && 'active')}>
+								<button onClick={ () => this.selected("category")}>
+									<i className="fa fa-bookmark"> </i>
+									<p className='show-for-large'> Add Catagories</p>
+								</button>
+							</li>
+						}
+						{ this.props.role === 'admin' &&
+							<li className={(this.state.select === "item"  && 'active')}>
+								<button onClick={ () => this.selected("item")}>
+									<i className="fa fa-suitcase"></i>
+									<p className='show-for-large'> Add Item</p>
+								</button>
+							</li>
+						}
 	                 </ul>
 	            </div>
 	        </div>
@@ -51,7 +55,7 @@ export default class Admin extends Component {
 		            <div className="small-12 columns">
 		            	{ this.state.select === 'category' ?
 			            	<AddCatagory />
-			            	: this.state.select === 'item' ? <AddItem /> : <Setting />
+			            	: this.state.select === 'item' ? <AddItem /> : <Setting profilePicture={this.props.profilePicture} />
 		            	}
 		            </div>            
 		        </div>

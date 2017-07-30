@@ -46,7 +46,7 @@ class CategoriesL extends Component {
   }
 
   removeItem(key){
-    this.dbItems.child(key).remove();
+        this.dbItems.child(key).remove();
   }
 
   render() {

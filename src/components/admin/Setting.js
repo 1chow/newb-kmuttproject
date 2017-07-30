@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import * as firebase from 'firebase'
+import ImageUploader from 'react-firebase-image-uploader'
+
 
 export default class Setting extends Component {
   constructor () {
@@ -7,10 +9,12 @@ export default class Setting extends Component {
     this.state = {
       username:'',
       email:'',
-      Uid:'',
+			Uid:'',
+			userimage:'',
+      userimageURL:'',
       Error: null ,
       setting: false,
-      address: ''
+      address: '',
     }
   }
 
@@ -45,7 +49,49 @@ export default class Setting extends Component {
   Setting = (e) => {
   	e.preventDefault
     this.setState({ setting: !this.state.setting})
+	}
+	
+	handleUploadError = (error) => {
+      this.setState({isUploading: false})
+      console.error(error)
   }
+  handleUploadSuccess = (filename) => {
+      this.setState({userimage: filename, progress: 100, isUploading: false});
+			firebase.storage().ref('images').child(filename).getDownloadURL()
+				.then(url => { 
+					this.setState({userimageURL: url})
+					firebase.database().ref().child(`users/${this.state.Uid}/info`)
+					.update({
+							photoUrl: url
+					})
+			})
+	}
+		
+	handleNewItemSubmit = (e) => {
+    e.preventDefault();
+    this.setState({registerError: null })
+      if (this.state.username && this.state.username.trim().length !== 0) {
+					if (this.state.email && this.state.email.trim().length !== 0){
+							if (this.state.address && this.state.address.trim().length !== 0){
+							firebase.database().ref().child(`users/${this.state.Uid}/info`)
+							.update({
+									displayName: this.state.username,
+									email: this.state.email,
+									address: this.state.address
+							})} else this.setState({Error: 'Please enter a valid address' })
+					} else this.setState({Error: 'Please enter a valid email' })
+      } else this.setState({Error: 'Please enter a valid username' })
+    this.setState({ 
+			username:'',
+      email:'',
+			Uid:'',
+			userimage:'',
+      userimageURL:'',  })
+	}
+	
+	componentWillUnmount() {
+		this.setState({registerError: null })
+	}
 
   render(){
     return this.state.address ? (
@@ -59,26 +105,18 @@ export default class Setting extends Component {
 	          	<div className="small-12 large-4 columns img-uploader">
                    <label>Profile Image
                     <div className="box-img user-box-img">
-                        {this.state.isUploading &&
-                            <p>{this.state.progress}%</p>
-                        }
-                        {this.state.avatarURL &&
-                            <img src={this.state.avatarURL} alt="PreviewPic" />
-                        }
                         <label className="button btn-file ">
                         + Edit Photo
-                        {/*
-                            <ImageUploader
+                        <ImageUploader
                                 name="avatar"
                                 storageRef={firebase.storage().ref('images')}
                                 onUploadStart={this.handleUploadStart}
                                 onUploadError={this.handleUploadError}
                                 onUploadSuccess={this.handleUploadSuccess}
                                 onProgress={this.handleProgress}
-                            />
-                        */}
+                        />
                         </label>
-                        <img className="user-profile" src="https://graph.facebook.com/100000028820064/picture?width=300&height=300" alt=""></img>
+                        <img className="user-profile" src={this.props.profilePicture} alt=""></img>
                      </div>
                     </label>
 			    </div>
@@ -105,12 +143,15 @@ export default class Setting extends Component {
 	                  <label>Address
 	                    { this.state.setting === true ?
 	                    	this.state.address &&
-	                    <textarea className="checkout-address" name="" id="" rows="5" autoCorrect="off" spellcheck="false" defaultValue={ this.state.address } ></textarea>
-	                    : this.state.address && <textarea className="checkout-address" name="" id="" rows="5" autoCorrect="off"  readOnly defaultValue={ this.state.address }></textarea>
+	                    <textarea className="checkout-address" name="address" rows="5" autoCorrect="off" spellCheck="false" onChange={this.onNewItemChange} value={this.state.address} ></textarea>
+	                    : this.state.address && <textarea name="address" className="checkout-address"rows="5" autoCorrect="off"  readOnly defaultValue={this.state.address}></textarea>
 	                   }
 	                  </label>
     	     		</div>
 	     		 </div>
+						{ this.state.setting === true &&
+						<button type='submit'>Submit</button>
+						}
 	            </form>
 	            </div>
 	          </div>

@@ -12,11 +12,17 @@ const Toggle = props => (
                         <Link onClick={props.closetoggle} to='/' className="button">
                             <i className="fa fa-gavel fa-2x" aria-hidden="true"></i>
                             <p>Now Auct.</p>
-                        </Link> 				
+                        </Link> 
+                        { props.role === 'admin' ?				
                         <Link onClick={props.closetoggle} to='/admin' className="button">
                             <i className="fa fa-cogs fa-2x" aria-hidden="true"></i>
                             <p>Setting</p>
-                        </Link>	
+                        </Link>	:
+                        <Link onClick={props.closetoggle} to='/setting' className="button">
+                            <i className="fa fa-cogs fa-2x" aria-hidden="true"></i>
+                            <p>Setting</p>
+                        </Link>
+                        }
                         <button onClick={() => {logout(),props.closetoggle()}} className="button">
                             <i className="fa fa-sign-out fa-2x" aria-hidden="true"></i>
                             <p>Log Out</p>

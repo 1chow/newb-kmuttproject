@@ -29,6 +29,10 @@ class AddCatagoriy extends Component {
     this.setState({ [e.target.name]: e.target.value })
   }
 
+  	componentWillUnmount() {
+		this.setState({registerError: null })
+	}
+
   render() {
     return (
 

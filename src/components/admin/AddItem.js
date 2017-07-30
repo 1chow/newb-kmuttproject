@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import * as firebase from 'firebase'
 import ImageUploader from 'react-firebase-image-uploader'
 import ItemL from './ItemL'
+import moment from 'moment';
+import {DatetimePickerTrigger} from 'rc-datetime-picker';
 
 class Category extends Component {
   render(){
@@ -20,8 +22,12 @@ class Edit extends Component {
       productname : '',
       productimage:'',
       productimageURL:'',
+      firstbit:'',
       catagoriesselect:'', 
       desc: '',
+      timeStart: moment(),
+      timeEnd: moment(),
+      boundedTime:'',
       catagories:[],
       Error: null,
     }
@@ -48,47 +54,47 @@ class Edit extends Component {
 
   componentWillUnmount() {
     firebase.database().ref().child('catagories').off();
+    this.setState({registerError: null })
   }
 
   
   handleNewItemSubmit = (e) => {
+    console.log(this.state.timeEnd.format('x'))
     e.preventDefault();
     this.dbItems = firebase.database().ref().child('items');
-    if (this.state.productname && this.state.productname.trim().length !== 0 && this.state.desc.trim().length && this.state.catagoriesselect && this.state.productimageURL.length !== 0) {
-      this.dbItems.push({
+    if (this.state.productname && 
+      this.state.productname.trim().length !== 0 &&
+       this.state.desc.trim().length &&
+        this.state.catagoriesselect &&
+         this.state.productimageURL.length !== 0 &&
+          this.state.boundedTime.lenght !== 0 &&
+           this.state.timeStart.lenght !== 0 &&
+            this.state.timeEnd.lenght !== 0) 
+      {
+        this.dbItems.push({
         name: this.state.productname,
-        category: this.state.catagoriesselect,
+        catagory: this.state.catagoriesselect,
         isActive: 1,
         desc:{
-              short:this.state.desc,
-              fullHeader:'Consectetur adipisicing elit. Est sed.',
-              fullDesc :'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo'
+              short: this.state.desc.slice(0,16),
+              fullHeader: this.state.desc.slice(0,8),
+              fullDesc : this.state.desc
         },
         bid:{
-            current : '30',
-            endTime: '1501448590662',
-            open: 5,
-            startTime: new Date().getTime(),
-            step: 30,
+            current : this.state.firstbit,
+            endTime: this.state.timeEnd.format('x'),
+            startTime: this.state.timeStart.format('x'),
         },
         img: this.state.productimageURL,
-        bouded : 15,
+        bouded : this.state.boundedTime,
         own : this.state.User,
-        timenow: new Date().getTime(),
+        timeNow : new Date().getTime()
       })
       .then(snapshot => {
             firebase.database().ref('/items/' + snapshot.key + '/bidList').push({
               userId : '',
-              bid : 30,
-              bidTimestamp : new Date().getTime()
-            });
-            
-            firebase.database().ref('/time').once("value" ,function(Csnapshot) {
-              var fkTime = Csnapshot.val();
-              var fk = fkTime.timeNow + ((7) * 60 * 1000)
-              firebase.database().ref('/items/' + snapshot.key + '/bid').update({
-                endTime: fk
-              })
+              bid : this.state.firstbit,
+              bidTimestamp : this.state.timeStart.format('x')
             });
         });
       this.setState({
@@ -111,10 +117,26 @@ class Edit extends Component {
       this.setState({productimage: filename, progress: 100, isUploading: false});
       firebase.storage().ref('images').child(filename).getDownloadURL().then(url => this.setState({productimageURL: url}))
   }
- 
+
+  handleChange = (timeStart) => {
+    this.setState({
+      timeStart:timeStart
+    });
+  }
+
+   handleChange2 = (timeEnd) => {
+    this.setState({
+      timeEnd:timeEnd
+    });
+  }
+
+
   render() {
-
-
+    const shortcuts = {
+      'Today': moment(),
+      'Yesterday': moment().subtract(1, 'days'),
+      'Clear': ''
+    };
     return (
         <div className="row">
             <div className="small-12 columns">
@@ -151,7 +173,7 @@ class Edit extends Component {
                   <label>First Bit
                     <div className="input-group">
                       <span className="input-group-label">$</span>
-                      <input className="input-group-field" id="exampleNumberInput" type="number" onChange={ this.onNewItemChange } value={ this.state.prize } name="prize"/>
+                      <input className="input-group-field" type="number" onChange={ this.onNewItemChange } value={ this.state.firstbit } name="firstbit"/>
                     </div>
                   </label>
                   <span className="form-error" data-form-error-for="exampleNumberInput">Amount is required.</span>
@@ -160,21 +182,30 @@ class Edit extends Component {
                   <label>Bounded Time
                     <div className="input-group">
                       <span className="input-group-label">$</span>
-                      <input className="input-group-field" id="exampleNumberInput" type="number" required pattern="number" onChange={ this.onNewItemChange } value={ this.state.reserveTime } name="reserveTime"/>
+                      <input className="input-group-field" type="number" required pattern="number" onChange={ this.onNewItemChange } value={ this.state.boundedTime } name="boundedTime" />
                     </div>
                   </label>
                   <span className="form-error" data-form-error-for="exampleNumberInput">Amount is required.</span>
                 </div>
                 <div className="small-12 medium-6 columns">
                   <label>Time Start
-                    <input type="text" placeholder="Timestamp" aria-describedby="help-signup" required pattern="text" onChange={ this.onNewItemChange } value={ this.state.timetoauct } name="timetoauct"/>
-                    <span className="form-error">Yo, Product name required!!</span>
+                    <DatetimePickerTrigger
+                      shortcuts={shortcuts} 
+                      moment={this.state.timeStart}
+                      onChange={this.handleChange}>
+                      <input onChange={this.handleChange} name="timeStart" type="text" value={this.state.timeStart.format('x')} />
+                    </DatetimePickerTrigger>
+                {/*    <input type="text" placeholder="Timestamp" aria-describedby="help-signup" required pattern="text" value={ this.state.timeStart } name="timeStart" readOnly/> */}        
                   </label>
                 </div>
                 <div className="small-12 medium-6 columns">
                   <label>Time End
-                    <input type="text" placeholder="Timestamp" aria-describedby="help-signup" required pattern="text" onChange={ this.onNewItemChange } value={ this.state.timetoauct } name="timetoauct"/>
-                    <span className="form-error">Yo, Product name required!!</span>
+                      <DatetimePickerTrigger
+                      shortcuts={shortcuts} 
+                      moment={this.state.timeEnd}
+                      onChange={this.handleChange2}>
+                      <input onChange={this.handleChange2} name="timeEnd" type="text" value={this.state.timeEnd.format('x')} />
+                    </DatetimePickerTrigger>
                   </label>
                 </div>
               </div>

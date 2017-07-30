@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import Perf from 'react-addons-perf'
-import { Route } from "react-router-dom"
+import { Route, Redirect } from "react-router-dom"
 import TransitionGroup from "react-transition-group/TransitionGroup"
 import AnimatedSwitch from "../components/animate/MainAnimated"
 
@@ -33,6 +33,8 @@ export default class App extends Component {
 			typeModal: 'checkout',
 			isLogin: false,
 			User: "Guest",
+			profilePicture: null,
+			role:null,
 			feel:null,
 			message:null
 		};
@@ -60,9 +62,14 @@ export default class App extends Component {
 
 		this.removeListener = firebaseAuth().onAuthStateChanged( user => {
 			if (user) {
-				this.setState({
-					isLogin: true,
-					User: user.email,
+				db.child(`users/${user.uid}/info`).on('value', dataSnapshot => {
+						let user = dataSnapshot.val();
+						this.setState({
+							isLogin: true,
+							User: user.email,
+							profilePicture: user.photoUrl,
+							role:user.role
+						})
 				})
 				db.child(`orders/${user.uid}/orderList`).on('value', dataSnapshot => {
 				let orderLists = [];
@@ -78,7 +85,9 @@ export default class App extends Component {
 			} else {
 				this.setState({
 					isLogin: false,
-					User: "Guest"
+					User: "Guest",
+					profilePicture:null,
+					role:null
 				})
 			}
 		})
@@ -172,9 +181,9 @@ export default class App extends Component {
 			<div>
 				<section className={"warpper " + (this.state.showModal === true  && 'blur-for-modal')}>
 					{/* Navigator Bar */}
-					<Navigator toggle={this.toggle} triggler={this.handleOpenModal} isLogin={this.state.isLogin} filter={this.filter} />
+					<Navigator profilePicture={this.state.profilePicture} toggle={this.toggle} triggler={this.handleOpenModal} isLogin={this.state.isLogin} filter={this.filter} />
 					<Categories categories={this.state.categories} isActive={this.state.isActive} filter={this.filter} />
-					<Toggle logout={this.logout} closetoggle={this.closetoggle} showToggle={this.state.showToggle} />
+					<Toggle role={this.state.role} logout={this.logout} closetoggle={this.closetoggle} showToggle={this.state.showToggle} />
 					{/* Application Routes Zone */}
 						<div className="row">
 							<Route
@@ -204,10 +213,16 @@ export default class App extends Component {
 											)}
 										/>
 										<Route
+											path="/setting"
+											render={props => this.state.isLogin === true ? (
+												<Admin profilePicture={this.state.profilePicture} role={this.state.role} />
+											) : <Redirect to={{pathname: '/', state: {from: props.location}}} />}
+										/>
+										<Route
 											path="/admin"
-											render={props => (
-												<Admin/>
-											)}
+											render={props => this.state.isLogin === true ? (
+												<Admin profilePicture={this.state.profilePicture} role={this.state.role} />
+											) : <Redirect to={{pathname: '/', state: {from: props.location}}} />}
 										/>
 										<Route 
 											render={() => (

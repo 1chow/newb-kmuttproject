@@ -14,16 +14,19 @@ export const db2 = firebase.database()
 export const firebaseAuth = firebase.auth
 
 export function auth (email, pw, displayName) {
+  let firstName = displayName.slice(0, 1)
   return firebaseAuth().createUserWithEmailAndPassword(email, pw)
     .then( user =>  {
       db.child(`users/${user.uid}/info`)
         .update({
             displayName: displayName,
             email: user.email,
-            uid: user.uid
+            uid: user.uid,
+            photoUrl: 'http://via.placeholder.com/300/1779ba/ffffff?text='+firstName
         })
         .then(user.updateProfile({
           displayName: displayName,
+          photoUrl: 'http://via.placeholder.com/300/1779ba/ffffff?text='+firstName
         }))
     })
 }

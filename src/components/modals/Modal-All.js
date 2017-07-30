@@ -2,7 +2,6 @@ import React from 'react'
 
 const Allinone = props => (
     
-    <div className="modal-container">
         <div className="modal-core modal-small modal-message">
             <div className="row modal-core-head">
                 <button onClick={props.close} className="close"><i className="fa fa-times"></i></button>
@@ -27,7 +26,6 @@ const Allinone = props => (
                     </div>
             }
         </div>
-    </div>
 )
 
 export default Allinone

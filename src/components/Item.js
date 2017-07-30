@@ -96,7 +96,7 @@ export default class Item extends Component {
 										<tbody>
 											{ this.state.bidLists.map( (bidList,i) => {
 											return	<tr key={i}>
-													<td>{bidList.userId}</td>
+													<td>{bidList.userName}</td>
 													<td>{bidList.bid}<span>THB</span></td>
 													<td>{this.props.timeDiff(bidList.bidTimestamp)}</td>
 												</tr>
