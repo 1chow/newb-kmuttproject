@@ -96,11 +96,17 @@ export default class ModalChartWin extends Component {
 							<Link onClick={this.handleLinktoCheckOut} to="/checkout" className="button success">Checkout</Link>
 							<ul>
 								<li>Your Order {this.state.orderLists.length} Item<span>{this.state.orderPrice} THB</span></li>
-								<li>Delivery Charge<span>39 THB</span></li>
+								{ this.state.orderPrice ?
+								<li>Delivery Charge<span>39 THB</span></li> :
+								<li>Delivery Charge<span>0 THB</span></li>
+								}
 							</ul>
 							<hr/>
 							<ul>
-								<li className="price">Total<span>{this.state.orderPrice + 39} THB</span><p>(VAT incl.)</p></li>
+								{ this.state.orderPrice ?
+								<li className="price">Total<span>{this.state.orderPrice + 39} THB</span><p>(VAT incl.)</p></li> :
+								<li className="price">Total<span>0 THB</span><p>(VAT incl.)</p></li>
+								}
 							</ul>
 						</div>
 						<div className="small-12 columns post-checkout" style={{background:'#fff'}}>

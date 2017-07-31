@@ -14,7 +14,7 @@ export default class Setting extends Component {
       userimageURL:'',
       Error: null ,
       setting: false,
-      address: '',
+      address: 'Your Address',
     }
   }
 
@@ -78,15 +78,12 @@ export default class Setting extends Component {
 									displayName: this.state.username,
 									email: this.state.email,
 									address: this.state.address
-							})} else this.setState({Error: 'Please enter a valid address' })
+							})
+							this.props.triggler('alert','good','Your detail has changes')
+							} else this.setState({Error: 'Please enter a valid address' })
 					} else this.setState({Error: 'Please enter a valid email' })
       } else this.setState({Error: 'Please enter a valid username' })
-    this.setState({ 
-			username:'',
-      email:'',
-			Uid:'',
-			userimage:'',
-      userimageURL:'',  })
+    this.setState({ setting: !this.state.setting})
 	}
 	
 	componentWillUnmount() {
@@ -94,7 +91,7 @@ export default class Setting extends Component {
 	}
 
   render(){
-    return (
+    return this.state.username ? (
 	          <div className="row">
 	            <div className="small-12 columns user-container">
 	              <h1> Your Profile</h1>
@@ -121,6 +118,13 @@ export default class Setting extends Component {
                     </label>
 			    </div>
 			    <div className="small-12 large-8 columns">
+						   { this.state.Error &&
+                  <div className="small-12 columns">
+                    <div className="alert callout">
+                      <p><i className="fi-alert"></i>{this.state.Error}</p>
+                    </div>
+                  </div>
+                }
 	          	<form data-abide noValidate onSubmit={ this.handleNewItemSubmit } >
 	             <div className="small-12 columns">
 	                <div className="small-12 columns">
@@ -155,7 +159,7 @@ export default class Setting extends Component {
 	            </form>
 	            </div>
 	          </div>
-    )
+    ) : null
   }
 
 }

@@ -98,7 +98,7 @@ export default class Checkout extends Component {
 						<i className="fa fa-check-circle fa-5x" aria-hidden="true"></i>
 						<h3>Checkout Sucessful</h3>
 						<p>Thankyou,You Can Enjoy More At AUCT</p><br/>
-						<Link to="/" className="button"><i className="fa fa-shopping-cart"></i>  Let's Auction</Link>
+						<Link onClick={() => this.props.filter('default')} to="/" className="button"><i className="fa fa-shopping-cart"></i>  Let's Auction</Link>
 						<Link to="#" onClick={this.print} className="button"><i className="fa fa-print"></i>  Print Recive</Link>
 					</div>
 				</div>

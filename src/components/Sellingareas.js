@@ -86,11 +86,11 @@ export default class Sellingareas extends Component {
 							<Animated.div style={style}>
 								<Link onClick={this.handleClose} to={'/item/'+ item._id}>
 									<div className="post-box-top">
-										<img src={require("../images/mockup.JPG")} alt=""/>
+										<img src={item.img} alt=""/>
 									</div>
 									<div className="post-box-content">
 										<h3>{item.name}</h3>
-										<p className="desc">{item.desc.short}</p>
+										<p className="desc">{item.desc.short.slice(0,20)}</p>
 										<Clock item={item}  />
 										{ this.state.newcurrent[i] &&
 											<p className="price">{this.state.newcurrent[i].current}<span className="curentcy">Bath</span></p>
