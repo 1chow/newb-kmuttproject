@@ -66,8 +66,8 @@ class CategoriesL extends Component {
                     <td width="210">ID</td>
                     <td className="show-for-large" width="210">Name</td>
                     <td className="show-for-large" width="150">Categories</td>
-                    <td className="show-for-large" width="100">Start</td>
-                    <td className="show-for-large" width="100">End</td>
+                    <td className="show-for-large" width="150">Start</td>
+                    <td className="show-for-large" width="150">End</td>
                     <td>Delete</td>
                 </tr>
                 {this.state.items.map((items) => {

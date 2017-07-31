@@ -80,7 +80,7 @@ class Edit extends Component {
               fullDesc : this.state.desc
         },
         bid:{
-            current : this.state.firstbit,
+            current : parseInt(this.state.firstbit),
             endTime: this.state.timeEnd.format('x'),
             startTime: this.state.timeStart.format('x'),
         },
@@ -92,7 +92,7 @@ class Edit extends Component {
       .then(snapshot => {
             firebase.database().ref('/items/' + snapshot.key + '/bidList').push({
               userId : '',
-              bid : this.state.firstbit,
+              bid : parseInt(this.state.firstbit),
               bidTimestamp : this.state.timeStart.format('x')
             });
         });

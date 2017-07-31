@@ -478,22 +478,24 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 				var mfk = bidLast[0];//bidLastWin
 				var userId = mfk.userId;
 
-				db.ref('/orders/' + userId ).once('value', function(childSnapshot) {
+				db.ref('/orders/' + userId ).once('value', function(uSnapshot) {
 
-					var data = childSnapshot.val();
-					
-					if (data !== null) {
+					var data = uSnapshot.val();
+					console.log(data)
+					if (data != null) {
 						var price_ = data.orderPrice;
 						var totalPrice = parseInt( mfk.bid + price_ );
-						var count_ = parseInt( data.orderCount ) + 1;
+						var count_ = data.orderCount + 1;
 					} else {
 						var totalPrice = parseInt( mfk.bid );
-						var count_ = 1;
+						var count_ = 1 ;
 					}
+					console.log(mfk)
+
 
 				  	db.ref('/orders/' + userId ).update({
 				  		orderPrice: totalPrice,// sumPrice
-				  		orderCount : count_
+				  		orderCount : parseInt(count_)
 					})
 
 					db.ref('/orders/' + userId + '/orderList').push({
