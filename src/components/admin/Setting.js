@@ -142,9 +142,10 @@ export default class Setting extends Component {
 	     			<div className="small-12 columns">
 	                  <label>Address
 	                    { this.state.setting === true ?
-	                    	this.state.address &&
-	                    <textarea className="checkout-address" name="address" rows="5" autoCorrect="off" spellCheck="false" onChange={this.onNewItemChange} value={this.state.address} ></textarea>
-	                    : this.state.address && <textarea name="address" className="checkout-address"rows="5" autoCorrect="off"  readOnly defaultValue={this.state.address}></textarea>
+	                    	this.state.address ?
+	                    <textarea className="checkout-address" name="address" rows="5" autoCorrect="off" spellCheck="false" onChange={this.onNewItemChange} value={this.state.address} ></textarea> : <textarea className="checkout-address" name="address" rows="10" autoCorrect="off" spellCheck="false" onChange={this.onNewItemChange} value=" Please provide a contact address. And shipping" ></textarea>
+	                    : this.state.address ? <textarea name="address" className="checkout-address"rows="5" autoCorrect="off"  readOnly defaultValue={this.state.address}></textarea> :
+	                    	<textarea name="address" className="checkout-address"rows="5" autoCorrect="off"  readOnly defaultValue=" Please provide a contact address. And shipping"></textarea>
 	                   }
 	                  </label>
     	     		</div>

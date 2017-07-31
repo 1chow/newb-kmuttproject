@@ -67,7 +67,6 @@ class Edit extends Component {
        this.state.desc.trim().length &&
         this.state.catagoriesselect &&
          this.state.productimageURL.length !== 0 &&
-          this.state.boundedTime.lenght !== 0 &&
            this.state.timeStart.lenght !== 0 &&
             this.state.timeEnd.lenght !== 0) 
       {
@@ -86,7 +85,7 @@ class Edit extends Component {
             startTime: this.state.timeStart.format('x'),
         },
         img: this.state.productimageURL,
-        bouded : this.state.boundedTime,
+        bouded : 15,
         own : this.state.User,
         timeNow : new Date().getTime()
       })
@@ -109,13 +108,23 @@ class Edit extends Component {
     this.setState({ [e.target.name]: e.target.value })
   }
 
+  handleUploadStart = () => {
+    this.setState({productimageURL: null})
+    this.setState({isUploading: true})
+  }
+
+  handleProgress = () => {
+    this.state.productimageURL !== null && 
+     this.setState({isUploading: false})
+  }
+
   handleUploadError = (error) => {
       this.setState({isUploading: false})
       console.error(error)
   }
   handleUploadSuccess = (filename) => {
-      this.setState({productimage: filename, progress: 100, isUploading: false});
-      firebase.storage().ref('images').child(filename).getDownloadURL().then(url => this.setState({productimageURL: url}))
+      this.setState({productimage: filename});
+      firebase.storage().ref('images').child(filename).getDownloadURL().then(url => this.setState({productimageURL: url,isUploading: false}))
   }
 
   handleChange = (timeStart) => {
@@ -169,31 +178,23 @@ class Edit extends Component {
                     <span className="form-error">Yo, Product Description required!!</span>
                   </label>
                 </div>
-                <div className="small-12 medium-6 columns">
+                <div className="small-12 columns">
                   <label>First Bit
                     <div className="input-group">
-                      <span className="input-group-label">$</span>
+                      <span className="input-group-label">฿</span>
                       <input className="input-group-field" type="number" onChange={ this.onNewItemChange } value={ this.state.firstbit } name="firstbit"/>
                     </div>
                   </label>
                   <span className="form-error" data-form-error-for="exampleNumberInput">Amount is required.</span>
                 </div>
-                <div className="small-12 medium-6 columns">
-                  <label>Bounded Time
-                    <div className="input-group">
-                      <span className="input-group-label">$</span>
-                      <input className="input-group-field" type="number" required pattern="number" onChange={ this.onNewItemChange } value={ this.state.boundedTime } name="boundedTime" />
-                    </div>
-                  </label>
-                  <span className="form-error" data-form-error-for="exampleNumberInput">Amount is required.</span>
-                </div>
+
                 <div className="small-12 medium-6 columns">
                   <label>Time Start
                     <DatetimePickerTrigger
                       shortcuts={shortcuts} 
                       moment={this.state.timeStart}
                       onChange={this.handleChange}>
-                      <input onChange={this.handleChange} name="timeStart" type="text" value={this.state.timeStart.format('x')} />
+                      <input onChange={this.handleChange} name="timeStart" readOnly type="text" value={this.state.timeStart.format('YYYY-MM-DD HH:mm')} />
                     </DatetimePickerTrigger>
                 {/*    <input type="text" placeholder="Timestamp" aria-describedby="help-signup" required pattern="text" value={ this.state.timeStart } name="timeStart" readOnly/> */}        
                   </label>
@@ -204,7 +205,7 @@ class Edit extends Component {
                       shortcuts={shortcuts} 
                       moment={this.state.timeEnd}
                       onChange={this.handleChange2}>
-                      <input onChange={this.handleChange2} name="timeEnd" type="text" value={this.state.timeEnd.format('x')} />
+                      <input onChange={this.handleChange2} name="timeEnd" readOnly type="text" value={this.state.timeEnd.format('YYYY-MM-DD HH:mm')} />
                     </DatetimePickerTrigger>
                   </label>
                 </div>
@@ -224,6 +225,13 @@ class Edit extends Component {
                                 onProgress={this.handleProgress}
                             />
                         </label>
+                        {this.state.isUploading  === true ?
+                            <img className="load-small" src={'https://firebasestorage.googleapis.com/v0/b/auctkmutt.appspot.com/o/images%2FRolling.gif?alt=media&token=83378f72-c160-45d7-9b1e-9e805425e545'} alt="PreviewPic" />
+                          : <img className="load-small none" src={'https://firebasestorage.googleapis.com/v0/b/auctkmutt.appspot.com/o/images%2FRolling.gif?alt=media&token=83378f72-c160-45d7-9b1e-9e805425e545'} alt="PreviewPic" />
+                        }
+                        {this.state.productimageURL && 
+                          <img src={this.state.productimageURL} alt="PreviewPic" />
+                        }
                      </div>
                     </label>
                 </div>
@@ -249,9 +257,6 @@ class Edit extends Component {
           <div className="small-12 columns profile-main">
             <ItemL/>
           </div>
-             {this.state.productimageURL &&
-                            <img src={this.state.productimageURL} alt="PreviewPic" />
-              }
         </div>
     );
   }

@@ -23,7 +23,7 @@ export default class LoginSignUp extends Component {
 	handleSubmit = (e) => {
 		e.preventDefault()
 		this.props.type === 'signup' ? (
-
+			this._pw.value === this.pw.value ? (
 			firebase.database().ref('/users').once('value', snapshot => {
 				var matchU = [];
 				snapshot.forEach((childSnapshot) => {
@@ -46,7 +46,7 @@ export default class LoginSignUp extends Component {
 					 .catch( err => this.setState({registerError: err.message }))
 				}
 
-			})
+			}) ) : this.setState({registerError: 'Retype Password has Incorrect.' })
 
 		) : (
 			login(this.email.value, this.pw.value , this.props.close)

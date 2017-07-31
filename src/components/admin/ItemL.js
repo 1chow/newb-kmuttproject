@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import * as firebase from 'firebase'
+import moment from 'moment'
 
 
 class CategoryL extends Component {
@@ -11,8 +12,8 @@ class CategoryL extends Component {
               <td>{this.props.key_}</td>
               <td className="show-for-large">{this.props.name}</td>
               <td className="show-for-large">{this.props.catagory}</td>
-              <td className="show-for-large">{/*this.props.bid.startTime*/} 00:00:00</td>
-              <td className="show-for-large">{/*this.props.bid.endTime*/} 00:00:00</td>
+              <td className="show-for-large">{moment(this.props.bid.startTime).format('YYYY-MM-DD HH:mm')}</td>
+              <td className="show-for-large">{moment(this.props.bid.startTime).format('YYYY-MM-DD HH:mm')}</td>
               <td><button onClick={()=> this.props.hell(this.props.dbkey)} ><i className="fa fa-trash"></i></button></td>
           </tr>
         
