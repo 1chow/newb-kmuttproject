@@ -26,62 +26,37 @@ export default class Checkout extends Component {
 		};
 	}
 	componentDidMount() {
-		this.props.filter("CS");
-		if (this.props.userUID) {
-		firebase.database().ref('/orders/'+ this.props.userUID +'/orderList').once('value', dataSnapshot => {
-			var list = [];
-			dataSnapshot.forEach(childSnapshot => {
-				let orderPrice = childSnapshot.val();
-				list.push(orderPrice)
-				})
-			    this.setState({
-	        	orderL: list
-	      		});
-			})
-		}
-		firebase.database().ref('/orders/'+ this.props.userUID).once('value', dataSnapshot => {
-			var list = [];
-			dataSnapshot.forEach(childSnapshot => {
-				let orderPrice = childSnapshot.val();
-				list.push(orderPrice)
-			})
-			this.setState({
-	        	orderDesc: list
-	      		});
-		})
 		firebase.database().ref('/users/'+ this.props.userUID + '/info' ).once('value', dataSnapshot => {
 				let orderPrice = dataSnapshot.val();
 			this.setState({
 	        	user_: orderPrice
 	      		});
 		})
-
-
 	}
 
-	componentWillReceiveProps(nextProps) {
+	componentWillReceiveProps(nextProps,nextState) {
 		if (this.props.userUID) {
-		firebase.database().ref('orders/'+ this.props.userUID +'/orderList').once('value', dataSnapshot => {
-			var list = [];
-			dataSnapshot.forEach(childSnapshot => {
-				let orderPrice = childSnapshot.val();
-				list.push(orderPrice)
+			firebase.database().ref('orders/'+ this.props.userUID +'/orderList').once('value', dataSnapshot => {
+				var list = [];
+				dataSnapshot.forEach(childSnapshot => {
+					let orderPrice = childSnapshot.val();
+					list.push(orderPrice)
+					})
+					this.setState({
+					orderL: list
+					});
+			})
+			firebase.database().ref('/orders/'+ this.props.userUID).once('value', dataSnapshot => {
+				var list = [];
+				dataSnapshot.forEach(childSnapshot => {
+					let orderPrice = childSnapshot.val();
+					list.push(orderPrice)
 				})
-			    this.setState({
-	        	orderL: list
-	      		});
+				this.setState({
+					orderDesc: list
+					});
 			})
 		}
-		firebase.database().ref('orders/'+ this.props.userUID ).once('value', dataSnapshot => {
-			var list = [];
-			dataSnapshot.forEach(childSnapshot => {
-				let orderPrice = childSnapshot.val();
-				list.push(orderPrice)
-			})
-			this.setState({
-	        	orderDesc: list
-	      		});
-		})
 	}
 
 	print(){
@@ -133,16 +108,18 @@ export default class Checkout extends Component {
 	                  					return ( 
 	                  						<CheckoutList key={orderL.itemId} {...orderL} />
 									);})}
-									<tr>{this.state.orderDesc[0] &&
-											<th className="text-right">Total</th>
-										}
-										{this.state.orderDesc[0] &&
-											<th className="text-center">{this.state.orderDesc[0].orderCount}</th>
-										}
-										{this.state.orderDesc[0] &&
-											<th className="text-right">{this.state.orderDesc[0].orderPrice}.00 <span>THB</span></th>
-										}
+									<tr>
+										<td>Delivery Charge</td>
+										<td className="text-center">-</td>
+										<td className="text-right">39.00 <span>THB</span></td>
 									</tr>
+									{this.state.orderDesc[1] &&
+										<tr>
+											<th className="text-right">Total</th>
+											<th className="text-center">{Object.keys(this.state.orderDesc[1]).length}</th>
+											<th className="text-right">{this.state.orderDesc[2] + 39}.00 <span>THB</span></th>
+										</tr>
+									}
 									</tbody>
 								</table>
 							</div>
@@ -154,7 +131,7 @@ export default class Checkout extends Component {
 									<p className="address"><span className="name"><i className="fa fa-gavel fa-1x"></i> Auct Call Center</span>Telphone : 1150 (9:00-16:00 GMT+7) <br></br>Email : Auct@Auct.Auct</p>
 								</div>
 								<div className="small-12 medium-6 columns ">
-									<p className="address"><span className="name">Payment On Delevery</span>Amount : {this.state.orderDesc[0] && this.state.orderDesc[0].orderPrice} THB<br></br>Transaction Id: 1234489875445</p>
+									<p className="address"><span className="name">Payment On Delevery</span>Amount : {this.state.orderDesc[2] && this.state.orderDesc[2] + 39} THB<br></br>Transaction Id: 1234489875445</p>
 								</div>
 								<div className="small-12 medium-6 columns none">
 									<p className="address"><span className="name">Payment By Omise</span>Card Info. : Undified <br></br>Amount : Undified <br></br>Transaction Id: 1234489875445</p>
