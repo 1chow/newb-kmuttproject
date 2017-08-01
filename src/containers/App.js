@@ -206,7 +206,7 @@ export default class App extends Component {
 										<Route
 											path="/item/:id"
 											render={props => (
-												<Item triggler={this.alertOpenModal} current={this.state.current} {...props} items={this.state.items} timeDiff={this.timeDiff} />
+												<Item isLogin={this.state.isLogin} triggler={this.alertOpenModal} current={this.state.current} {...props} items={this.state.items} timeDiff={this.timeDiff} />
 											)}
 										/>
 										<Route
@@ -218,13 +218,13 @@ export default class App extends Component {
 										<Route
 											path="/setting"
 											render={props => this.state.isLogin === true ? (
-												<Admin profilePicture={this.state.profilePicture} role={this.state.role} />
+												<Admin triggler={this.alertOpenModal} profilePicture={this.state.profilePicture} role={this.state.role} />
 											) : <Redirect to={{pathname: '/', state: {from: props.location}}} />}
 										/>
 										<Route
 											path="/admin"
 											render={props => this.state.isLogin === true ? (
-												<Admin profilePicture={this.state.profilePicture} role={this.state.role} />
+												<Admin triggler={this.alertOpenModal} profilePicture={this.state.profilePicture} role={this.state.role} />
 											) : <Redirect to={{pathname: '/', state: {from: props.location}}} />}
 										/>
 										<Route 

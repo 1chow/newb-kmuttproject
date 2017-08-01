@@ -15,7 +15,6 @@ class bidForm extends Component {
 
     Validation = (oldItem,itemId,current,open,endTime,life,validatecurrent) => {
 		var user = firebaseAuth().currentUser
-		console.log(user)
 		if (user) {
 			let userId = user.uid
 			let postBid = "https://us-central1-auctkmutt.cloudfunctions.net/bidOrder?itemId="+itemId+"&bid="+current+"&uId="+userId
@@ -40,16 +39,17 @@ class bidForm extends Component {
 
 	handleSubmit = (e) => {
 		e.preventDefault()
+		this.props.waiting()
 		this.setState({current: this.bid.value})
 		let getCurrent = "https://us-central1-auctkmutt.cloudfunctions.net/getCurrent?itemId="+this.props.item._id
 		fetch(getCurrent)
 			.then( res => res.json())
-			.then( json => this.setState({validates: json}))
+			.then( json => this.setState({validates: json},this.props.recieve()))
 	}
 
 
     render() {
-        return (
+        return this.props.wait === false ? (
 			<form className="auct-form" onSubmit={this.handleSubmit}>
 				<label>
 					<div className="input-group">
@@ -59,7 +59,7 @@ class bidForm extends Component {
 				</label>
 				<button className="button" type="submit" value="Submit">Bid</button>
 			</form>
-        )
+        ) : <img src={require("../images/Rolling.gif")} alt="Loading"></img>
     }
 }
 

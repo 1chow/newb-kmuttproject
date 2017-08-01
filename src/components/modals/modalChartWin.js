@@ -69,12 +69,13 @@ export default class ModalChartWin extends Component {
 										})},0)
 										`
 									};
+									console.log(orderList.img)
 									return (
 									<div key={i} className="small-12 columns post-list">
 										<Animated.div style={style}>
 											<Link onClick={this.props.close} to={'/item/'+orderList.itemId}>
 												<div className="post-list-l">
-													<img src="http://placehold.it/300x300" alt="" />
+													<img src={orderList.itemPic} alt="" />
 												</div>
 												<div className="post-list-r">
 													<h3>{orderList.itemName}</h3>
@@ -96,11 +97,17 @@ export default class ModalChartWin extends Component {
 							<Link onClick={this.handleLinktoCheckOut} to="/checkout" className="button success">Checkout</Link>
 							<ul>
 								<li>Your Order {this.state.orderLists.length} Item<span>{this.state.orderPrice} THB</span></li>
-								<li>Delivery Charge<span>39 THB</span></li>
+								{ this.state.orderPrice ?
+								<li>Delivery Charge<span>39 THB</span></li> :
+								<li>Delivery Charge<span>0 THB</span></li>
+								}
 							</ul>
 							<hr/>
 							<ul>
-								<li className="price">Total<span>{this.state.orderPrice + 39} THB</span><p>(VAT incl.)</p></li>
+								{ this.state.orderPrice ?
+								<li className="price">Total<span>{this.state.orderPrice + 39} THB</span><p>(VAT incl.)</p></li> :
+								<li className="price">Total<span>0 THB</span><p>(VAT incl.)</p></li>
+								}
 							</ul>
 						</div>
 						<div className="small-12 columns post-checkout" style={{background:'#fff'}}>

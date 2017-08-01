@@ -9,6 +9,7 @@ export default class Item extends Component {
 		item:[],
 		bidLists:[],
 		newcurrent:[],
+		wait:false
 	}
 
 	componentDidMount() {
@@ -19,7 +20,6 @@ export default class Item extends Component {
 			let data = childSnapshot.val();
 			table_.push(data)
 			})
-			console.log(table_)
 			if(this.state)				
 			this.setState({bidLists:table_.reverse()})
 		})
@@ -54,6 +54,14 @@ export default class Item extends Component {
 		newcurrent.length !== 0 && this.setState({newcurrent: newcurrent[0].current})
 	}
 
+	recieve = () => {
+		this.setState({wait:false})
+	} 
+
+	waiting = () => {
+		this.setState({wait:true})
+	}
+
 	render() {
 		return this.state.item[0] ? (
 			<div>
@@ -72,7 +80,7 @@ export default class Item extends Component {
 					<div className="small-12 medium-5 large-6 columns auct-l-container">
 						<div className="item-warper">
 							<div className="item">
-								<img src={require("../images/mockup.JPG")} alt=""/>
+								<img src={this.state.item[0].img} alt=""/>
 							</div>
 						</div>
 					</div>
@@ -82,13 +90,15 @@ export default class Item extends Component {
 								<div className="small-5 medium-5 columns">
 									<p className="time">Time Remaining<br></br><Clock  item={this.state.item[0]} /></p>
 								</div>
-								<div className="small-7 medium-7 columns auct-from-bit">
-									<p className="time">Place Your Bid</p>
-									<BidForm newcurrent={this.state.newcurrent} open={this.props.triggler} item={this.state.item[0]} params={this.props.match.params.id} />
-									{ this.state.newcurrent !== 0 &&
-										<p className="helper">Bids More Than {this.state.newcurrent}฿ To Win This Auction</p>
-									}
-								</div>
+								{ this.props.isLogin &&
+									<div className="small-7 medium-7 columns auct-from-bit">
+										<p className="time">Place Your Bid</p>
+										<BidForm recieve={this.recieve} waiting={this.waiting} wait={this.state.wait} newcurrent={this.state.newcurrent} open={this.props.triggler} item={this.state.item[0]} params={this.props.match.params.id} />
+										{ this.state.newcurrent !== 0 &&
+											<p className="helper">Bids More Than {this.state.newcurrent}฿ To Win This Auction</p>
+										}
+									</div>
+								}
 							</div>
 							<div className="row auct-from-warp">
 								<div className="small-12 medium-12 columns">

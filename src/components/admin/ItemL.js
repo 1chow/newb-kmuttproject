@@ -52,7 +52,9 @@ class CategoriesL extends Component {
   }
 
   removeItem(key){
-        this.dbItems.child(key).remove();
+    if (window.confirm("Do you want to remove this?") === true) {
+      this.dbItems.child(key).remove();
+    } 
   }
 
   render() {

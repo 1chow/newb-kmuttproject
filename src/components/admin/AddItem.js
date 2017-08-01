@@ -59,7 +59,6 @@ class Edit extends Component {
 
   
   handleNewItemSubmit = (e) => {
-    console.log(this.state.timeEnd.format('x'))
     e.preventDefault();
     this.dbItems = firebase.database().ref().child('items');
     if (this.state.productname && 
@@ -75,8 +74,8 @@ class Edit extends Component {
         catagory: this.state.catagoriesselect,
         isActive: 1,
         desc:{
-              short: this.state.desc.slice(0,16),
-              fullHeader: this.state.desc.slice(0,8),
+              short: this.state.desc.slice(0,32),
+              fullHeader: this.state.desc.slice(0,16),
               fullDesc : this.state.desc
         },
         bid:{
