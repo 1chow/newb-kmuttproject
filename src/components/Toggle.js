@@ -23,7 +23,7 @@ const Toggle = props => (
                             <p>Setting</p>
                         </Link>
                         }
-                        <button onClick={() => {logout(),props.closetoggle()}} className="button">
+                        <button onClick={() => {logout();props.closetoggle()}} className="button">
                             <i className="fa fa-sign-out fa-2x" aria-hidden="true"></i>
                             <p>Log Out</p>
                         </button>		

@@ -14,7 +14,7 @@ export default class Setting extends Component {
       userimageURL:'',
       Error: null ,
       setting: false,
-      address: 'Your Address',
+      address: 'Please provide a contact address.',
     }
   }
 
@@ -42,12 +42,10 @@ export default class Setting extends Component {
   }
 
   onNewItemChange = (e) => {
-  	e.preventDefault
     this.setState({ [e.target.name]: e.target.value })
   }
 
   Setting = (e) => {
-  	e.preventDefault
     this.setState({ setting: !this.state.setting})
 	}
 	
@@ -91,7 +89,7 @@ export default class Setting extends Component {
 	}
 
   render(){
-    return this.state.username ? (
+    return this.state ? (
 	          <div className="row">
 	            <div className="small-12 columns user-container">
 	              <h1> Your Profile</h1>
@@ -146,10 +144,9 @@ export default class Setting extends Component {
 	     			<div className="small-12 columns">
 	                  <label>Address
 	                    { this.state.setting === true ?
-	                    	this.state.address ?
-	                    <textarea className="checkout-address" name="address" rows="5" autoCorrect="off" spellCheck="false" onChange={this.onNewItemChange} value={this.state.address} ></textarea> : <textarea className="checkout-address" name="address" rows="10" autoCorrect="off" spellCheck="false" onChange={this.onNewItemChange} value=" Please provide a contact address. And shipping" ></textarea>
-	                    : this.state.address ? <textarea name="address" className="checkout-address"rows="5" autoCorrect="off"  readOnly defaultValue={this.state.address}></textarea> :
-	                    	<textarea name="address" className="checkout-address"rows="5" autoCorrect="off"  readOnly defaultValue=" Please provide a contact address. And shipping"></textarea>
+	                    	this.state.address &&
+	                    <textarea className="checkout-address" name="address" rows="5" autoCorrect="off" spellCheck="false" onChange={this.onNewItemChange} value={this.state.address} ></textarea>
+	                    : this.state.address && <textarea name="address" className="checkout-address"rows="5" autoCorrect="off"  readOnly defaultValue={this.state.address}></textarea>
 	                   }
 	                  </label>
     	     		</div>

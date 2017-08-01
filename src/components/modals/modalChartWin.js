@@ -69,7 +69,6 @@ export default class ModalChartWin extends Component {
 										})},0)
 										`
 									};
-									console.log(orderList.img)
 									return (
 									<div key={i} className="small-12 columns post-list">
 										<Animated.div style={style}>

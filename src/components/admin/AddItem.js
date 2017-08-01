@@ -26,7 +26,7 @@ class Edit extends Component {
       catagoriesselect:'', 
       desc: '',
       timeStart: moment(),
-      timeEnd: moment(),
+      timeEnd: moment().add(1, 'days'),
       boundedTime:'',
       catagories:[],
       Error: null,
@@ -69,6 +69,7 @@ class Edit extends Component {
            this.state.timeStart.lenght !== 0 &&
             this.state.timeEnd.lenght !== 0) 
       {
+        this.props.triggler('alert','good','Your Item has create')
         this.dbItems.push({
         name: this.state.productname,
         catagory: this.state.catagoriesselect,
@@ -79,7 +80,7 @@ class Edit extends Component {
               fullDesc : this.state.desc
         },
         bid:{
-            current : parseInt(this.state.firstbit),
+            current : parseInt(this.state.firstbit,10),
             endTime: this.state.timeEnd.format('x'),
             startTime: this.state.timeStart.format('x'),
         },
@@ -91,15 +92,22 @@ class Edit extends Component {
       .then(snapshot => {
             firebase.database().ref('/items/' + snapshot.key + '/bidList').push({
               userId : '',
-              bid : parseInt(this.state.firstbit),
+              bid : parseInt(this.state.firstbit,10),
               bidTimestamp : this.state.timeStart.format('x')
-            });
-        });
-      this.setState({
-        productname: '',
-        catagoriesselect:'',
-        desc: '',
-      })
+            })
+            .then(   
+              this.setState({
+                  productname: '',
+                  catagoriesselect:'',
+                  desc: '',
+                  productimage:'',
+                  productimageURL:'',
+                  firstbit:'',
+                  timeStart: moment(),
+                  timeEnd: moment().add(1, 'days'),
+                })
+            )
+        })
     } else this.setState({Error: 'Please filled a valid form' })
   }
 

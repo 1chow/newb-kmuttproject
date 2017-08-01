@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import * as firebase from 'firebase'
-import moment from 'moment';
 
 class CategoryL extends Component {
   render(){

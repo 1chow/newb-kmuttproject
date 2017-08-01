@@ -81,8 +81,8 @@ export default class Sellingareas extends Component {
 							})},0)
 							`
 						};
-						return (
-						<div key={i} className={"small-6 medium-4 large-3 columns post-box "+(item.isActive === 0 && 'hidden')}>
+						return this.state.newcurrent[i] ? (
+						<div key={i} className={"small-6 medium-4 large-3 columns post-box "+(this.state.newcurrent[i].isActive === 0 && 'hidden')}>
 							<Animated.div style={style}>
 								<Link onClick={this.handleClose} to={'/item/'+ item._id}>
 									<div className="post-box-top">
@@ -92,15 +92,13 @@ export default class Sellingareas extends Component {
 										<h3>{item.name}</h3>
 										<p className="desc">{item.desc.short.slice(0,20)}</p>
 										<Clock item={item}  />
-										{ this.state.newcurrent[i] &&
 											<p className="price">{this.state.newcurrent[i].current}<span className="curentcy">Bath</span></p>
-										}
 										<button><i className="fa fa2x "></i></button>
 									</div>
 								</Link>
 							</Animated.div>
 						</div>
-						)
+						) : null
 					})}
 				</TransitionGroup>
 			</div>
