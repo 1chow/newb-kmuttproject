@@ -9,6 +9,7 @@ export default class Item extends Component {
 		item:[],
 		bidLists:[],
 		newcurrent:[],
+		timeNow:[],
 		wait:false
 	}
 
@@ -32,6 +33,9 @@ export default class Item extends Component {
 		if (this.props.current !== nextProps.current) {
 			this._filtercurrent(this.props.current,nextProps.current)
 		}
+		if (this.props.timeNows !== nextProps.timeNows) {
+			this._filtertimeNows(this.props.timeNows,nextProps.timeNows)
+		}
 	}
 
 	_filterItems = (items,currents) => {
@@ -52,6 +56,13 @@ export default class Item extends Component {
 			return current.itemId === this.props.match.params.id
 		})
 		newcurrent.length !== 0 && this.setState({newcurrent: newcurrent[0].current})
+	}
+
+	_filtertimeNows = (timeNows) => {
+		let newtimeNows = timeNows.filter( timeNow => {
+			return timeNow._id === this.props.match.params.id
+		})
+		newtimeNows.length !== 0 && this.setState({timeNow: newtimeNows[0].timeNow})
 	}
 
 	recieve = () => {
@@ -88,7 +99,11 @@ export default class Item extends Component {
 						<div className="auct-content">
 							<div className="row auct-from-warp">
 								<div className="small-5 medium-5 columns">
-									<p className="time">Time Remaining<br></br><Clock  item={this.state.item[0]} /></p>
+									<p className="time">Time Remaining<br></br>
+									{this.state.timeNow &&
+										<Clock secondsToHms={this.props.secondsToHms} timeNow={this.state.timeNow}/>
+									}
+									</p>
 								</div>
 								{ this.props.isLogin &&
 									<div className="small-7 medium-7 columns auct-from-bit">

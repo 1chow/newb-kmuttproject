@@ -9,7 +9,7 @@ export default class Projects extends Component {
 					<div className="page-404">
 						<h3>404</h3>
 						<p className="quote">This Page Not Found.</p>
-						<Link to="/" className="button success" type="submit" value="Submit">Just Auction</Link>
+						<Link to="/" className="button success">Just Auction</Link>
 					</div>
 				</div>
 			</div>

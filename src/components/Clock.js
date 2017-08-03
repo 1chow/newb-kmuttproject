@@ -3,42 +3,45 @@ import Loading from "./Loading"
 
 class Clock extends React.Component {
   state = {
-    currentCount: (this.props.item.bid.endTime - this.props.item.timeNow)/1000,
-    hotTime: true
+    hotTime: false
   }
 
-  componentDidMount() {
-      let intervalId = setInterval(this.timer, 1000)
-      this.setState({intervalId: intervalId})
-  }
-
-  componentWillUnmount(){
-    clearInterval(this.state.intervalId)
-  }
-
-  timer = () => {
-    let newCount = this.state.currentCount - 1;
-    if(newCount >= 0) { 
-        this.setState({ currentCount: newCount })
-        if(newCount <= 16) {this.setState({ hotTime: false })}
-    } else {
-        this.setState({ currentCount: 0 })
-        this.setState({ hotTime: false })
-        clearInterval(this.state.intervalId)
-    }
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.timeNows.timeNow <= 15){
+      this.setState({hotTime: true})
+    } 
   }
 
   render() {
-    let test = new Date(this.state.currentCount * 1e3).toISOString().slice(-13, -5);
-    return  test ? (
-      <span className={"timecount " + (this.state.hotTime ? 'green' : 'red')}>{test}</span>
-    ) : null
+    return  (
+      <span className={"timecount " + (this.state.hotTime ? 'red' : 'green')}>{this.props.secondsToHms(this.props.timeNows.timeNow)}</span>
+    )
+  }
+}
+
+class Clock2 extends React.Component {
+  state = {
+    hotTime: false
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.timeNow <= 15){
+      this.setState({hotTime: true})
+    } else this.setState({hotTime: false})
+  }
+
+  render() {
+    return  (
+      <span className={"timecount " + (this.state.hotTime ? 'red' : 'green')}>{this.props.secondsToHms(this.props.timeNow)}</span>
+    )
   }
 }
 
 export default  function Clocks(props) {
-  return props.item ? (
-      <Clock item={props.item} />
+  return props.timeNows ? (
+      <Clock secondsToHms={props.secondsToHms} timeNows={props.timeNows} />
+  ) : props.timeNow ? (
+      <Clock2 secondsToHms={props.secondsToHms} timeNow={props.timeNow} />
   ) : <Loading />
 }
 

@@ -38,6 +38,7 @@ export default class App extends Component {
 			feel:null,
 			message:null,
 			userUID: '',
+			timeNows: '',
 		};
 	}
 	componentWillMount() {
@@ -46,8 +47,23 @@ export default class App extends Component {
 				return response.json();
 			})
 			.then(json => {
+				let timeNows =[]
+				json.forEach( (object,i) => {
+					let timeNow_ = ((object.bid.endTime - object.timeNow)/1000)
+					let id_ = object._id
+					let catagory_ = object.catagory
+					let isActive_ = object.isActive
+					let timeNows_ = {
+						timeNow  : timeNow_,
+						_id  	 : id_,
+						catagory : catagory_,
+						isActive : isActive_
+					}
+					timeNows.push(timeNows_);
+				})
 				this.setState({
-					items: json
+					items: json,
+					timeNows:timeNows
 				});
 			});
 
@@ -94,7 +110,7 @@ export default class App extends Component {
 				})
 			}
 		})
-		  db2.ref('/items').on('value', Snapshot => {
+		db2.ref('/items').on('value', Snapshot => {
 	        let current_a = [];
 
 	        Snapshot.forEach( childSnapshot => {
@@ -107,17 +123,54 @@ export default class App extends Component {
 	          	current  : current_,
 				itemId : key,
 				catagory: catagory_,
-				isActive: isActive_ 			
+				isActive: isActive_,		
 	          }
 	          current_a.push(obj);
 			})
 		    this.setState({current:current_a})
 		  })
+		this.timerID = setInterval(
+		() => this.tick(),
+		1000
+		);
 	}
 
 	componentWillUnmount () {
 		this.removeListener()
 	}
+
+	secondsToHms = (d) => {
+		d = Number(d);
+		var h = Math.floor(d / 3600);
+		var m = Math.floor(d % 3600 / 60);
+		var s = Math.floor(d % 3600 % 60);
+
+		var hDisplay = h > 0 ? (h > 9 ? h+':' : '0'+h+':') : "00:"
+		var mDisplay = m > 0 ? (m > 9 ? m+':' : '0'+m+':') : "00:"
+		var sDisplay = s > 0 ? (s > 9 ? s : '0'+s) : "00"
+		return hDisplay + mDisplay + sDisplay; 
+	}
+
+	tick() {
+		let timeNows = []
+		if(this.state.timeNows) {
+		let newTimeNows = this.state.timeNows.map( timeNow => {
+			let timeNow_
+			if(timeNow.timeNow <= 0){
+				timeNow_ = 0
+			} else { timeNow_ = timeNow.timeNow - 1 }
+			let timeNows_ = {
+				timeNow  : timeNow_,
+				_id : timeNow._id,
+				catagory : timeNow.catagory,
+				isActive : timeNow.isActive	
+			}
+			timeNows.push(timeNows_);
+			return timeNows_
+		})
+		this.setState({timeNows:timeNows})
+		}
+  	}
 
 	//Modal function
 
@@ -164,8 +217,7 @@ export default class App extends Component {
 	//Timer Function
 
 	timeDiff = (timestamp) => {
-		let change = (timestamp/1000)+(60*60*7);
-		return new Date(change * 1e3).toISOString().slice(-13, -5);
+		return new Date(timestamp * 1e3).toISOString().slice(-13, -5);
 	}
 
 	toggle = () => {
@@ -200,13 +252,13 @@ export default class App extends Component {
 											exact
 											path="/"
 											render={props => (
-												<Sellingareas current={this.state.current} isActive={this.state.isActive} close={this.handleCloseModal} items={this.state.items} timeDiff={this.timeDiff} />
+												<Sellingareas secondsToHms={this.secondsToHms} timeNows={this.state.timeNows} current={this.state.current} isActive={this.state.isActive} close={this.handleCloseModal} items={this.state.items} timeDiff={this.timeDiff} />
 											)}
 										/>
 										<Route
 											path="/item/:id"
 											render={props => (
-												<Item isLogin={this.state.isLogin} triggler={this.alertOpenModal} current={this.state.current} {...props} items={this.state.items} timeDiff={this.timeDiff} />
+												<Item secondsToHms={this.secondsToHms} timeNows={this.state.timeNows} isLogin={this.state.isLogin} triggler={this.alertOpenModal} current={this.state.current} {...props} items={this.state.items} timeDiff={this.timeDiff} />
 											)}
 										/>
 										<Route

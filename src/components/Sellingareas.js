@@ -11,6 +11,7 @@ export default class Sellingareas extends Component {
 			items: [],
 			animations: [],
 			newcurrent:[],
+			timeNows:[],
 		};
 	}
 	//For After First Render
@@ -23,9 +24,11 @@ export default class Sellingareas extends Component {
 		if (!this.props.items.length && nextProps.items.length) {
 			this._renderProjects(nextProps.items,nextProps.isActive);
 		}
-		//
 		if (nextProps.current.length !== 0) {
 			this._filtercurrent(nextProps.current,this.props.isActive)
+		}
+		if (nextProps.timeNows.length !== 0) {
+			this._filtertimeNows(nextProps.timeNows,this.props.isActive)
 		}
 	}
 
@@ -62,6 +65,16 @@ export default class Sellingareas extends Component {
 		}  newcurrent.length !== 0 && this.setState({newcurrent: newcurrent})
 	}
 
+	_filtertimeNows = (timeNows,isActive) => {
+		if(timeNows.length !== 0) {
+			if(isActive !== 'default') {
+			var newtimeNows = timeNows.filter( timeNow => {
+				return timeNow.catagory === isActive && timeNow.isActive !== 0
+			}) 
+			} else newtimeNows = timeNows
+		} timeNows.length !== 0 && this.setState({timeNows: newtimeNows})
+	}
+
 	handleClose = () => {
 		this.props.close()
 		window.scrollTo(0,0);
@@ -91,7 +104,7 @@ export default class Sellingareas extends Component {
 									<div className="post-box-content">
 										<h3>{item.name}</h3>
 										<p className="desc">{item.desc.short.slice(0,20)}</p>
-										<Clock item={item}  />
+										<Clock secondsToHms={this.props.secondsToHms} timeNows={this.state.timeNows[i]}  />
 											<p className="price">{this.state.newcurrent[i].current}<span className="curentcy">Bath</span></p>
 										<button><i className="fa fa2x "></i></button>
 									</div>
