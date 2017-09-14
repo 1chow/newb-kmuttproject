@@ -21,7 +21,7 @@ export default class Sellingareas extends Component {
 	
 	//For First Render
 	componentWillReceiveProps(nextProps) {
-		if (!this.props.items.length && nextProps.items.length) {
+		if (this.props.items.length !== nextProps.items.length) {
 			this._renderProjects(nextProps.items,nextProps.isActive);
 		}
 		if (nextProps.current.length !== 0) {
@@ -37,7 +37,9 @@ export default class Sellingareas extends Component {
 		if(isActive !== 'default') {
 		var newitems = items.filter( item => {
 			return item.catagory === isActive && item.isActive !== 0
-		})} else newitems = items
+		})} else newitems = items.sort(function(a, b){
+			return a.bid.endTime-b.bid.endTime
+		})
 		this.setState(
 			{
 				items: newitems,
@@ -61,7 +63,9 @@ export default class Sellingareas extends Component {
 			var newcurrent = currents.filter( current => {
 				return current.catagory === isActive && current.isActive !== 0
 			}) 
-			} else newcurrent = currents
+			} else newcurrent = currents.sort(function(a, b){
+				return a.endTime-b.endTime
+			})
 		}  newcurrent.length !== 0 && this.setState({newcurrent: newcurrent})
 	}
 
@@ -71,7 +75,9 @@ export default class Sellingareas extends Component {
 			var newtimeNows = timeNows.filter( timeNow => {
 				return timeNow.catagory === isActive && timeNow.isActive !== 0
 			}) 
-			} else newtimeNows = timeNows
+			} else newtimeNows = timeNows.sort(function(a, b){
+				return a.timeNow-b.timeNow
+			})
 		} timeNows.length !== 0 && this.setState({timeNows: newtimeNows})
 	}
 

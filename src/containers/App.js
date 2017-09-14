@@ -42,31 +42,7 @@ export default class App extends Component {
 		};
 	}
 	componentWillMount() {
-		fetch("https://us-central1-auctkmutt.cloudfunctions.net/getItems")
-			.then(response => {
-				return response.json();
-			})
-			.then(json => {
-				let timeNows =[]
-				json.forEach( (object,i) => {
-					let timeNow_ = ((object.bid.endTime - object.timeNow)/1000)
-					let id_ = object._id
-					let catagory_ = object.catagory
-					let isActive_ = object.isActive
-					let timeNows_ = {
-						timeNow  : timeNow_,
-						_id  	 : id_,
-						catagory : catagory_,
-						isActive : isActive_
-					}
-					timeNows.push(timeNows_);
-				})
-				this.setState({
-					items: json,
-					timeNows:timeNows
-				});
-			});
-
+		this.getObjects()
 		fetch("https://us-central1-auctkmutt.cloudfunctions.net/getCatagories")
 			.then(response => {
 				return response.json();
@@ -110,6 +86,42 @@ export default class App extends Component {
 				})
 			}
 		})
+		this.timerID = setInterval(
+			() => this.tick(),
+			1000
+		);
+	}
+
+	componentWillUnmount () {
+		this.removeListener()
+	}
+
+	getObjects = () => {
+		fetch("https://us-central1-auctkmutt.cloudfunctions.net/getItems")
+		.then(response => {
+			return response.json();
+		})
+		.then(json => {
+			let timeNows =[]
+			json.forEach( (object,i) => {
+				let timeNow_ = ((object.bid.endTime - object.timeNow)/1000)
+				let id_ = object._id
+				let catagory_ = object.catagory
+				let isActive_ = object.isActive
+				let timeNows_ = {
+					timeNow  : timeNow_,
+					_id  	 : id_,
+					catagory : catagory_,
+					isActive : isActive_
+				}
+				timeNows.push(timeNows_);
+			})
+			console.log(json)
+			this.setState({
+				items: json,
+				timeNows:timeNows
+			});
+		});
 		db2.ref('/items').on('value', Snapshot => {
 	        let current_a = [];
 
@@ -119,24 +131,18 @@ export default class App extends Component {
 			  let current_ = data.bid.current;
 			  let catagory_ = data.catagory;
 			  let isActive_ = data.isActive;
+			  let endTime_ = data.bid.endTime;
 	          let obj = {
 	          	current  : current_,
 				itemId : key,
 				catagory: catagory_,
-				isActive: isActive_,		
+				isActive: isActive_,
+				endTime: endTime_,		
 	          }
 	          current_a.push(obj);
 			})
 		    this.setState({current:current_a})
 		  })
-		this.timerID = setInterval(
-		() => this.tick(),
-		1000
-		);
-	}
-
-	componentWillUnmount () {
-		this.removeListener()
 	}
 
 	secondsToHms = (d) => {
@@ -154,7 +160,7 @@ export default class App extends Component {
 	tick() {
 		let timeNows = []
 		if(this.state.timeNows) {
-		let newTimeNows = this.state.timeNows.map( timeNow => {
+		this.state.timeNows.map( timeNow => {
 			let timeNow_
 			if(timeNow.timeNow <= 0){
 				timeNow_ = 0
@@ -213,13 +219,6 @@ export default class App extends Component {
 	}
 
 
-
-	//Timer Function
-
-	timeDiff = (timestamp) => {
-		return new Date(timestamp * 1e3).toISOString().slice(-13, -5);
-	}
-
 	toggle = () => {
 		this.setState({ showToggle: true });
 	}
@@ -236,9 +235,25 @@ export default class App extends Component {
 			<div>
 				<section className={"warpper " + (this.state.showModal === true  && 'blur-for-modal')}>
 					{/* Navigator Bar */}
-					<Navigator profilePicture={this.state.profilePicture} toggle={this.toggle} triggler={this.handleOpenModal} isLogin={this.state.isLogin} filter={this.filter} />
-					<Categories categories={this.state.categories} isActive={this.state.isActive} filter={this.filter} />
-					<Toggle role={this.state.role} logout={this.logout} closetoggle={this.closetoggle} showToggle={this.state.showToggle} />
+					<Navigator 
+						profilePicture={this.state.profilePicture} 
+						toggle={this.toggle}
+						triggler={this.handleOpenModal}
+						isLogin={this.state.isLogin}
+						filter={this.filter} 
+						getObjects={this.getObjects}
+					/>
+					<Categories 
+						categories={this.state.categories} 
+						isActive={this.state.isActive} 
+						filter={this.filter}
+					 />
+					<Toggle 
+						role={this.state.role} 
+						logout={this.logout} 
+						closetoggle={this.closetoggle} 
+						showToggle={this.state.showToggle}
+					 />
 					{/* Application Routes Zone */}
 						<div className="row">
 							<Route
@@ -252,13 +267,13 @@ export default class App extends Component {
 											exact
 											path="/"
 											render={props => (
-												<Sellingareas secondsToHms={this.secondsToHms} timeNows={this.state.timeNows} current={this.state.current} isActive={this.state.isActive} close={this.handleCloseModal} items={this.state.items} timeDiff={this.timeDiff} />
+												<Sellingareas secondsToHms={this.secondsToHms} timeNows={this.state.timeNows} current={this.state.current} isActive={this.state.isActive} close={this.handleCloseModal} items={this.state.items} />
 											)}
 										/>
 										<Route
 											path="/item/:id"
 											render={props => (
-												<Item secondsToHms={this.secondsToHms} timeNows={this.state.timeNows} isLogin={this.state.isLogin} triggler={this.alertOpenModal} current={this.state.current} {...props} items={this.state.items} timeDiff={this.timeDiff} />
+												<Item secondsToHms={this.secondsToHms} timeNows={this.state.timeNows} isLogin={this.state.isLogin} triggler={this.alertOpenModal} current={this.state.current} {...props} items={this.state.items} />
 											)}
 										/>
 										<Route
@@ -279,6 +294,15 @@ export default class App extends Component {
 												<Admin triggler={this.alertOpenModal} profilePicture={this.state.profilePicture} role={this.state.role} />
 											) : <Redirect to={{pathname: '/', state: {from: props.location}}} />}
 										/>
+										{/* Test Zone */}
+										<Route
+											exact
+											path="/playground"
+											render={props => (
+												<div>This test pages</div>
+											)}
+										/>
+										{/* Test Zone */}
 										<Route 
 											render={() => (
 												<FourZeroFour/>
@@ -299,7 +323,6 @@ export default class App extends Component {
 					isActive={this.state.isActive}
 					orderLists={this.state.orderLists}
 					current={this.state.current}
-					timeDiff={this.timeDiff}
 					alertCloseModal={this.alertCloseModal}
 					feel={this.state.feel}	
 					message={this.state.message}			

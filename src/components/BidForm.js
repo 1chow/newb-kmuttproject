@@ -27,11 +27,13 @@ class bidForm extends Component {
              }
 			if (life === 1){ //fininsh gate1 : Item expired
 				if (oldItem._id === itemId){ //fininsh gate2 : Item is Equal
-					if(validatecurrent < current){ //fininsh gate3 : Check Over Old Cost?
-							fetch(postBid, myInit)
-								.then( res => res && open('alert','good','Congrat! You win in this round'))
-								.catch( err => err && open('alert','bad','Unfortunately Bad Request'))
-					} else open('alert','bad','Make sure you bid enough')
+					if(current.length > 6){
+						if(validatecurrent < current){ //fininsh gate3 : Check Over Old Cost?
+								fetch(postBid, myInit)
+									.then( res => res && open('alert','good','Congrat! You win in this round'))
+									.catch( err => err && open('alert','bad','Unfortunately Bad Request'))
+						} else open('alert','bad','Make sure you bid enough')
+					} else open('alert','bad','Bid Just Less Than 7')
 				} else open('alert','bad','Its a bad path pls refresh')
 			} else open('alert','bad','Item expired')
 		} else open('alert','bad','Please LogIn')

@@ -124,7 +124,7 @@ export default class Item extends Component {
 											return	<tr key={i}>
 													<td width="150">{bidList.userName}</td>
 													<td width="75">{bidList.bid}<span>THB</span></td>
-													<td width="75">{this.props.timeDiff(bidList.bidTimestamp)}</td>
+													<td width="75">{bidList.bidTimestamp}</td>
 												</tr>
 											})}
 										</tbody>
