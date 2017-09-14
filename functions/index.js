@@ -12,100 +12,6 @@ admin.initializeApp(functions.config().firebase);
 const db = admin.database();
 const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 
-
-
-////// mockup Service //////
-
-	//https://us-central1-auctkmutt.cloudfunctions.net/addMockups >> add Item & catagories
-	exports.addMockups = functions.https.onRequest((req, res) => {
-
-		const nameCat = ['House Hold','Electric Gadget','Jewery & Beautyware','Activity Product','Food & Beverage']
-		const iconCat = ['fa-home','fa-plug','fa-diamond','fa-bicycle','fa-cutlery']
-
-		for (var i = 0; i <= 4; i++) {
-
-			
-			db.ref('/catagories').push({
-				  	name: nameCat[i],
-				  	icon: iconCat[i],
-				})
-
-			.then(snapshot => {
-			});
-
-				for (var j = 0; j <= 4; j++) {
-
-				db.ref('/time').update({
-				  	timeNow : timeCurrent
-				})
-
-					db.ref('/items').push({
-						  	name: 'Salty Camel',
-						  	catagory: nameCat[i],
-						  	isActive: 1,
-						  	desc:{
-							  	short:'Consectetur adipisicing elit. Est sed.',
-							  	fullHeader:'Consectetur adipisicing elit. Est sed.',
-							  	fullDesc :'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo'
-						  	},
-						  	bid:{
-						  		startTime: timeCurrent,
-						  		step: 30,
-						  		open: 5,
-						  		current : '30'
-						  	},
-						  	img:['a', 'b', 'c'],
-						  	bouded : 15,
-						  	own : 'jByPD6RZW2UUgTx7M305k2BrSrr2',
-						})
-					.then(snapshot => {
-						db.ref('/items/' + snapshot.key + '/bidList').push({
-							userId : '',
-							bid : 30,
-							bidTimestamp : timeCurrent
-						});
-						
-						db.ref('/time').once("value" ,function(Csnapshot) {
-							var fkTime = Csnapshot.val();
-							var fk = fkTime.timeNow + ((7) * 60 * 1000)
-							db.ref('/items/' + snapshot.key + '/bid').update({
-								endTime: fk
-							})
-						});
-				  	});
-				//db.ref('/time').remove();
-				};
-		};
-
-		res.status(200).send('Add now 16');
-	});
-
-	//https://us-central1-auctkmutt.cloudfunctions.net/resetItems
-	exports.resetItems = functions.https.onRequest((req, res) => {
-
-		db.ref('/items').once("value" ,function(snapshot) {
-		    snapshot.forEach(function(childSnapshot) {
-		    	var i = i + 1;
-		    	db.ref('/items/'+ childSnapshot.key ).update({
-			    	bid:{
-				  		startTime: timeCurrent,
-				  		endTime: timeStack,
-				  		step: 30,
-				  		open: 5,
-				  		current : '30'
-				  	}
-		    	})
-		    	db.ref('/items/' + childSnapshot.key + '/bidList').remove();
-		    	db.ref('/items/' + childSnapshot.key + '/bidList').push({
-					userId : '',
-					bid : 30,
-					bidTimestamp : timeCurrent
-				});
-		  	});
-			res.status(200).send('Reset Now !!');
-		});
-	});
-
 /////// Item Service ///////
 
 	//https://us-central1-auctkmutt.cloudfunctions.net/getItem >> all Items
@@ -120,73 +26,96 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 
 	  	if(itemKey != null){
 
+	  		db.ref('/time').update({
+  		 		timeNow :  timeCurrent
+  		 	})
+
 		  	db.ref('/items/'+ itemKey ).once('value', function(snapshot) {
 
-		  		 var data = snapshot.val();
-		  		 var active = data.isActive;
-		  		 var timeEnd = data.bid.endTime;
-		  		 
-		  		 	db.ref('/items/'+ itemKey ).update({
-		  		 		timeNow :  timeCurrent,
-		  		 	})
+	  			db.ref('/time').once('value', function(TimeSnapshot) {
+	  		 		 var time_ = TimeSnapshot.val();
+	  		 		 var getTime = time_.timeNow;
 
-	  		 		var tOut = timeEnd - data.timeNow ;
-	  		 		if ( tOut <= 0 && active != 0){
-		  				db.ref('/items/'+ itemKey ).update({
-		  					isActive :  0
-		  				})
-	  				}
+			  		 var data = snapshot.val();
+			  		 var active = data.isActive;
+			  		 var timeEnd = data.bid.endTime;  		 
+			  		 	
+			  		 	var tOut = timeEnd - data.getTime ;
+		  		 		if ( tOut <= 0 && active != 0){
+			  				db.ref('/items/'+ itemKey ).update({
+			  					isActive :  0
+			  				})
+		  				}
 
-	  			 var helpp = {
-	  			 	_id: snapshot.key,
-	  			 	endTime: timeEnd,
-	  			 	current: data.bid.current,
-	  			 	isActive: data.isActive
-	  			 }
-				 res.status(200).send(helpp);
+			  			 var helpp = {
+			  			 	_id: snapshot.key,
+			  			 	endTime: timeEnd,
+			  			 	current: data.bid.current,
+			  			 	isActive: data.isActive,
+			  			 	timeNow: getTime
+			  			 }
+
+					 res.status(200).send(helpp);
+
+				})
 			});
 		}
 		else {
 
 		  	db.ref('/items').once('value', function(snapshot) {
 
-		  		const arrays = [];
+		  			db.ref('/time').update({
+		  		 		timeNow :  timeCurrent
+		  		 	});
 
-			  		snapshot.forEach(function(childSnapshot) {
+		  		 	db.ref('/time').once('value', function(TimeSnapshot) {
+		  		 		var time_ = TimeSnapshot.val();
+		  		 		var getTime = time_.timeNow;
 
-					    var key_ = childSnapshot.key;
-					    var childData = childSnapshot.val();
-					    var active = childData.isActive;
-		  		 		//var timeEnd = childData.bid.endTime;
-		  		 		//console.log(childData.bid.endTime);
-				      	childData['_id'] = key_;
+		  		 	const arrays = [];
 
-				      	const listArrays = [];
+				  		snapshot.forEach(function(childSnapshot) {
 
-				      	childSnapshot.child('bidList').forEach(function(listSnapshot) {
-					      	var listKey = listSnapshot.key;
-					      	var listData = listSnapshot.val();
-					      	listData['_id'] = listKey;
-					      	listArrays.push(listData);
-				      	})
+						    var key_ = childSnapshot.key;
+						    var childData = childSnapshot.val();
+						    var active = childData.isActive;
+			  		 		//var timeEnd = childData.bid.endTime;
+			  		 		//console.log(childData.bid.endTime);
+					      	childData['_id'] = key_;
+					      	childData['timeNow'] = getTime;
+/*
+					      	const listArrays = [];
 
-				      	db.ref('/items').child(key_).update({
-			  		 		timeNow :  timeCurrent,
-			  		 	})
+					      	db.ref('/items/' + key_ +'/bidList').orderByChild('bid')
+							.once('value', function(snapBidList) {
 
-		  		 		var tOut = childData.bid.endTime - childData.timeNow ;
-		  		 		if ( tOut <= 0 && active != 0) {
-			  				db.ref('/items/'+ key_ ).update({
-			  					isActive :  0
-			  				})
-		  				}
+							const listArrays_ = [];
 
-		  				childData['bidList'] = listArrays;
-				      	arrays.push(childData);
+						      	snapBidList.child('bidList').forEach(function(listSnapshot) {
+							      	var listKey = listSnapshot.key;
+							      	var listData = listSnapshot.val();
+							      	listData['_id'] = listKey;
+							      	listArrays_.push(listData);
+						      	})
 
+						    listArrays.push(listArrays_);
+
+					      	})*/
+
+			  		 		var tOut = childData.bid.endTime - getTime ;
+			  		 		if ( tOut <= 0 && active != 0) {
+				  				db.ref('/items/'+ key_ ).update({
+				  					isActive :  0
+				  				})
+			  				}
+
+			  				//childData['bidList'] = listArrays;
+					      	arrays.push(childData);
+
+					  	});
+						res.status(200).send(arrays);
 				  	});
 
-			   	res.status(200).send(arrays);
 			});
 	   	}
 	});
@@ -200,37 +129,39 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 	  	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		const itemKey = req.query.itemId;
 
-	  	if(itemKey != null){
+			db.ref('/time').update({
+  		 		timeNow :  timeCurrent
+  		 	})
 
-			db.ref('/items/'+ itemKey ).once('value', function(snapshot) {
+		  	db.ref('/items/'+ itemKey ).once('value', function(snapshot) {
 
-		  		 var data = snapshot.val();
-		  		 var active = data.isActive;
-		  		 var timeEnd = data.bid.endTime;
-		  		 
-		  		 	db.ref('/items/'+ itemKey ).update({
-		  		 		timeNow :  timeCurrent,
-		  		 	})
+	  			db.ref('/time').once('value', function(TimeSnapshot) {
+	  		 		 var time_ = TimeSnapshot.val();
+	  		 		 var getTime = time_.timeNow;
 
-	  		 		var tOut = timeEnd - data.timeNow ;
-	  		 		if ( tOut <= 0 && active != 0){
-		  				db.ref('/items/'+ itemKey ).update({
-		  					isActive :  0
-		  				})
-	  				}
+			  		 var data = snapshot.val();
+			  		 var active = data.isActive;
+			  		 var timeEnd = data.bid.endTime;  		 
+			  		 	
+			  		 	var tOut = timeEnd - data.getTime ;
+		  		 		if ( tOut <= 0 && active != 0){
+			  				db.ref('/items/'+ itemKey ).update({
+			  					isActive :  0
+			  				})
+		  				}
 
-	  			 var helpp = {
-	  			 	_id: snapshot.key,
-	  			 	endTime: timeEnd,
-	  			 	current: data.bid.current,
-	  			 	isActive: data.isActive
-	  			 }
-				 res.status(200).send(helpp);
+			  			 var helpp = {
+			  			 	_id: snapshot.key,
+			  			 	endTime: timeEnd,
+			  			 	current: data.bid.current,
+			  			 	isActive: data.isActive,
+			  			 	timeNow: getTime
+			  			 }
+
+					 res.status(200).send(helpp);
+
+				})
 			});
-
-		} else{
-			res.status(200).send([404]);
-		}
 	});
 
 	//https://us-central1-auctkmutt.cloudfunctions.net/postEndTime?itemId=XXXXXXX&endAt=XXXXXXXX >> specific Items
@@ -243,7 +174,6 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 		const itemKey = req.query.itemId;
 
 	  	if(itemKey != null){
-
 		  		 	db.ref('/items/'+ itemKey +'/bid' ).update({
 		  		 		endTime  :  end_,
 		  		 	})
@@ -272,6 +202,10 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 
 		  	db.ref('/items/' + itemKey ).once('value', function(snapshot) {
 
+		  		db.ref('/time').update({
+	  		 		timeNow :  timeCurrent
+	  		 	});
+
 				var data = snapshot.val();
 				var active = data.isActive;
 				var bidEndTime = data.bid.endTime;
@@ -289,45 +223,62 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 					var mfk = bidLast[0];//bidLastWin
 					console.log('mfk ' + mfk.bid);
 
-					db.ref('/items/'+ itemKey).update({
-		  		 		  timeNow :  timeCurrent,
-		  		 		}).then(timeSnapshot => {
+					db.ref('/time').update({
+		  		 		  timeNow :  timeCurrent
+		  		 		}).then( result => {
 
-		  		 		var tOut_ = bidEndTime - data.timeNow;
-		  		 		//var tOut = 0;
-	  		 			var checkBid = newBid - mfk.bid;
-	  		 			var bouded_ = parseInt(data.bouded) * 1000
-	  		 			var expandTime = (data.timeNow) + (bouded_); //boudded
-	  		 			var message = [];
-		  		 		if ( checkBid > 0 && active != 0 && tOut_ > 1000 ){
+			  		 	db.ref('/time').once('value', function(TimeSnapshot) {
+		  		 		 	var time_ = TimeSnapshot.val();
+		  		 		 	var getTime = time_.timeNow;
 
-		  		 		db.ref('/users/' + uid ).once('value', function(userSnapshot) {
-		  		 		
-						var _data = userSnapshot.val();
-						var _info = _data.info;
+			  		 		var tOut_ = bidEndTime - getTime;
+		  		 			var checkBid = newBid - mfk.bid;
+		  		 			var message = [];
 
-			  				db.ref('/items/'+ itemKey + '/bidList').push({
-			  					bid : newBid,
-			  					bidTimestamp : data.timeNow,
-			  					userId : uid,
-			  					userName : _info.displayName
-			  				})
-			  				db.ref('/items/'+ itemKey + '/bid').update({
-			  					current : newBid,
-			  					userName : _info.displayName
-			  				})
-			  			})
-			  				message.push(200)
-			  			} else {
-			  				message.push(403)
-			  			}
-			  			res.status(200).send(message);
-	 				})
-		  		});
+			  		 		if ( active != 0 && tOut_ > 1000 ){
+
+				  		 		db.ref('/users/' + uid ).once('value', userSnapshot => {
+				  		 		
+								var _data = userSnapshot.val();
+								var _info = _data.info;
+
+					  				db.ref('/items/'+ itemKey + '/bidList').push({
+					  					bid : newBid,
+					  					bidTimestamp : getTime,
+					  					userId : uid,
+					  					userName : _info.displayName
+					  				})
+					  				if (checkBid > 0) {
+						  				db.ref('/items/'+ itemKey + '/bid').update({
+						  					current : newBid,
+						  					userName : _info.displayName
+						  				})
+				  					}
+
+					  			})
+
+				  				if (checkBid > 0) {
+					  				//win bid
+					  				message.push('win')
+				  				} else{
+				  					//loser bid
+				  					message.push('lost')
+				  				}
+
+				  			} else {
+				  				//item not active
+				  				message.push('timeout')
+				  			}
+
+				  			res.status(200).send(message);
+		 				})//then
+					})
+
+		  		})
 	
 			})
 	  	} else {
-	  		res.status(200).send([404]);
+	  		res.status(200).send(['unexpected']);
 	  	}
 	});
 
@@ -455,7 +406,6 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 	    });
 	}*/
 
-
 	exports.winOrder = functions.database.ref('/items/{Itemid}/isActive')
 	  .onUpdate(event => {
 
@@ -514,7 +464,6 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 		});// ref current by item win
 
 	});
-
 
 	//https://us-central1-auctkmutt.cloudfunctions.net/getOrder
 	//https://us-central1-auctkmutt.cloudfunctions.net/getOrder?userId=xxxxxxxx
