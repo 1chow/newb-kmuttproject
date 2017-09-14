@@ -78,7 +78,7 @@ export default class ModalChartWin extends Component {
 												</div>
 												<div className="post-list-r">
 													<h3>{orderList.itemName}</h3>
-													<p className="time">{orderList.itemId}<span>{this.props.timeDiff(orderList.itemWinTime)}</span></p>
+													<p className="time">{orderList.itemId}<span>{orderList.itemWinTime}</span></p>
 													<p className="price">{orderList.itemPrice}<span className="curentcy">Bath</span></p>
 													<i className="fa fa-shopping-basket fa-2x"></i>
 												</div>

@@ -48,7 +48,7 @@ export default class Chart extends Component {
 					
 					<div className="row">
 
-						<ModalChartWin timeDiff={this.props.timeDiff} orderLists={this.props.orderLists} close={this.props.close} filter={this.props.filter} />
+						<ModalChartWin orderLists={this.props.orderLists} close={this.props.close} filter={this.props.filter} />
 					
 					</div>
 				</div>				

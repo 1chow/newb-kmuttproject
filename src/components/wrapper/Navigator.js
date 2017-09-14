@@ -27,13 +27,18 @@ class Header extends React.Component {
 		this.setState({ scrollTop:true }) : this.setState({ scrollTop:false })
 	}
 
+	handleLink = () => {
+		this.props.getObjects()
+		this.props.filter("default")
+	}
+
 	render() {
 		return (
 		<header>
 				<div data-sticky-container>
 					<div className={"title-bar " + (this.state.scrollTop ? 'nav-fix' : null)} data-sticky data-options="marginTop:0;" style={{width:100+'%'}}>
 						<div className="row">
-							<NavLink  onClick={ () => this.props.filter("default")} exact to="/">
+							<NavLink  onClick={this.handleLink} exact to="/">
 								<div className="title-bar-left nav-left">
 									<h1><i className="fa fa-gavel fa-1x"></i> AUCT</h1>
 									<div className="nav-toggle-btn"></div>
