@@ -76,7 +76,7 @@ export default class Sellingareas extends Component {
 				return timeNow.catagory === isActive && timeNow.isActive !== 0
 			}) 
 			} else newtimeNows = timeNows.sort(function(a, b){
-				return a.timeNow-b.timeNow
+				return a.endTime-b.endTime
 			})
 		} timeNows.length !== 0 && this.setState({timeNows: newtimeNows})
 	}

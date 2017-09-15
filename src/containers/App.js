@@ -108,15 +108,16 @@ export default class App extends Component {
 				let id_ = object._id
 				let catagory_ = object.catagory
 				let isActive_ = object.isActive
+				let endTime_ = object.bid.endTime
 				let timeNows_ = {
 					timeNow  : timeNow_,
 					_id  	 : id_,
 					catagory : catagory_,
-					isActive : isActive_
+					isActive : isActive_,
+					endTime : endTime_
 				}
 				timeNows.push(timeNows_);
 			})
-			console.log(json)
 			this.setState({
 				items: json,
 				timeNows:timeNows
@@ -169,7 +170,8 @@ export default class App extends Component {
 				timeNow  : timeNow_,
 				_id : timeNow._id,
 				catagory : timeNow.catagory,
-				isActive : timeNow.isActive	
+				isActive : timeNow.isActive,
+				endTime : timeNow.endTime,
 			}
 			timeNows.push(timeNows_);
 			return timeNows_
@@ -222,6 +224,10 @@ export default class App extends Component {
 	toggle = () => {
 		this.setState({ showToggle: true });
 	}
+	handleclosetoggle = () => {
+		this.getObjects()
+		this.setState({ showToggle: false });
+	}
 	closetoggle = () => {
 		this.setState({ showToggle: false });
 	}
@@ -241,7 +247,7 @@ export default class App extends Component {
 						triggler={this.handleOpenModal}
 						isLogin={this.state.isLogin}
 						filter={this.filter} 
-						getObjects={this.getObjects}
+						getObjects={this.handleclosetoggle}
 					/>
 					<Categories 
 						categories={this.state.categories} 
@@ -253,6 +259,7 @@ export default class App extends Component {
 						logout={this.logout} 
 						closetoggle={this.closetoggle} 
 						showToggle={this.state.showToggle}
+						getObjects={this.getObjects}
 					 />
 					{/* Application Routes Zone */}
 						<div className="row">
