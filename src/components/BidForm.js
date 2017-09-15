@@ -18,21 +18,27 @@ class bidForm extends Component {
 		if (user) {
 			let userId = user.uid
 			let postBid = "https://us-central1-auctkmutt.cloudfunctions.net/bidOrder?itemId="+itemId+"&bid="+current+"&uId="+userId
-			var myInit =  { method: 'GET',
-                mode: 'no-cors',
-                headers: new Headers(
-                   {"Content-Type": "*"}
-                ),
-			 }
-			if (life === 1){ //fininsh gate1 : Item expired
-				if (oldItem._id === itemId){ //fininsh gate2 : Item is Equal
-					if(validatecurrent < current){ //fininsh gate3 : Check Over Old Cost?
-							fetch(postBid, myInit)
-								.then( res => res && open('alert','good','Congrat! You win in this round'))
-								.catch( err => err && open('alert','bad','Unfortunately Bad Request'))
-					} else open('alert','bad','Make sure you bid enough')
-				} else open('alert','bad','Its a bad path pls refresh')
-			} else open('alert','bad','Item expired')
+			fetch(postBid)
+			.then( response => {
+				return response.json();
+			  })
+			.then( data => {
+				switch(data[0]) {
+					case 'win':
+						open('alert','good','Win')
+						break
+					case 'lost':
+						open('alert','bad','Lost')
+						break
+					case 'lessThanOpenBid':
+						open('alert','bad','Less Than Open Bid')
+						break
+					default:
+						open('alert','bad',data[0])
+						break
+				}
+			  })
+			.catch( err => err && open('alert','bad','Unfortunately Bad Request'))
 		} else open('alert','bad','Please LogIn')
 	}
 
