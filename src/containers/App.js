@@ -37,6 +37,7 @@ export default class App extends Component {
 			role:null,
 			feel:null,
 			message:null,
+			icon:null,
 			userUID: '',
 			timeNows: '',
 		};
@@ -201,12 +202,13 @@ export default class App extends Component {
 	getOrderLists = Obj => {
 		this.setState({ orderLists: Obj });
 	}
-	alertOpenModal = (type,feel,message) => {
+	alertOpenModal = (type,feel,message,icon) => {
 		this.setState({ 
 			typeModal: type,
 			showModal: true,
 			feel: feel,
 			message: message,
+			icon: icon,
 		 });
 		document.body.style.overflow = "hidden"
 	}
@@ -332,7 +334,8 @@ export default class App extends Component {
 					current={this.state.current}
 					alertCloseModal={this.alertCloseModal}
 					feel={this.state.feel}	
-					message={this.state.message}			
+					message={this.state.message}
+					icon={this.state.icon}			
 				/>
 			</div>
 		) 

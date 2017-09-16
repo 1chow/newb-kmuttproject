@@ -25,21 +25,21 @@ class bidForm extends Component {
 			.then( data => {
 				switch(data[0]) {
 					case 'win':
-						open('alert','good','Win')
+						open('alert','good','Win','fa-check-circle')
 						break
 					case 'lost':
-						open('alert','bad','Lost')
+						open('alert','bad','Lost','fa-thumbs-down')
 						break
 					case 'lessThanOpenBid':
-						open('alert','bad','Less Than Open Bid')
+						open('alert','bad','Less Than Open Bid','fa-thumbs-down')
 						break
 					default:
-						open('alert','bad',data[0])
+						open('alert','bad',data[0],'fa-thumbs-down')
 						break
 				}
 			  })
-			.catch( err => err && open('alert','bad','Unfortunately Bad Request'))
-		} else open('alert','bad','Please LogIn')
+			.catch( err => err && open('alert','bad','Unfortunately Bad Request'),'fa-thumbs-down')
+		} else open('alert','bad','Please LogIn','fa-thumbs-down')
 	}
 
 	handleSubmit = (e) => {

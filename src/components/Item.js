@@ -18,7 +18,7 @@ export default class Item extends Component {
 		firebase.database().ref('/items/'+this.props.match.params.id+'/bidList').on('value', Snapshot => {
 			let table_ = []
 			Snapshot.forEach( childSnapshot => {
-			let data = childSnapshot.val();
+			let data = childSnapshot.val()
 			table_.push(data)
 			})
 			if(this.state)				
