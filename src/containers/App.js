@@ -160,6 +160,21 @@ export default class App extends Component {
 		return hDisplay + mDisplay + sDisplay; 
 	}
 
+	convertTime = (timestamp) => {
+		var d = new Date(parseInt(timestamp)),
+			yy = d.getFullYear(),
+			mm = ('0' + (d.getMonth() + 1)).slice(-2),
+			dd = ('0' + d.getDate()).slice(-2),
+			hh = d.getHours(), h = hh,
+			min = ('0' + d.getMinutes()).slice(-2),
+			sec = ('0' + d.getSeconds()).slice(-2),
+			msec = ('0' + d.getMilliseconds()).slice(-2),
+			time = yy + '-' + mm + '-' + dd + ', ' + h + ':' + min + ':' + sec +  ':' + msec + ' (UTC+7)';
+	
+		return time;
+
+	}
+
 	tick() {
 		let timeNows = []
 		if(this.state.timeNows) {

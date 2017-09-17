@@ -15,14 +15,18 @@ export default class Item extends Component {
 
 	componentDidMount() {
 		this._filterItems(this.props.items,this.props.current);
-		firebase.database().ref('/items/'+this.props.match.params.id+'/bidList').on('value', Snapshot => {
-			let table_ = []
-			Snapshot.forEach( childSnapshot => {
-			let data = childSnapshot.val()
-			table_.push(data)
+			firebase.database().ref('/items/'+this.props.match.params.id+'/bidList').orderByChild('bid').on('value', Snapshot => {
+				let table_ = []
+				Snapshot.forEach( childSnapshot => {
+				let data = childSnapshot.val()
+				data['name'] = data.userName
+				table_.push(data)
 			})
-			if(this.state)				
-			this.setState({bidLists:table_.reverse()})
+
+			if(this.state) {				
+				this.setState({bidLists:table_.reverse()})
+			}
+
 		})
 	}
 
@@ -121,14 +125,16 @@ export default class Item extends Component {
 									<table className="hover unstriped">
 										<tbody>
 											{ this.state.bidLists.map( (bidList,i) => {
+												let bidLenght = this.state.bidLists.length - 1
 											return	<tr key={i}>
-													<td width="150">{bidList.userName}</td>
-													<td width="75">{bidList.bid}<span>THB</span></td>
-													<td width="75">{bidList.bidTimestamp}</td>
+													<td width="30">{i === 0 && <i className="fa fa-trophy"></i>}</td>
+													<td width="80" style={{textAlign:"left"}}>{i !== bidLenght  ? (bidList.name).slice(0,-3) + ' ⁎⁎⁎' : bidList.name}</td>
+													<td width="80" style={{textAlign:"right"}}>{bidList.bid}.00<span>฿</span></td>
+													<td width="175" style={{fontSize:"0.66em"}}>{this.props.convertTime(bidList.bidTimestamp)}</td>
 												</tr>
 											})}
 										</tbody>
-									</table>
+									</table> 
 								</div>
 							</div>
 							<div className="row auct-from-markdown">
