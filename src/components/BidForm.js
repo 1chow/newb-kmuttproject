@@ -44,14 +44,25 @@ class bidForm extends Component {
 		} else open('alert','bad','Please LogIn','fa-thumbs-down')
 	}
 
+	isBidForm = (bid,open) => {
+		if(bid.value.length >= 6 || bid.value <= 0 || bid.value === 'e' || bid.value%Math.floor(bid.value) !== 0) {
+			this.props.recieve()
+			this.bid.value = ''
+			open('alert','bad','Enter a valid Prize','fa-thumbs-down')
+		}
+		else {
+			this.setState({current: this.bid.value})
+			let getCurrent = "https://us-central1-auctkmutt.cloudfunctions.net/getCurrent?itemId="+this.props.item._id
+			fetch(getCurrent)
+				.then( res => res.json())
+				.then( json => this.setState({validates: json}))
+		}
+	}
+
 	handleSubmit = (e) => {
 		e.preventDefault()
 		this.props.waiting()
-		this.setState({current: this.bid.value})
-		let getCurrent = "https://us-central1-auctkmutt.cloudfunctions.net/getCurrent?itemId="+this.props.item._id
-		fetch(getCurrent)
-			.then( res => res.json())
-			.then( json => this.setState({validates: json}))
+		this.isBidForm(this.bid,this.props.open)
 	}
 
 

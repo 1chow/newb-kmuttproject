@@ -70,6 +70,7 @@ class Edit extends Component {
             this.state.timeEnd.lenght !== 0) 
       {
         this.props.triggler('alert','good','Your Item has create','fa-check-circle')
+        this.setState({registerError: null })
         this.dbItems.push({
         name: this.state.productname,
         catagory: this.state.catagoriesselect,
