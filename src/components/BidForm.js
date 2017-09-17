@@ -23,6 +23,8 @@ class bidForm extends Component {
 				return response.json();
 			  })
 			.then( data => {
+				this.props.recieve()
+				this.bid.value = ''
 				switch(data[0]) {
 					case 'win':
 						open('alert','good','Win','fa-check-circle')
@@ -49,12 +51,12 @@ class bidForm extends Component {
 		let getCurrent = "https://us-central1-auctkmutt.cloudfunctions.net/getCurrent?itemId="+this.props.item._id
 		fetch(getCurrent)
 			.then( res => res.json())
-			.then( json => this.setState({validates: json},this.props.recieve()))
+			.then( json => this.setState({validates: json}))
 	}
 
 
     render() {
-        return this.props.wait === false ? (
+        return  (
 			<form className="auct-form" onSubmit={this.handleSubmit}>
 				<label>
 					<div className="input-group">
@@ -62,9 +64,15 @@ class bidForm extends Component {
 						<input ref={ bid => this.bid = bid} className="input-group-field auct-form-input" id="NumberInput" type="number" required pattern="number"/>
 					</div>
 				</label>
-				<button className="button" type="submit" value="Submit">Bid</button>
+				{
+					this.props.wait === false ? (
+						<button className="button" type="submit" value="Submit">Bid</button>
+					) : (
+						null
+					)
+				}
 			</form>
-        ) : <img src={require("../images/Rolling.gif")} alt="Loading"></img>
+        )
     }
 }
 

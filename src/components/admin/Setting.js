@@ -77,7 +77,7 @@ export default class Setting extends Component {
 									email: this.state.email,
 									address: this.state.address
 							})
-							this.props.triggler('alert','good','Your detail has changes')
+							this.props.triggler('alert','good','Your detail has changes','fa-check-circle')
 							} else this.setState({Error: 'Please enter a valid address' })
 					} else this.setState({Error: 'Please enter a valid email' })
       } else this.setState({Error: 'Please enter a valid username' })

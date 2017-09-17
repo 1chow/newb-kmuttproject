@@ -44,16 +44,6 @@ export default class App extends Component {
 	}
 	componentWillMount() {
 		this.getObjects()
-		fetch("https://us-central1-auctkmutt.cloudfunctions.net/getCatagories")
-			.then(response => {
-				return response.json();
-			})
-			.then(json => {
-				this.setState({
-					categories: json
-				});
-			});
-
 		this.removeListener = firebaseAuth().onAuthStateChanged( user => {
 			if (user) {
 				db.child(`users/${user.uid}/info`).on('value', dataSnapshot => {
@@ -122,8 +112,19 @@ export default class App extends Component {
 			this.setState({
 				items: json,
 				timeNows:timeNows
-			});
+			})
 		});
+
+		fetch("https://us-central1-auctkmutt.cloudfunctions.net/getCatagories")
+		.then(response => {
+			return response.json();
+		})
+		.then(json => {
+			this.setState({
+				categories: json
+			})
+		});
+		
 		db2.ref('/items').on('value', Snapshot => {
 	        let current_a = [];
 
@@ -144,7 +145,7 @@ export default class App extends Component {
 	          current_a.push(obj);
 			})
 		    this.setState({current:current_a})
-		  })
+		  });
 	}
 
 	secondsToHms = (d) => {
@@ -239,7 +240,7 @@ export default class App extends Component {
 	}
 
 	render() {
-		return (
+		return this.state.current.length !== 0 ? (
 			<div>
 				<section className={"warpper " + (this.state.showModal === true  && 'blur-for-modal')}>
 					{/* Navigator Bar */}
@@ -276,13 +277,28 @@ export default class App extends Component {
 											exact
 											path="/"
 											render={props => (
-												<Sellingareas secondsToHms={this.secondsToHms} timeNows={this.state.timeNows} current={this.state.current} isActive={this.state.isActive} close={this.handleCloseModal} items={this.state.items} />
+												<Sellingareas 
+													secondsToHms={this.secondsToHms}
+													timeNows={this.state.timeNows}
+													current={this.state.current} 
+													isActive={this.state.isActive} 
+													close={this.handleCloseModal} 
+													items={this.state.items}
+												/>
 											)}
 										/>
 										<Route
 											path="/item/:id"
 											render={props => (
-												<Item secondsToHms={this.secondsToHms} timeNows={this.state.timeNows} isLogin={this.state.isLogin} triggler={this.alertOpenModal} current={this.state.current} {...props} items={this.state.items} />
+												<Item 
+													secondsToHms={this.secondsToHms} 
+													timeNows={this.state.timeNows} 
+													isLogin={this.state.isLogin} 
+													triggler={this.alertOpenModal} 
+													current={this.state.current} 
+													{...props} 
+													items={this.state.items} 
+												/>
 											)}
 										/>
 										<Route
@@ -314,7 +330,7 @@ export default class App extends Component {
 										{/* Test Zone */}
 										<Route 
 											render={() => (
-												<FourZeroFour/>
+												<FourZeroFour getObjects={this.handleclosetoggle} />
 										)} />
 									</AnimatedSwitch>
 								</TransitionGroup>
@@ -338,6 +354,6 @@ export default class App extends Component {
 					icon={this.state.icon}			
 				/>
 			</div>
-		) 
+		) : <div style={{width:100+"%",textAlign:'center'}}><img src={require("../images/Rolling.gif")} alt="Loading"></img></div>
 	}
 }

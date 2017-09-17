@@ -6,10 +6,10 @@ const Toggle = props => (
             <div className={"toggle "+(props.showToggle === true && 'toggle-open')}>
                 <div className="toggle-container">
                     <div className="row text-center">
-                        <button onClick={props.getObjects} className="close">
+                        <button onClick={props.closetoggle} className="close">
                             <i className="fa fa-close fa-2x" aria-hidden="true"></i>
                         </button>	
-                        <Link onClick={props.closetoggle} to='/' className="button">
+                        <Link onClick={() => {props.getObjects();props.closetoggle()}} to='/' className="button">
                             <i className="fa fa-gavel fa-2x" aria-hidden="true"></i>
                             <p>Now Auct.</p>
                         </Link> 
