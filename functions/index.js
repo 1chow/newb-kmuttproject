@@ -230,12 +230,12 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 			  		 	db.ref('/time').once('value', function(TimeSnapshot) {
 		  		 		 	var time_ = TimeSnapshot.val();
 		  		 		 	var getTime = time_.timeNow;
-
+		  		 		 	var openBid = data.bid.openBid;
 			  		 		var tOut_ = bidEndTime - getTime;
 		  		 			var checkBid = newBid - mfk.bid;
 		  		 			var message = [];
 
-			  		 		if ( active != 0 && tOut_ > 1000 ){
+			  		 		if ( active != 0 && tOut_ > 1000 && newBid > openBid){
 
 				  		 		db.ref('/users/' + uid ).once('value', userSnapshot => {
 				  		 		
@@ -266,8 +266,14 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 				  				}
 
 				  			} else {
-				  				//item not active
-				  				message.push('timeout')
+				  				
+				  				if (newBid <= openBid) {
+					  				//win bid
+					  				message.push('lessThanOpenBid')
+				  				} else{
+				  					//item not active
+				  					message.push('notActive')
+				  				}
 				  			}
 
 				  			res.status(200).send(message);
@@ -366,36 +372,6 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 	});
 
 ////// Order Service ///////
-
-	//https://us-central1-auctkmutt.cloudfunctions.net/addMockup
-	exports.createOrder = functions.https.onRequest((req, res) => {
-
-		var userId = req.query.uId;
-
-	  	db.ref('/orders/' + userId ).push({
-	  		orderPrice: 0,// sumPrice
-	  		orderCount: 0,// countList
-	  		orderOwnerId:'',
-	  		orderMethod:{
-	  			payment:'',
-	  			logistic:''
-	  		},
-			owner:{
-				title: '',
-				name: '',
-				address: '',
-				tel:''
-			}
-		})
-		.then(snapshot => {
-			db.ref('/orders/' + snapshot.key + '/orderList').push({
-  				itemId:'',
-  				price:'',
-  				amount:1,
-			});
-		res.status(200).send('createOrder '+snapshot.key);
-		});		
-	});
 
 /*	var eventSnapshot = event.data;
 	var profilePictureSnapshot = eventSnapshot.child('profilePicture');

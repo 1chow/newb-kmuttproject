@@ -81,6 +81,7 @@ class Edit extends Component {
         },
         bid:{
             current : parseInt(this.state.firstbit,10),
+            openBid : parseInt(this.state.firstbit,10),
             endTime: this.state.timeEnd.format('x'),
             startTime: this.state.timeStart.format('x'),
         },
