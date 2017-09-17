@@ -10,16 +10,14 @@ const Allinone = props => (
                 props.feel === 'bad' ?
                     <div className="row">
                         <div className="small-12 medium-11 small-centered msg-box">
-                            <i className="fa fa-thumbs-down fail" style={{color:'#ff6060'}}></i>
-                            <h3>Unfortunately</h3>
+                            <i className={'fa ' + props.icon + ' fail'} style={{color:'#ff6060'}}></i>
                             <p>{props.message}</p>
                             {/*<button className="button success" type="submit" value="Submit">Login !!</button>*/}
                         </div>
                     </div> :
                     <div className="row">
                         <div className="small-12 medium-11 small-centered msg-box">
-                            <i className="fa fa-check-circle success"></i>
-                            <h3>It's Correct Request</h3>
+                            <i className={"fa " + props.icon + " success"}></i>
                             <p>{props.message}</p>
                             {/*<button className="button success" type="submit" value="Submit">Login !!</button>*/}
                         </div>

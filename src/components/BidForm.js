@@ -18,25 +18,30 @@ class bidForm extends Component {
 		if (user) {
 			let userId = user.uid
 			let postBid = "https://us-central1-auctkmutt.cloudfunctions.net/bidOrder?itemId="+itemId+"&bid="+current+"&uId="+userId
-
-			var myInit =  { method: 'GET',
-                mode: 'no-cors',
-                headers: new Headers(
-                   {"Content-Type": "*"}
-                ),
-             }
-			if (life === 1){ //fininsh gate1 : Item expired
-				if (oldItem._id === itemId){ //fininsh gate2 : Item is Equal
-					if(current.length > 6){
-						if(validatecurrent < current){ //fininsh gate3 : Check Over Old Cost?
-								fetch(postBid, myInit)
-									.then( res => res && open('alert','good','Congrat! You win in this round'))
-									.catch( err => err && open('alert','bad','Unfortunately Bad Request'))
-						} else open('alert','bad','Make sure you bid enough')
-					} else open('alert','bad','Bid Just Less Than 7')
-				} else open('alert','bad','Its a bad path pls refresh')
-			} else open('alert','bad','Item expired')
-		} else open('alert','bad','Please LogIn')
+			fetch(postBid)
+			.then( response => {
+				return response.json();
+			  })
+			.then( data => {
+				this.props.recieve()
+				this.bid.value = ''
+				switch(data[0]) {
+					case 'win':
+						open('alert','good','Win','fa-check-circle')
+						break
+					case 'lost':
+						open('alert','bad','Lost','fa-thumbs-down')
+						break
+					case 'lessThanOpenBid':
+						open('alert','bad','Less Than Open Bid','fa-thumbs-down')
+						break
+					default:
+						open('alert','bad',data[0],'fa-thumbs-down')
+						break
+				}
+			  })
+			.catch( err => err && open('alert','bad','Unfortunately Bad Request'),'fa-thumbs-down')
+		} else open('alert','bad','Please LogIn','fa-thumbs-down')
 	}
 
 	handleSubmit = (e) => {
@@ -46,12 +51,12 @@ class bidForm extends Component {
 		let getCurrent = "https://us-central1-auctkmutt.cloudfunctions.net/getCurrent?itemId="+this.props.item._id
 		fetch(getCurrent)
 			.then( res => res.json())
-			.then( json => this.setState({validates: json},this.props.recieve()))
+			.then( json => this.setState({validates: json}))
 	}
 
 
     render() {
-        return this.props.wait === false ? (
+        return  (
 			<form className="auct-form" onSubmit={this.handleSubmit}>
 				<label>
 					<div className="input-group">
@@ -59,9 +64,15 @@ class bidForm extends Component {
 						<input ref={ bid => this.bid = bid} className="input-group-field auct-form-input" id="NumberInput" type="number" required pattern="number"/>
 					</div>
 				</label>
-				<button className="button" type="submit" value="Submit">Bid</button>
+				{
+					this.props.wait === false ? (
+						<button className="button" type="submit" value="Submit">Bid</button>
+					) : (
+						null
+					)
+				}
 			</form>
-        ) : <img src={require("../images/Rolling.gif")} alt="Loading"></img>
+        )
     }
 }
 

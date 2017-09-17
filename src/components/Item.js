@@ -15,7 +15,6 @@ export default class Item extends Component {
 
 	componentDidMount() {
 		this._filterItems(this.props.items,this.props.current);
-
 			firebase.database().ref('/items/'+this.props.match.params.id+'/bidList').orderByChild('bid').on('value', Snapshot => {
 				let table_ = []
 				Snapshot.forEach( childSnapshot => {

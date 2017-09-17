@@ -34,12 +34,16 @@ export default class Sellingareas extends Component {
 
 	// Animation Logic
 	_renderProjects(items,isActive,currents) {
-		if(isActive !== 'default') {
-		var newitems = items.filter( item => {
-			return item.catagory === isActive && item.isActive !== 0
-		})} else newitems = items.sort(function(a, b){
+		let sortItems = items.sort(function(a, b){
 			return a.bid.endTime-b.bid.endTime
 		})
+		let filterItems = sortItems.filter( item => {
+			return item.isActive !== 0
+		})
+		if(isActive !== 'default') {
+		var newitems = filterItems.filter( item => {
+			return item.catagory === isActive
+		})} else newitems = filterItems
 		this.setState(
 			{
 				items: newitems,
@@ -58,26 +62,34 @@ export default class Sellingareas extends Component {
 
 	//
 	_filtercurrent = (currents,isActive) => {
+		let sortCurrents = currents.sort(function(a, b){
+			return a.endTime-b.endTime
+		})
+		let filterCurrents = sortCurrents.filter( current => {
+			return current.isActive !== 0
+		})
 		if(currents.length !== 0) {
 			if(isActive !== 'default') {
-			var newcurrent = currents.filter( current => {
-				return current.catagory === isActive && current.isActive !== 0
+			var newcurrent = filterCurrents.filter( current => {
+				return current.catagory === isActive
 			}) 
-			} else newcurrent = currents.sort(function(a, b){
-				return a.endTime-b.endTime
-			})
+			} else newcurrent = filterCurrents
 		}  newcurrent.length !== 0 && this.setState({newcurrent: newcurrent})
 	}
 
 	_filtertimeNows = (timeNows,isActive) => {
+		let sortTimeNows = timeNows.sort(function(a, b){
+			return a.endTime-b.endTime
+		})
+		let filterTimeNows = sortTimeNows.filter( timeNow => {
+			return timeNow.isActive !== 0
+		})
 		if(timeNows.length !== 0) {
 			if(isActive !== 'default') {
-			var newtimeNows = timeNows.filter( timeNow => {
-				return timeNow.catagory === isActive && timeNow.isActive !== 0
+			var newtimeNows = filterTimeNows.filter( timeNow => {
+				return timeNow.catagory === isActive
 			}) 
-			} else newtimeNows = timeNows.sort(function(a, b){
-				return a.timeNow-b.timeNow
-			})
+			} else newtimeNows = filterTimeNows
 		} timeNows.length !== 0 && this.setState({timeNows: newtimeNows})
 	}
 
@@ -121,7 +133,7 @@ export default class Sellingareas extends Component {
 					})}
 				</TransitionGroup>
 			</div>
-		) 
+		)
 	}
 }
 

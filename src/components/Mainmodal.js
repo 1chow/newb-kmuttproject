@@ -28,6 +28,7 @@ const Modals = props => {
 										close={props.alertCloseModal}
 										feel={props.feel}	
 										message={props.message}
+										icon={props.icon}
 										/>
 							default :
 								return <ModalLoginSignUp 

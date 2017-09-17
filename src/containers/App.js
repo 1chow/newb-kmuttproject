@@ -37,22 +37,13 @@ export default class App extends Component {
 			role:null,
 			feel:null,
 			message:null,
+			icon:null,
 			userUID: '',
 			timeNows: '',
 		};
 	}
 	componentWillMount() {
 		this.getObjects()
-		fetch("https://us-central1-auctkmutt.cloudfunctions.net/getCatagories")
-			.then(response => {
-				return response.json();
-			})
-			.then(json => {
-				this.setState({
-					categories: json
-				});
-			});
-
 		this.removeListener = firebaseAuth().onAuthStateChanged( user => {
 			if (user) {
 				db.child(`users/${user.uid}/info`).on('value', dataSnapshot => {
@@ -108,20 +99,32 @@ export default class App extends Component {
 				let id_ = object._id
 				let catagory_ = object.catagory
 				let isActive_ = object.isActive
+				let endTime_ = object.bid.endTime
 				let timeNows_ = {
 					timeNow  : timeNow_,
 					_id  	 : id_,
 					catagory : catagory_,
-					isActive : isActive_
+					isActive : isActive_,
+					endTime : endTime_
 				}
 				timeNows.push(timeNows_);
 			})
-			console.log(json)
 			this.setState({
 				items: json,
 				timeNows:timeNows
-			});
+			})
 		});
+
+		fetch("https://us-central1-auctkmutt.cloudfunctions.net/getCatagories")
+		.then(response => {
+			return response.json();
+		})
+		.then(json => {
+			this.setState({
+				categories: json
+			})
+		});
+		
 		db2.ref('/items').on('value', Snapshot => {
 	        let current_a = [];
 
@@ -142,7 +145,7 @@ export default class App extends Component {
 	          current_a.push(obj);
 			})
 		    this.setState({current:current_a})
-		  })
+		  });
 	}
 
 	secondsToHms = (d) => {
@@ -184,7 +187,8 @@ export default class App extends Component {
 				timeNow  : timeNow_,
 				_id : timeNow._id,
 				catagory : timeNow.catagory,
-				isActive : timeNow.isActive	
+				isActive : timeNow.isActive,
+				endTime : timeNow.endTime,
 			}
 			timeNows.push(timeNows_);
 			return timeNows_
@@ -214,12 +218,13 @@ export default class App extends Component {
 	getOrderLists = Obj => {
 		this.setState({ orderLists: Obj });
 	}
-	alertOpenModal = (type,feel,message) => {
+	alertOpenModal = (type,feel,message,icon) => {
 		this.setState({ 
 			typeModal: type,
 			showModal: true,
 			feel: feel,
 			message: message,
+			icon: icon,
 		 });
 		document.body.style.overflow = "hidden"
 	}
@@ -237,6 +242,10 @@ export default class App extends Component {
 	toggle = () => {
 		this.setState({ showToggle: true });
 	}
+	handleclosetoggle = () => {
+		this.getObjects()
+		this.setState({ showToggle: false });
+	}
 	closetoggle = () => {
 		this.setState({ showToggle: false });
 	}
@@ -246,7 +255,7 @@ export default class App extends Component {
 	}
 
 	render() {
-		return (
+		return this.state.current.length !== 0 ? (
 			<div>
 				<section className={"warpper " + (this.state.showModal === true  && 'blur-for-modal')}>
 					{/* Navigator Bar */}
@@ -256,7 +265,7 @@ export default class App extends Component {
 						triggler={this.handleOpenModal}
 						isLogin={this.state.isLogin}
 						filter={this.filter} 
-						getObjects={this.getObjects}
+						getObjects={this.handleclosetoggle}
 					/>
 					<Categories 
 						categories={this.state.categories} 
@@ -268,6 +277,7 @@ export default class App extends Component {
 						logout={this.logout} 
 						closetoggle={this.closetoggle} 
 						showToggle={this.state.showToggle}
+						getObjects={this.getObjects}
 					 />
 					{/* Application Routes Zone */}
 						<div className="row">
@@ -282,13 +292,28 @@ export default class App extends Component {
 											exact
 											path="/"
 											render={props => (
-												<Sellingareas secondsToHms={this.secondsToHms} timeNows={this.state.timeNows} current={this.state.current} isActive={this.state.isActive} close={this.handleCloseModal} items={this.state.items} />
+												<Sellingareas 
+													secondsToHms={this.secondsToHms}
+													timeNows={this.state.timeNows}
+													current={this.state.current} 
+													isActive={this.state.isActive} 
+													close={this.handleCloseModal} 
+													items={this.state.items}
+												/>
 											)}
 										/>
 										<Route
 											path="/item/:id"
 											render={props => (
-												<Item secondsToHms={this.secondsToHms} convertTime={this.convertTime} timeNows={this.state.timeNows} isLogin={this.state.isLogin} triggler={this.alertOpenModal} current={this.state.current} {...props} items={this.state.items} />
+												<Item 
+													secondsToHms={this.secondsToHms} 
+													timeNows={this.state.timeNows} 
+													isLogin={this.state.isLogin} 
+													triggler={this.alertOpenModal} 
+													current={this.state.current} 
+													{...props} 
+													items={this.state.items} 
+												/>
 											)}
 										/>
 										<Route
@@ -320,7 +345,7 @@ export default class App extends Component {
 										{/* Test Zone */}
 										<Route 
 											render={() => (
-												<FourZeroFour/>
+												<FourZeroFour getObjects={this.handleclosetoggle} />
 										)} />
 									</AnimatedSwitch>
 								</TransitionGroup>
@@ -340,9 +365,10 @@ export default class App extends Component {
 					current={this.state.current}
 					alertCloseModal={this.alertCloseModal}
 					feel={this.state.feel}	
-					message={this.state.message}			
+					message={this.state.message}
+					icon={this.state.icon}			
 				/>
 			</div>
-		) 
+		) : <div style={{width:100+"%",textAlign:'center'}}><img src={require("../images/Rolling.gif")} alt="Loading"></img></div>
 	}
 }
