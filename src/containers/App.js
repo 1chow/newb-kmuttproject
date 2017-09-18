@@ -135,12 +135,14 @@ export default class App extends Component {
 			  let catagory_ = data.catagory;
 			  let isActive_ = data.isActive;
 			  let endTime_ = data.bid.endTime;
+			  let timeNow_ = ((data.bid.endTime - data.timeNow)/1000)
 	          let obj = {
 	          	current  : current_,
 				itemId : key,
 				catagory: catagory_,
 				isActive: isActive_,
-				endTime: endTime_,		
+				endTime: endTime_,
+				timeNow  : timeNow_,		
 	          }
 	          current_a.push(obj);
 			})
@@ -307,6 +309,7 @@ export default class App extends Component {
 											render={props => (
 												<Item 
 													secondsToHms={this.secondsToHms} 
+													convertTime={this.convertTime}
 													timeNows={this.state.timeNows} 
 													isLogin={this.state.isLogin} 
 													triggler={this.alertOpenModal} 
