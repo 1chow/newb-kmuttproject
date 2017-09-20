@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import * as firebase from 'firebase'
 import ImageUploader from 'react-firebase-image-uploader'
-import ItemL from './ItemL'
+import ItemsL from './ItemsL'
 import moment from 'moment';
 import {DatetimePickerTrigger} from 'rc-datetime-picker';
 
@@ -54,23 +54,30 @@ class Edit extends Component {
 
   componentWillUnmount() {
     firebase.database().ref().child('catagories').off();
-    this.setState({registerError: null })
+    this.setState({Error: null })
   }
 
   
   handleNewItemSubmit = (e) => {
     e.preventDefault();
     this.dbItems = firebase.database().ref().child('items');
-    if (this.state.productname && 
-      this.state.productname.trim().length !== 0 &&
-       this.state.desc.trim().length &&
+    if (
+        this.state.productname && 
+        this.state.productname.trim().length !== 0 &&
+        this.state.desc.trim().length &&
         this.state.catagoriesselect &&
-         this.state.productimageURL.length !== 0 &&
-           this.state.timeStart.lenght !== 0 &&
-            this.state.timeEnd.lenght !== 0) 
+        this.state.productimageURL.length !== 0 &&
+        this.state.timeStart.lenght !== 0 &&
+        this.state.timeEnd.lenght !== 0 &&
+        this.state.productname.trim().length <= 10 &&
+        this.state.desc.trim().length <= 100 &&
+        this.state.firstbit.length <= 10 &&
+        this.state.firstbit > 0 &&
+        this.state.firstbit%Math.floor(this.state.firstbit) === 0
+      ) 
       {
         this.props.triggler('alert','good','Your Item has create','fa-check-circle')
-        this.setState({registerError: null })
+        this.setState({Error: null })
         this.dbItems.push({
         name: this.state.productname,
         catagory: this.state.catagoriesselect,
@@ -83,8 +90,8 @@ class Edit extends Component {
         bid:{
             current : parseInt(this.state.firstbit,10),
             openBid : parseInt(this.state.firstbit,10),
-            endTime: this.state.timeEnd.format('x'),
-            startTime: this.state.timeStart.format('x'),
+            endTime: parseInt(this.state.timeEnd.format('x'),10),
+            startTime: parseInt(this.state.timeStart.format('x'),10),
         },
         img: this.state.productimageURL,
         bouded : 15,
@@ -99,14 +106,18 @@ class Edit extends Component {
             })
             .then(   
               this.setState({
-                  productname: '',
-                  catagoriesselect:'',
-                  desc: '',
+                  User:'',
+                  productname : '',
                   productimage:'',
                   productimageURL:'',
                   firstbit:'',
+                  catagoriesselect:'', 
+                  desc: '',
                   timeStart: moment(),
                   timeEnd: moment().add(1, 'days'),
+                  boundedTime:'',
+                  catagories:[],
+                  Error: null,
                 })
             )
         })
@@ -235,8 +246,8 @@ class Edit extends Component {
                             />
                         </label>
                         {this.state.isUploading  === true ?
-                            <img className="load-small" src={'https://firebasestorage.googleapis.com/v0/b/auctkmutt.appspot.com/o/images%2FRolling.gif?alt=media&token=83378f72-c160-45d7-9b1e-9e805425e545'} alt="PreviewPic" />
-                          : <img className="load-small none" src={'https://firebasestorage.googleapis.com/v0/b/auctkmutt.appspot.com/o/images%2FRolling.gif?alt=media&token=83378f72-c160-45d7-9b1e-9e805425e545'} alt="PreviewPic" />
+                            <img className="load-small" src={require("../../images/Rolling.gif")} alt="PreviewPic" />
+                          : <img className="load-small none" src={require("../../images/Rolling.gif")} alt="PreviewPic" />
                         }
                         {this.state.productimageURL && 
                           <img src={this.state.productimageURL} alt="PreviewPic" />
@@ -264,7 +275,7 @@ class Edit extends Component {
             </form>
           </div>
           <div className="small-12 columns profile-main">
-            <ItemL/>
+            {/*<ItemsL/>*/}
           </div>
         </div>
     );

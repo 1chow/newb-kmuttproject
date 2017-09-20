@@ -293,7 +293,7 @@ button.user-edit{position: absolute;right: 15px;bottom: 35px;color: #777;font-si
 .user-container{position: relative;}
 .user-p{font-size: 1em;}
 .checkout-address{font-size: 1.25em;color: rgb(92, 92, 92);background-color: transparent !important;border: 0;box-shadow: none;padding: 0;}
-
+.checkout-address-active{font-size: 1.25em;color: rgb(92, 92, 92);background-color: transparent !important;border: 1;box-shadow: none;padding: 0;}
 .user-profile{border-radius: 50%;border: 5px solid #3adb76;width: 248px;height: 248px;}
 .user-box-img{border: 0;box-shadow: none;}
 

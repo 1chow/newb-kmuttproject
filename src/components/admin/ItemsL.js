@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import * as firebase from 'firebase'
-import moment from 'moment'
 
 
-class CategoryL extends Component {
+class ItemL extends Component {
   render(){
     return (
         
@@ -12,8 +11,8 @@ class CategoryL extends Component {
               <td>{this.props.key_}</td>
               <td className="show-for-large">{this.props.name}</td>
               <td className="show-for-large">{this.props.catagory}</td>
-              <td className="show-for-large">{moment(this.props.bid.startTime).format('YYYY-MM-DD HH:mm')}</td>
-              <td className="show-for-large">{moment(this.props.bid.startTime).format('YYYY-MM-DD HH:mm')}</td>
+              <td className="show-for-large">Time</td>
+              <td className="show-for-large">Time</td>
               <td><button onClick={()=> this.props.hell(this.props.dbkey)} ><i className="fa fa-trash"></i></button></td>
           </tr>
         
@@ -21,7 +20,7 @@ class CategoryL extends Component {
   }
 }
 
-class CategoriesL extends Component {
+class ItemsL extends Component {
   constructor () {
     super();
     this.state = {
@@ -36,9 +35,8 @@ class CategoriesL extends Component {
       let items = [];
         dataSnapshot.forEach( childSnapshot => {
         let category = childSnapshot.val();
-        category['key_'] = childSnapshot.key;
+        category['key'] = childSnapshot.key;
         items.push(category);
-
       });
 
       this.setState({
@@ -72,9 +70,9 @@ class CategoriesL extends Component {
                     <td className="show-for-large" width="150">End</td>
                     <td>Delete</td>
                 </tr>
-                {this.state.items.map((items) => {
+                {this.state.items.map((items,i) => {
                   return ( 
-                    <CategoryL dbkey={items['key_']} hell={this.removeItem} {...items} />
+                    <ItemL key={items['key']} dbkey={items['key']} hell={this.removeItem} {...items} />
                     );})}
                 </tbody>
               </table>
@@ -85,4 +83,4 @@ class CategoriesL extends Component {
 }
 
  
-export default CategoriesL
+export default ItemsL

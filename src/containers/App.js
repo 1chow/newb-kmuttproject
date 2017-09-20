@@ -26,7 +26,7 @@ export default class App extends Component {
 			items: [],
 			categories:[],
 			orderLists:[],
-			current:[],
+			current:null,
 			showModal: false,
 			showToggle: false,
 			isActive: 'default',
@@ -135,14 +135,12 @@ export default class App extends Component {
 			  let catagory_ = data.catagory;
 			  let isActive_ = data.isActive;
 			  let endTime_ = data.bid.endTime;
-			  let timeNow_ = ((data.bid.endTime - data.timeNow)/1000)
 	          let obj = {
 	          	current  : current_,
 				itemId : key,
 				catagory: catagory_,
 				isActive: isActive_,
-				endTime: endTime_,
-				timeNow  : timeNow_,		
+				endTime: endTime_,	
 	          }
 	          current_a.push(obj);
 			})
@@ -257,7 +255,7 @@ export default class App extends Component {
 	}
 
 	render() {
-		return this.state.current.length !== 0 ? (
+		return this.state.current !== null ? (
 			<div>
 				<section className={"warpper " + (this.state.showModal === true  && 'blur-for-modal')}>
 					{/* Navigator Bar */}

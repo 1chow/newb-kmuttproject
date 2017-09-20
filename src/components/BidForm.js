@@ -45,7 +45,7 @@ class bidForm extends Component {
 	}
 
 	isBidForm = (bid,open) => {
-		if(bid.value.length >= 6 || bid.value <= 0 || bid.value === 'e' || bid.value%Math.floor(bid.value) !== 0) {
+		if(bid.value.length >= 10 || bid.value <= 0 || bid.value === 'e' || bid.value%Math.floor(bid.value) !== 0) {
 			this.props.recieve()
 			this.bid.value = ''
 			open('alert','bad','Enter a valid Prize','fa-thumbs-down')
