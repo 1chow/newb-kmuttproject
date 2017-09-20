@@ -13,16 +13,19 @@ class AddCatagoriy extends Component {
 
   handleNewItemSubmit = (e) => {
     e.preventDefault();
-    this.setState({registerError: null })
-      if (this.state.newitemtext && this.state.newitemtext.trim().length !== 0) {
+      if (this.state.newitemtext && this.state.newitemtext.trim().length !== 0 && this.state.newitemtext.trim().length <= 12) {
             if (this.state.icon && this.state.icon.trim().length !== 0){
+              this.setState({
+                Error: null,
+                newitemtext: '',
+                icon: '',
+               })
                firebase.database().ref().child('catagories').push({
                 icon: this.state.icon,
                 name: this.state.newitemtext,
             })} else this.setState({Error: 'Please select icon' })
       } else this.setState({Error: 'Please enter a valid category name' })
-    this.setState({  newitemtext: '',  })
-    this.setState({  icon: '',  })
+    
   }
 
   onNewItemChange = (e) => {
@@ -30,7 +33,11 @@ class AddCatagoriy extends Component {
   }
 
   	componentWillUnmount() {
-		this.setState({registerError: null })
+      this.setState({
+        Error: null,
+        newitemtext: '',
+        icon: '',
+       })
 	}
 
   render() {
@@ -114,10 +121,6 @@ class AddCatagoriy extends Component {
               <CategoriesL/>
             </div>
         </div>
-
-
-
-
     );
   }
 }

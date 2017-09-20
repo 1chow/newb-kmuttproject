@@ -7,46 +7,54 @@ export default class Setting extends Component {
   constructor () {
     super();
     this.state = {
-      username:'',
+			newusername:'',
+			username:'',
+			newemail:'',
       email:'',
 			Uid:'',
 			userimage:'',
       userimageURL:'',
       Error: null ,
-      setting: false,
-      address: 'Please provide a contact address.',
+			setting: false,
+			newaddress:'',
+      address: '',
     }
   }
 
   componentDidMount() {
-    let user = firebase.auth().currentUser;
-    if (user) {
-    	this.setState({email: user.email,Uid: user.uid})
-    	firebase.database().ref('/users/' + user.uid + '/info').once('value', dataSnapshot => {
-	      var userdata = dataSnapshot.val();
-	      this.setState({username: userdata.displayName , address: userdata.address})
-	    })
-	}
-  }
-
-  componentWillReceiveProps(nextProps) {
-  	let user = firebase.auth().currentUser;
-  	 if (user) {
-    	this.setState({email: user.email,Uid: user.uid})
-    	firebase.database().ref('/users/' + user.uid + '/info').once('value', dataSnapshot => {
-	      var userdata = dataSnapshot.val();
-	      this.setState({username: userdata.displayName , address: userdata.address})
-	    })
+		let user = firebase.auth().currentUser;
+		if (user) {
+			this.setState({email: user.email,Uid: user.uid})
+			firebase.database().ref('/users/' + user.uid + '/info').once('value', dataSnapshot => {
+				var userdata = dataSnapshot.val();
+				this.setState({
+					username: userdata.displayName,
+					newusername: userdata.displayName,
+					address: userdata.address
+				})
+			})
+		}
 	}
 	
-  }
+	validateEmail = (email) =>
+	{
+			var re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum)\b/;
+			return re.test(email);
+	}
+
 
   onNewItemChange = (e) => {
     this.setState({ [e.target.name]: e.target.value })
   }
 
   Setting = (e) => {
-    this.setState({ setting: !this.state.setting})
+		this.setState({ 
+			newusername: this.state.username,
+			newemail:this.state.email,
+			newaddress:this.state.address,
+			setting: !this.state.setting,
+			Error: null,
+		})
 	}
 	
 	handleUploadError = (error) => {
@@ -67,15 +75,20 @@ export default class Setting extends Component {
 		
 	handleNewItemSubmit = (e) => {
     e.preventDefault();
-    this.setState({registerError: null })
-      if (this.state.username && this.state.username.trim().length !== 0) {
-					if (this.state.email && this.state.email.trim().length !== 0){
-							if (this.state.address && this.state.address.trim().length !== 0){
+      if (this.state.newusername && this.state.newusername.trim().length !== 0 && this.state.newusername.trim().length <= 10) {
+					if (this.state.newemail && this.state.newemail.trim().length !== 0 && this.validateEmail(this.state.newemail.trim()) === true){
+							if (this.state.newaddress && this.state.newaddress.trim().length !== 0 && this.state.newaddress.trim().length <= 30){
+							this.setState({
+								Error: null,
+								username: this.state.newusername,
+								email:this.state.newemail,
+								address:this.state.newaddress,
+							 })
 							firebase.database().ref().child(`users/${this.state.Uid}/info`)
 							.update({
-									displayName: this.state.username,
-									email: this.state.email,
-									address: this.state.address
+									displayName: this.state.newusername,
+									email: this.state.newemail,
+									address: this.state.newaddress
 							})
 							this.props.triggler('alert','good','Your detail has changes','fa-check-circle')
 							} else this.setState({Error: 'Please enter a valid address' })
@@ -85,7 +98,7 @@ export default class Setting extends Component {
 	}
 	
 	componentWillUnmount() {
-		this.setState({registerError: null })
+		this.setState({Error: null })
 	}
 
   render(){
@@ -128,7 +141,7 @@ export default class Setting extends Component {
 	                <div className="small-12 columns">
 	                  <label>User Name
 	                  { this.state.setting === true ?
-	                    <input type="text" placeholder="User Name" pattern="text" id="p_name" onChange={ this.onNewItemChange } value={ this.state.username } name="username"/>
+	                    <input type="text" placeholder="User Name" pattern="text" id="p_name" onChange={ this.onNewItemChange } value={ this.state.newusername } name="newusername"/>
 	                    :<p className='user-p'>{ this.state.username }</p>
 	                   }
 	                  </label>
@@ -136,7 +149,7 @@ export default class Setting extends Component {
     	     		<div className="small-12 columns">
 	                  <label>E-mail
 	                    { this.state.setting === true ?
-	                    <input type="email" placeholder="E-mail" pattern="email" id="email" onChange={ this.onNewItemChange } value={ this.state.email } name="email"/>
+	                    <input type="email" placeholder="E-mail" pattern="email" id="email" onChange={ this.onNewItemChange } value={ this.state.newemail } name="newemail"/>
 	                    :<p className='user-p'>{ this.state.email } </p>
 	                   }
 	                  </label>
@@ -145,8 +158,8 @@ export default class Setting extends Component {
 	                  <label>Address
 	                    { this.state.setting === true ?
 	                    	this.state.address &&
-	                    <textarea className="checkout-address" name="address" rows="5" autoCorrect="off" spellCheck="false" onChange={this.onNewItemChange} value={this.state.address} ></textarea>
-	                    : this.state.address && <textarea name="address" className="checkout-address"rows="5" autoCorrect="off"  readOnly defaultValue={this.state.address}></textarea>
+	                    <textarea className="checkout-address-active" name="newaddress" rows="5" autoCorrect="off" spellCheck="false" onChange={this.onNewItemChange} value={this.state.newaddress} ></textarea>
+	                    : this.state.address && <textarea name="address" className="checkout-address"rows="5" autoCorrect="off"  readOnly value={this.state.address}></textarea>
 	                   }
 	                  </label>
     	     		</div>

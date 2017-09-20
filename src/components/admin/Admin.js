@@ -48,19 +48,21 @@ export default class Admin extends Component {
 	                 </ul>
 	            </div>
 	        </div>
-
+			{/* Fucking Bug */}
 	        <div className="small-10 large-10 admin-r columns">
 	        	
 		        <div className="small-12 columns profile-main">
 		            <div className="small-12 columns">
 		            	{ this.state.select === 'category' ?
 			            	<AddCatagory />
-			            	: this.state.select === 'item' ? <AddItem triggler={this.props.triggler} /> : <Setting triggler={this.props.triggler} profilePicture={this.props.profilePicture} />
+			            	: this.state.select === 'item' ? <AddItem triggler={this.props.triggler} /> 
+								: <Setting triggler={this.props.triggler} profilePicture={this.props.profilePicture} />
 		            	}
 		            </div>            
 		        </div>
 
 	        </div>
+			{/* Fucking Bug */}
 
         </div>
         )
