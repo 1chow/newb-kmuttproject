@@ -68,7 +68,7 @@ export default class Item extends Component {
 		})
 		newtimeNows.length !== 0 && this.setState({timeNow: newtimeNows[0].timeNow})
 	}
-
+                 
 	recieve = () => {
 		this.setState({wait:false})
 	} 
@@ -130,7 +130,7 @@ export default class Item extends Component {
 													<td width="30">{i === 0 && <i className="fa fa-trophy"></i>}</td>
 													<td width="80" style={{textAlign:"left"}}>{i !== bidLenght  ? (bidList.name).slice(0,-3) + ' ⁎⁎⁎' : bidList.name}</td>
 													<td width="80" style={{textAlign:"right"}}>{bidList.bid}.00<span>฿</span></td>
-													<td width="175" style={{fontSize:"0.66em"}}>{this.props.convertTime(bidList.bidTimestamp)}</td>
+													<td width="175" title={this.props.convertTime(bidList.bidTimestamp)} style={{fontSize:"0.66em"}}>{this.props.convertTime(bidList.bidTimestamp)}</td>
 												</tr>
 											})}
 										</tbody>

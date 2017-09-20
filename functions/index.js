@@ -211,17 +211,9 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 				var bidEndTime = data.bid.endTime;
 
 
-				db.ref('/items/' + itemKey + '/bidList').orderByChild('bid').limitToLast(1)
-				.once('value', function(childSnapshot) {
+				db.ref('/items/' + itemKey + '/bid').once('value', function(childSnapshot) {
 
-					var bidLast = [];
-					childSnapshot.forEach((duckSnap) => {
-						const duck = duckSnap.val();
-						bidLast.push(duck);
-					});
-
-					var mfk = bidLast[0];//bidLastWin
-					console.log('mfk ' + mfk.bid);
+					var bidLast = childSnapshot.val();
 
 					db.ref('/time').update({
 		  		 		  timeNow :  timeCurrent
@@ -232,48 +224,53 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 		  		 		 	var getTime = time_.timeNow;
 		  		 		 	var openBid = data.bid.openBid;
 			  		 		var tOut_ = bidEndTime - getTime;
-		  		 			var checkBid = newBid - mfk.bid;
+		  		 			var checkBid = newBid - bidLast.current;
 		  		 			var message = [];
 
-			  		 		if ( active != 0 && tOut_ > 1000 && newBid > openBid){
+		  		 			//validate int type
+		  		 			if (typeof newBid === 'number' && newBid > 0 && (newBid%1) === 0){
 
-				  		 		db.ref('/users/' + uid ).once('value', userSnapshot => {
-				  		 		
-								var _data = userSnapshot.val();
-								var _info = _data.info;
+				  		 		if ( active != 0 && tOut_ > 1000 && checkBid > 0 ){
 
-					  				db.ref('/items/'+ itemKey + '/bidList').push({
-					  					bid : newBid,
-					  					bidTimestamp : getTime,
-					  					userId : uid,
-					  					userName : _info.displayName
-					  				})
-					  				if (checkBid > 0) {
-						  				db.ref('/items/'+ itemKey + '/bid').update({
-						  					current : newBid,
+					  		 		db.ref('/users/' + uid ).once('value', userSnapshot => {
+					  		 		
+									var _data = userSnapshot.val();
+									var _info = _data.info;
+
+						  				db.ref('/items/'+ itemKey + '/bidList').push({
+						  					bid : newBid,
+						  					bidTimestamp : getTime,
+						  					userId : uid,
 						  					userName : _info.displayName
 						  				})
-				  					}
+						  				db.ref('/items/'+ itemKey + '/bid').update({
+							  					current : newBid,
+							  					userName : _info.displayName,
+							  					userId : uid
+							  			})
+					  					
 
-					  			})
-
-				  				if (checkBid > 0) {
-					  				//win bid
+						  			})
+			  						//win bid
 					  				message.push('win')
-				  				} else{
-				  					//loser bid
-				  					message.push('lost')
-				  				}
 
-				  			} else {
-				  				
-				  				if (newBid <= openBid) {
-					  				//win bid
-					  				message.push('lessThanOpenBid')
-				  				} else{
-				  					//item not active
-				  					message.push('notActive')
-				  				}
+					  			} else {
+					  				
+					  				if (newBid <= bidLast.current) {
+						  				//loser bid
+						  				message.push('loser')
+					  				} else if( active === 0 || tOut_ <= 1000 ){
+					  					//item not active
+					  					message.push('timeup')
+					  				} else{
+					  					//bad req.
+					  					message.push('403')
+					  				}
+					  			}
+
+				  			} else{
+				  				//bad req.
+					  			message.push('403')
 				  			}
 
 				  			res.status(200).send(message);

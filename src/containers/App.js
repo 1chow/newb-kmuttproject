@@ -372,6 +372,6 @@ export default class App extends Component {
 					icon={this.state.icon}			
 				/>
 			</div>
-		) : <div style={{width:100+"%",textAlign:'center'}}><img src={require("../images/Rolling.gif")} alt="Loading"></img></div>
+		) : <div className='preload'><img src={require("../images/Rolling.gif")} alt="Loading"></img></div>
 	}
 }

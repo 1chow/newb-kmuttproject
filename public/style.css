@@ -14,7 +14,8 @@ input::-moz-placeholder{font-size: 0.9em;opacity: 1;color:#777;}
 input::placeholder {color:#777;font-size: 0.9em;}
 h3.print{color: #5f5f5f !important;}
 
-.icon-font{font-family: 'FontAwesome', 'Second Font name'}
+.icon-font{font-family: 'FontAwesome'}
+.preload{width: 200px;position: absolute;top:calc(50vh - 100px);left: 0;right: 0;margin: 0 auto;}
 
 .none{display: none;}
 
@@ -184,7 +185,9 @@ i.alert{color: #ffae00;}
 .auct-form{position: relative;font-size: 1em;}
 .auct-form label{width: calc(100% - 60px);display: inline-block;}
 .auct-form label .input-group{margin: 0;}
-.auct-form [type=submit]{font-size: 1.15em;display: inline-block;width: 50px;margin-left: 5px;padding: 17px 0;border: none;height: 2.575em;position: absolute;left: calc(100% - 55px);}
+.auct-form button{font-size: 1.15em;display: inline-block;width: 50px;margin-left: 5px;padding: 17px 0;border: none;height: 2.575em;position: absolute;left: calc(100% - 55px);}
+.auct-form button.gray{background: transparent;}
+.auct-form button.gray img{width: 75%;text-align: center;position: relative; top:-5px;}
 .auct-form-input{font-size: 1em;height: 2.66em;width: 100%;}
 .auct-from-warp{background: #f0f0f0;margin: 15px 0 0;position: relative;padding-bottom: 10px;overflow: hidden;}
     .auct-from-warp table{border-collapse: collapse;font-size: 1em;}
