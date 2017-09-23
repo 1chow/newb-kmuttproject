@@ -83,8 +83,13 @@ export default class App extends Component {
 		);
 	}
 
+	componentDidMount() {
+		window.addEventListener('scroll', this.handleScroll);
+	}
+
 	componentWillUnmount () {
 		this.removeListener()
+		window.removeEventListener('scroll', this.handleScroll);
 	}
 
 	getObjects = () => {
@@ -146,6 +151,13 @@ export default class App extends Component {
 			})
 		    this.setState({current:current_a})
 		  });
+	}
+
+	//Scroll function
+	handleScroll = e => {
+		let scrollTop = e.target.body.scrollTop
+		scrollTop >= 132 &&
+		console.log("Magic")
 	}
 
 	secondsToHms = (d) => {
