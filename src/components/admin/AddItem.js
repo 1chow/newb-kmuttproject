@@ -63,7 +63,6 @@ class Edit extends Component {
     this.dbItems = firebase.database().ref().child('items');
     if (
         this.state.productname && 
-        this.state.productname.trim().length !== 0 &&
         this.state.desc.trim().length &&
         this.state.catagoriesselect &&
         this.state.productimageURL.length !== 0 &&
@@ -89,20 +88,25 @@ class Edit extends Component {
         },
         bid:{
             current : parseInt(this.state.firstbit,10),
+            maxBid : parseInt((this.state.firstbit - 1),10),
+            maxBidTime : parseInt(this.state.timeStart.format('x'),10),
             openBid : parseInt(this.state.firstbit,10),
             endTime: parseInt(this.state.timeEnd.format('x'),10),
             startTime: parseInt(this.state.timeStart.format('x'),10),
+            userName : '',
+            userId : ''
         },
         img: this.state.productimageURL,
-        bouded : 15,
-        own : this.state.User,
-        timeNow : new Date().getTime()
+        own : this.state.User
+        
       })
       .then(snapshot => {
             firebase.database().ref('/items/' + snapshot.key + '/bidList').push({
               userId : '',
+              userName : '',
               bid : parseInt(this.state.firstbit,10),
-              bidTimestamp : this.state.timeStart.format('x')
+              bidTimestamp : this.state.timeStart.format('x'),
+              auto : 0
             })
             .then(   
               this.setState({

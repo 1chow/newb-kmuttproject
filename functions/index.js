@@ -222,6 +222,7 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 			  		 	db.ref('/time').once('value', function(TimeSnapshot) {
 		  		 		 	var time_ = TimeSnapshot.val();
 		  		 		 	var getTime = time_.timeNow;
+		  		 		 	var maxBid = bidLast.maxBid;
 		  		 		 	var openBid = data.bid.openBid;
 			  		 		var tOut_ = bidEndTime - getTime;
 		  		 			var checkBid = newBid - bidLast.current;
@@ -237,43 +238,145 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 									var _data = userSnapshot.val();
 									var _info = _data.info;
 
-						  				db.ref('/items/'+ itemKey + '/bidList').push({
-						  					bid : newBid,
-						  					bidTimestamp : getTime,
-						  					userId : uid,
-						  					userName : _info.displayName
-						  				})
-						  				db.ref('/items/'+ itemKey + '/bid').update({
-							  					current : newBid,
-							  					userName : _info.displayName,
-							  					userId : uid
-							  			})
-					  					
+						  				if (newBid > maxBid) {
+
+						  					if ( uid != bidLast.userId ) {
+
+						  					db.ref('/items/'+ itemKey + '/bidList').orderByChild("bid").limitToLast(1)
+						  						.once("child_added", findAutoSnapshot => {
+						  							var a_data = findAutoSnapshot.val();
+						  							var a_key = findAutoSnapshot.key;
+						  							//console.log(a_key);
+						  							if (a_data.auto === 1){
+						  								db.ref('/items/'+ itemKey + '/bidList/' + a_key).update({
+						  									auto : 3						  									
+						  								})
+						  							}
+						  						}).then ( well => {
+
+									  				db.ref('/items/'+ itemKey + '/bid').update({
+									  					current : maxBid + 1,
+									  					userName : _info.displayName,
+									  					userId : uid,
+									  					maxBid : newBid,
+									  					maxBidTime : getTime
+										  			})
+										  			db.ref('/items/'+ itemKey + '/bidList').push({
+									  					bid : maxBid + 1,
+									  					bidTimestamp : getTime,
+									  					userId : uid,
+									  					userName : _info.displayName,
+									  					auto : 1
+									  				})
+
+									  				//win bid
+						  							res.status(200).send(['win']);
+
+					  							})
+
+								  			} else {
+
+								  				db.ref('/items/'+ itemKey + '/bid').update({
+								  					maxBid : newBid 
+									  			})
+									  			//increase max bid
+									  			res.status(200).send(['increase']);
+								  			}
+
+						  				} else if (newBid <= maxBid) {
+
+						  					if ( uid != bidLast.userId ) {
+
+						  						db.ref('/items/'+ itemKey + '/bidList').orderByChild("bid").limitToLast(1)
+						  						.once("child_added", findAutoSnapshot => {
+						  							var a_data = findAutoSnapshot.val();
+						  							var a_key = findAutoSnapshot.key;
+						  							//console.log(a_key);
+						  							if (a_data.auto === 1){
+						  								db.ref('/items/'+ itemKey + '/bidList/' + a_key).update({
+						  									auto : 2						  									
+						  								})
+						  							}
+						  						}).then ( well => {
+
+						  						if (newBid < maxBid) {
+
+								  					db.ref('/items/'+ itemKey + '/bid').update({
+									  					current : newBid + 1,
+									  					userName : bidLast.userName,
+									  					userId : bidLast.userId,
+										  			})
+										  			db.ref('/items/'+ itemKey + '/bidList').push({
+									  					bid : newBid,
+									  					bidTimestamp : getTime,
+									  					userId : uid,
+									  					userName : _info.displayName,
+									  					auto : 0
+								  					})
+										  			db.ref('/items/'+ itemKey + '/bidList').push({
+									  					bid : newBid + 1,
+									  					bidTimestamp : bidLast.maxBidTime,
+									  					userId : bidLast.userId,
+									  					userName : bidLast.userName,
+									  					auto : 1
+								  					})
+
+									  			} else {
+
+									  				db.ref('/items/'+ itemKey + '/bid').update({
+									  					current : newBid,
+									  					userName : bidLast.userName,
+									  					userId : bidLast.userId,
+										  			})
+										  			db.ref('/items/'+ itemKey + '/bidList').push({
+									  					bid : newBid,
+									  					bidTimestamp : getTime,
+									  					userId : uid,
+									  					userName : _info.displayName,
+									  					auto : 0
+								  					})
+										  			db.ref('/items/'+ itemKey + '/bidList').push({
+									  					bid : newBid,
+									  					bidTimestamp : bidLast.maxBidTime,
+									  					userId : bidLast.userId,
+									  					userName : bidLast.userName,
+									  					auto : 1
+								  					})
+
+									  			}
+							  					//auto bid
+							  					res.status(200).send(['autoBid']);
+
+							  					})
+
+									  		} else {
+									  			//alrady win
+							  					res.status(200).send(['alreadywin']);
+									  		}
+
+						  				}
 
 						  			})
-			  						//win bid
-					  				message.push('win')
 
 					  			} else {
 					  				
-					  				if (newBid <= bidLast.current) {
-						  				//loser bid
-						  				message.push('loser')
-					  				} else if( active === 0 || tOut_ <= 1000 ){
-					  					//item not active
-					  					message.push('timeup')
+					  				if ( active === 0 || tOut_ <= 1000 ) {
+						  				//time up
+						  				res.status(200).send(['timeup']);
+						  			} else if( newBid < bidLast.current){
+						  				//already win
+					  					res.status(200).send(['loser']);
 					  				} else{
 					  					//bad req.
-					  					message.push('403')
+					  					res.status(200).send(['403']);
 					  				}
 					  			}
 
-				  			} else{
+				  			} else {
 				  				//bad req.
-					  			message.push('403')
+					  			res.status(200).send(['403']);
 				  			}
 
-				  			res.status(200).send(message);
 		 				})//then
 					})
 
@@ -281,7 +384,7 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 	
 			})
 	  	} else {
-	  		res.status(200).send(['unexpected']);
+	  		res.status(200).send(['404']);
 	  	}
 	});
 

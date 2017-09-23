@@ -10,6 +10,7 @@ export default class Item extends Component {
 		bidLists:[],
 		newcurrent:[],
 		timeNow:[],
+		seeAutoBid:false,
 		wait:false
 	}
 
@@ -77,6 +78,10 @@ export default class Item extends Component {
 		this.setState({wait:true})
 	}
 
+	toggleAutoBid = () => {
+		this.setState({seeAutoBid:!this.state.seeAutoBid})
+	}
+
 	render() {
 		return this.state.item[0] ? (
 			<div>
@@ -122,19 +127,22 @@ export default class Item extends Component {
 							<div className="row auct-from-warp">
 								<div className="small-12 medium-12 columns">
 									<p className="time">Bidding List</p>
+									<div className="tableWarp">
 									<table className="hover unstriped">
 										<tbody>
 											{ this.state.bidLists.map( (bidList,i) => {
 												let bidLenght = this.state.bidLists.length - 1
-											return	<tr key={i}>
-													<td width="30">{i === 0 && <i className="fa fa-trophy"></i>}</td>
-													<td width="80" style={{textAlign:"left"}}>{i !== bidLenght  ? (bidList.name).slice(0,-3) + ' ⁎⁎⁎' : bidList.name}</td>
-													<td width="80" style={{textAlign:"right"}}>{bidList.bid}.00<span>฿</span></td>
-													<td width="175" title={this.props.convertTime(bidList.bidTimestamp)} style={{fontSize:"0.66em"}}>{this.props.convertTime(bidList.bidTimestamp)}</td>
+											return	<tr key={i} className={"bidList " + (bidList.auto === 2 ? 'bidList-none ' : '') + ((this.state.seeAutoBid && bidList.auto >= 2) ? 'bidList-show' : '')} >
+													<td width="25">{i === 0 && <i className="fa fa-trophy"></i>}</td>
+													<td width="125" style={{textAlign:"left"}}>{i !== bidLenght  ? (bidList.name).slice(0,-2) + ' ⁎⁎⁎' : bidList.name}<span className='bidList-auto'>{bidList.auto === 1 || bidList.auto === 2 ? '(auto)' : ''}{(this.state.seeAutoBid && bidList.auto === 3) ? '(auto)' : ''}</span></td>
+													<td width="50" title={(bidList.auto === 3 ? 'max bid is lost.' : '')+ (bidList.auto === 2 ? ' auto bid.' : '')} style={{textAlign:"right"}}>{bidList.bid}.00<span>฿</span></td>
+													<td width="150" title={this.props.convertTimeM(bidList.bidTimestamp)} style={{fontSize:"0.66em"}}>{this.props.convertTime(bidList.bidTimestamp)}</td>
 												</tr>
 											})}
 										</tbody>
 									</table> 
+									</div>
+									<button className="toggleAutoBid" onClick={this.toggleAutoBid}><i className={"fa " +(this.state.seeAutoBid ? 'fa-eye-slash' : 'fa-eye')} aria-hidden="true"></i> auto bids</button>
 								</div>
 							</div>
 							<div className="row auct-from-markdown">
