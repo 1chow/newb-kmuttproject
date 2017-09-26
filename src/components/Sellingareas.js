@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import * as Animated from "animated/lib/targets/react-dom";
 import TransitionGroup from "react-transition-group/TransitionGroup";
-import { Link } from 'react-router-dom'
-import Clock from './Clock'
+import Sellingarea from './Sellingarea'
 
 export default class Sellingareas extends Component {
 	constructor(props) {
@@ -21,6 +20,13 @@ export default class Sellingareas extends Component {
 	
 	//For First Render
 	componentWillReceiveProps(nextProps) {
+		if(nextProps.items) {
+			if(this.state.items.length !== nextProps.items.filter( item => item.isActive !== 0).length){
+				this._renderDelete(nextProps.items,nextProps.isActive)
+				this._filtertimeNows(nextProps.timeNows,this.props.isActive)
+				this._filtercurrent(nextProps.current,this.props.isActive)
+			}
+		}
 		if (this.props.items.length !== nextProps.items.length) {
 			this._renderProjects(nextProps.items,nextProps.isActive);
 		}
@@ -60,6 +66,24 @@ export default class Sellingareas extends Component {
 		)
 	}
 
+	_renderDelete(items,isActive,currents) {
+		let sortItems = items.sort(function(a, b){
+			return a.bid.endTime-b.bid.endTime
+		})
+		let filterItems = sortItems.filter( item => {
+			return item.isActive !== 0
+		})
+		if(isActive !== 'default') {
+		var newitems = filterItems.filter( item => {
+			return item.catagory === isActive
+		})} else newitems = filterItems
+		this.setState(
+			{
+				items: newitems,
+			}
+		)
+	}
+
 	//
 	_filtercurrent = (currents,isActive) => {
 		let sortCurrents = currents.sort(function(a, b){
@@ -74,7 +98,7 @@ export default class Sellingareas extends Component {
 				return current.catagory === isActive
 			}) 
 			} else newcurrent = filterCurrents
-		}  newcurrent.length !== 0 && this.setState({newcurrent: newcurrent})
+		}  newcurrent.length !== null && this.setState({newcurrent: newcurrent})
 	}
 
 	_filtertimeNows = (timeNows,isActive) => {
@@ -103,32 +127,32 @@ export default class Sellingareas extends Component {
 			<div className="page items post-feed">
 				<TransitionGroup>
 					{this.state.items.map((item, i) => {
-						const style = {
-							opacity: this.state.animations[i],
-							transform: Animated.template`
-								translate3d(0,${this.state.animations[i].interpolate({
-								inputRange: [0, 1],
-								outputRange: ["6px", "0px"]
-							})},0)
-							`
-						};
+						let style = {}
+						if(this.state.animations[i] === undefined){
+							style = {
+								opacity: this.state.animations[i],
+							};
+						} else {
+							style = {
+								opacity: this.state.animations[i],
+								transform: Animated.template`
+									translate3d(0,${this.state.animations[i].interpolate({
+									inputRange: [0, 1],
+									outputRange: ["6px", "0px"]
+								})},0)
+								`
+							}
+						}
 						return this.state.newcurrent[i] ? (
-						<div key={i} className={"small-6 medium-4 large-3 columns post-box "+(this.state.newcurrent[i].isActive === 0 && 'hidden')}>
-							<Animated.div style={style}>
-								<Link onClick={this.handleClose} to={'/item/'+ item._id}>
-									<div className="post-box-top">
-										<img src={item.img} alt=""/>
-									</div>
-									<div className="post-box-content">
-										<h3>{item.name}</h3>
-										<p className="desc">{item.desc.short.slice(0,20)}</p>
-										<Clock secondsToHms={this.props.secondsToHms} timeNows={this.state.timeNows[i]}  />
-											<p className="price">{this.state.newcurrent[i].current}<span className="curentcy">Bath</span></p>
-										<button><i className="fa fa2x "></i></button>
-									</div>
-								</Link>
-							</Animated.div>
-						</div>
+						<Sellingarea 
+							key={i}
+							handleClose={this.handleClose}
+							style={style}
+							item={item}
+							timeNows={this.state.timeNows[i]}
+							current={this.state.newcurrent[i].current}
+							secondsToHms={this.props.secondsToHms}
+						/>
 						) : null
 					})}
 				</TransitionGroup>
