@@ -23,6 +23,7 @@ class Edit extends Component {
       productimage:'',
       productimageURL:'',
       firstbit:'',
+      bidStep:'',
       catagoriesselect:'', 
       desc: '',
       timeStart: moment(),
@@ -63,16 +64,18 @@ class Edit extends Component {
     this.dbItems = firebase.database().ref().child('items');
     if (
         this.state.productname && 
-        this.state.desc.trim().length &&
+        this.state.desc &&
         this.state.catagoriesselect &&
         this.state.productimageURL.length !== 0 &&
         this.state.timeStart.lenght !== 0 &&
         this.state.timeEnd.lenght !== 0 &&
-        this.state.productname.trim().length <= 10 &&
         this.state.desc.trim().length <= 100 &&
         this.state.firstbit.length <= 10 &&
         this.state.firstbit > 0 &&
-        this.state.firstbit%Math.floor(this.state.firstbit) === 0
+        this.state.firstbit%Math.floor(this.state.firstbit) === 0 &&
+        this.state.bidStep.length <= 10 &&
+        this.state.bidStep > 0 &&
+        this.state.bidStep%Math.floor(this.state.bidStep) === 0
       ) 
       {
         this.props.triggler('alert','good','Your Item has create','fa-check-circle')
@@ -88,9 +91,10 @@ class Edit extends Component {
         },
         bid:{
             current : parseInt(this.state.firstbit,10),
-            maxBid : parseInt((this.state.firstbit - 1),10),
+            maxBid : parseInt((this.state.firstbit - this.state.bidStep),10),
             maxBidTime : parseInt(this.state.timeStart.format('x'),10),
             openBid : parseInt(this.state.firstbit,10),
+            bidStep: parseInt(this.state.bidStep,10),
             endTime: parseInt(this.state.timeEnd.format('x'),10),
             startTime: parseInt(this.state.timeStart.format('x'),10),
             userName : '',
@@ -117,6 +121,7 @@ class Edit extends Component {
                   firstbit:'',
                   catagoriesselect:'', 
                   desc: '',
+                  bidStep:'',
                   timeStart: moment(),
                   timeEnd: moment().add(1, 'days'),
                   boundedTime:'',
@@ -207,6 +212,15 @@ class Edit extends Component {
                     <div className="input-group">
                       <span className="input-group-label">฿</span>
                       <input className="input-group-field" type="number" onChange={ this.onNewItemChange } value={ this.state.firstbit } name="firstbit"/>
+                    </div>
+                  </label>
+                  <span className="form-error" data-form-error-for="exampleNumberInput">Amount is required.</span>
+                </div>
+                <div className="small-12 columns">
+                  <label>Bid Increments
+                    <div className="input-group">
+                      <span className="input-group-label">฿</span>
+                      <input className="input-group-field" type="number" onChange={ this.onNewItemChange } value={ this.state.bidStep } name="bidStep"/>
                     </div>
                   </label>
                   <span className="form-error" data-form-error-for="exampleNumberInput">Amount is required.</span>

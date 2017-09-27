@@ -10,25 +10,31 @@ export default class Item extends Component {
 		bidLists:[],
 		newcurrent:[],
 		timeNow:[],
+		bidStep_:[],
 		seeAutoBid:false,
-		wait:false
+		wait:false,
 	}
 
 	componentDidMount() {
-		this._filterItems(this.props.items,this.props.current);
+
+			this._filterItems(this.props.items,this.props.current);
+
 			firebase.database().ref('/items/'+this.props.match.params.id+'/bidList').orderByChild('bid').on('value', Snapshot => {
 				let table_ = []
-				Snapshot.forEach( childSnapshot => {
-				let data = childSnapshot.val()
-				data['name'] = data.userName
-				table_.push(data)
+					Snapshot.forEach( childSnapshot => {
+						let data = childSnapshot.val()
+						data['name'] = data.userName
+						table_.push(data)
+					})
+
+				if(this.state) {				
+					this.setState({bidLists:table_.reverse()})
+				}
+
 			})
 
-			if(this.state) {				
-				this.setState({bidLists:table_.reverse()})
-			}
+			this._filtercurrent('',this.props.current)
 
-		})
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -41,6 +47,7 @@ export default class Item extends Component {
 		if (this.props.timeNows !== nextProps.timeNows) {
 			this._filtertimeNows(this.props.timeNows,nextProps.timeNows)
 		}
+
 	}
 
 	_filterItems = (items,currents) => {
@@ -58,9 +65,23 @@ export default class Item extends Component {
 
 	_filtercurrent = (items,currents) => {
 		let newcurrent = currents.filter( current => {
+			
 			return current.itemId === this.props.match.params.id
 		})
-		newcurrent.length !== 0 && this.setState({newcurrent: newcurrent[0].current})
+
+		if (newcurrent[0] !== null){
+
+			this.setState({newcurrent: newcurrent[0].current})
+
+			if ( newcurrent[0].maxBid < newcurrent[0].current){
+				this.setState({bidStep_: 0})
+
+			} else {
+				this.setState({bidStep_: newcurrent[0].bidStep})
+			}
+		} 
+
+
 	}
 
 	_filtertimeNows = (timeNows) => {
@@ -117,7 +138,7 @@ export default class Item extends Component {
 								{ this.props.isLogin &&
 									<div className="small-7 medium-7 columns auct-from-bit">
 										<p className="time">Place Your Bid</p>
-										<BidForm recieve={this.recieve} waiting={this.waiting} wait={this.state.wait} newcurrent={this.state.newcurrent} open={this.props.triggler} item={this.state.item[0]} params={this.props.match.params.id} />
+										<BidForm recieve={this.recieve} waiting={this.waiting} wait={this.state.wait} newcurrent={this.state.newcurrent} mfkCurrent={this.props.current} open={this.props.triggler} item={this.state.item[0]} params={this.props.match.params.id} bidStep_={this.state.bidStep_} />
 										{ this.state.newcurrent !== 0 &&
 											<p className="helper">Bids More Than {this.state.newcurrent}฿ To Win This Auction</p>
 										}
