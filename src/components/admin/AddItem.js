@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import * as firebase from 'firebase'
 import ImageUploader from 'react-firebase-image-uploader'
-import ItemsL from './ItemsL'
+//import ItemsL from './ItemsL'
 import moment from 'moment';
 import {DatetimePickerTrigger} from 'rc-datetime-picker';
 
@@ -168,6 +168,42 @@ class Edit extends Component {
     });
   }
 
+  addMockup = () => {
+    let timeEnd = parseInt(this.state.timeStart.format('x'),10) + 20000
+    this.dbItems = firebase.database().ref().child('items');
+    this.dbItems.push({
+      name: "MockUp :)",
+      catagory: "House Hold",
+      isActive: 1,
+      desc:{
+            short: "I'm come from the hell",
+            fullHeader: "Hi Man,I'm come from the hell",
+            fullDesc : "Hi Man,I'm come from the hell"
+      },
+      bid:{
+          current : parseInt(50,10),
+          maxBid : parseInt((50 - 1),10),
+          maxBidTime : parseInt(this.state.timeStart.format('x'),10),
+          openBid : parseInt(50,10),
+          endTime: parseInt(timeEnd,10),
+          startTime: parseInt(this.state.timeStart.format('x'),10),
+          userName : '',
+          userId : ''
+      },
+      img: "https://firebasestorage.googleapis.com/v0/b/auctkmutt.appspot.com/o/images%2Fa4a9443d-099f-4e24-bce0-6c5b3331c18c.jpg?alt=media&token=ef33603d-1a09-4292-8ec4-e1402afd51ab",
+      own : this.state.User
+    })
+    .then(snapshot => {
+      firebase.database().ref('/items/' + snapshot.key + '/bidList').push({
+        userId : '',
+        userName : '',
+        bid : parseInt(50,10),
+        bidTimestamp : this.state.timeStart.format('x'),
+        auto : 0
+      })
+    })
+  }
+
 
   render() {
     const shortcuts = {
@@ -294,6 +330,7 @@ class Edit extends Component {
           </div>
           <div className="small-12 columns profile-main">
             {/*<ItemsL/>*/}
+            <button onClick={this.addMockup}>Add Mock Item</button>  
           </div>
         </div>
     );

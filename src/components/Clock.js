@@ -9,7 +9,7 @@ class Clock extends React.Component {
   componentWillReceiveProps(nextProps) {
     if(nextProps.timeNows.timeNow <= 15){
       this.setState({hotTime: true})
-    } 
+    }  else this.setState({hotTime: false})
   }
 
   render() {

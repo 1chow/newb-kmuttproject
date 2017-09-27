@@ -9,8 +9,8 @@ export default class Item extends Component {
 		item:[],
 		bidLists:[],
 		newcurrent:[],
-		timeNow:[],
 		bidStep_:[],
+		timeNow:null,
 		seeAutoBid:false,
 		wait:false,
 	}
@@ -130,8 +130,8 @@ export default class Item extends Component {
 							<div className="row auct-from-warp">
 								<div className="small-5 medium-5 columns">
 									<p className="time">Time Remaining<br></br>
-									{this.state.timeNow &&
-										<Clock secondsToHms={this.props.secondsToHms} timeNow={this.state.timeNow}/>
+									{this.state.timeNow !== null &&
+										<Clock secondsToHms={this.props.secondsToHms} timeNow={this.state.timeNow-1}/>
 									}
 									</p>
 								</div>

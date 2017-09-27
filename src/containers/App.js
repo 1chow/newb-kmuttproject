@@ -44,6 +44,27 @@ export default class App extends Component {
 	}
 	componentWillMount() {
 		this.getObjects()
+		db2.ref('/items').on('value', Snapshot => {
+	        let current_a = [];
+
+	        Snapshot.forEach( childSnapshot => {
+			  let data = childSnapshot.val();
+			  let key = childSnapshot.key;
+			  let current_ = data.bid.current;
+			  let catagory_ = data.catagory;
+			  let isActive_ = data.isActive;
+			  let endTime_ = data.bid.endTime;
+	          let obj = {
+	          	current  : current_,
+				itemId : key,
+				catagory: catagory_,
+				isActive: isActive_,
+				endTime: endTime_,	
+	          }
+	          current_a.push(obj);
+			})
+		    this.setState({current:current_a})
+		  });
 		this.removeListener = firebaseAuth().onAuthStateChanged( user => {
 			if (user) {
 				db.child(`users/${user.uid}/info`).on('value', dataSnapshot => {
@@ -82,39 +103,12 @@ export default class App extends Component {
 			1000
 		);
 	}
-
+	
 	componentWillUnmount () {
 		this.removeListener()
 	}
 
 	getObjects = () => {
-		fetch("https://us-central1-auctkmutt.cloudfunctions.net/getItems")
-		.then(response => {
-			return response.json();
-		})
-		.then(json => {
-			let timeNows =[]
-			json.forEach( (object,i) => {
-				let timeNow_ = ((object.bid.endTime - object.timeNow)/1000)
-				let id_ = object._id
-				let catagory_ = object.catagory
-				let isActive_ = object.isActive
-				let endTime_ = object.bid.endTime
-				let timeNows_ = {
-					timeNow  : timeNow_,
-					_id  	 : id_,
-					catagory : catagory_,
-					isActive : isActive_,
-					endTime : endTime_
-				}
-				timeNows.push(timeNows_);
-			})
-			this.setState({
-				items: json,
-				timeNows:timeNows
-			})
-		});
-
 		fetch("https://us-central1-auctkmutt.cloudfunctions.net/getCatagories")
 		.then(response => {
 			return response.json();
@@ -123,10 +117,9 @@ export default class App extends Component {
 			this.setState({
 				categories: json
 			})
-		});
-		
+		})
 		db2.ref('/items').on('value', Snapshot => {
-	        let current_a = [];
+			let current_a = [];
 
 	        Snapshot.forEach( childSnapshot => {
 			  let data = childSnapshot.val();
@@ -148,11 +141,37 @@ export default class App extends Component {
 	          }
 	          current_a.push(obj);
 			})
-		    this.setState({current:current_a})
-		  });
+			this.setState({current:current_a},() => fetch("https://us-central1-auctkmutt.cloudfunctions.net/getItems")
+			.then(response => {
+				return response.json();
+			})
+			.then(json => {
+				let timeNows =[]
+				json.forEach( (object,i) => {
+					let timeNow_ = ((object.bid.endTime - object.timeNow)/1000)
+					let id_ = object._id
+					let catagory_ = object.catagory
+					let isActive_ = object.isActive
+					let endTime_ = object.bid.endTime
+					let timeNows_ = {
+						timeNow  : timeNow_,
+						_id  	 : id_,
+						catagory : catagory_,
+						isActive : isActive_,
+						endTime : endTime_
+					}
+					timeNows.push(timeNows_);
+				})
+				this.setState({
+					items: json,
+					timeNows:timeNows
+				})
+			}))
+		})
 	}
 
-	secondsToHms = (d) => {
+
+	secondsToHms = d => {
 		d = Number(d);
 		var h = Math.floor(d / 3600);
 		var m = Math.floor(d % 3600 / 60);
@@ -164,7 +183,7 @@ export default class App extends Component {
 		return hDisplay + mDisplay + sDisplay; 
 	}
 
-	convertTimeM = (timestamp) => {
+	convertTimeM = timestamp => {
 		var d = new Date(parseInt(timestamp)),
 			yy = d.getFullYear(),
 			mm = ('0' + (d.getMonth() + 1)).slice(-2),
@@ -179,7 +198,7 @@ export default class App extends Component {
 
 	}
 
-	convertTime = (timestamp) => {
+	convertTime = timestamp => {
 		var d = new Date(parseInt(timestamp)),
 			yy = d.getFullYear(),
 			mm = ('0' + (d.getMonth() + 1)).slice(-2),
@@ -196,10 +215,14 @@ export default class App extends Component {
 	tick() {
 		let timeNows = []
 		if(this.state.timeNows) {
-		this.state.timeNows.map( timeNow => {
+		this.state.timeNows.map( (timeNow,i) => {
 			let timeNow_
-			if(timeNow.timeNow <= 0){
+			if(timeNow.timeNow <= 1){
 				timeNow_ = 0
+				if(timeNow.isActive === 1){
+					this.hide(i,timeNow._id)
+					timeNow.isActive = 0
+				}
 			} else { timeNow_ = timeNow.timeNow - 1 }
 			let timeNows_ = {
 				timeNow  : timeNow_,
@@ -272,6 +295,28 @@ export default class App extends Component {
 		logout()
 	}
 
+	hide = (key,id) => {
+		let {items, current} = this.state
+		var fuck = null;
+		items.filter( (item,i) => {
+			if(item._id === id){
+				fuck = i
+				return 1
+			}
+			else{
+				return -1
+			}
+		})
+		let items_ = Object.assign({},items[fuck],{isActive:0})
+		let current_ = Object.assign({},current[key],{isActive:0})
+		items[fuck] = items_
+		current[key] = current_
+		this.setState({
+			items:items,
+			current:current,
+		})
+	}
+	
 	render() {
 		return this.state.current !== null ? (
 			<div>
