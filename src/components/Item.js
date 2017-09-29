@@ -9,31 +9,33 @@ export default class Item extends Component {
 		item:[],
 		bidLists:[],
 		newcurrent:[],
-		bidStep_:[],
-		timeNow:null,
+		bidStep_:'',
+		timeNow: null,
 		seeAutoBid:false,
+		maxBid:'',
 		wait:false,
+		bidResult:'',
+		bidResult_:'',
+		bidIcon:'',
 	}
 
 	componentDidMount() {
 
-			this._filterItems(this.props.items,this.props.current);
+		this._filterItems(this.props.items,this.props.current)
+		this._filtercurrent('',this.props.current)
+		this.handleMsg('default','','','')
 
-			firebase.database().ref('/items/'+this.props.match.params.id+'/bidList').orderByChild('bid').on('value', Snapshot => {
-				let table_ = []
-					Snapshot.forEach( childSnapshot => {
-						let data = childSnapshot.val()
-						data['name'] = data.userName
-						table_.push(data)
-					})
-
-				if(this.state) {				
-					this.setState({bidLists:table_.reverse()})
-				}
-
-			})
-
-			this._filtercurrent('',this.props.current)
+		firebase.database().ref('/items/'+this.props.match.params.id+'/bidList').orderByChild('bid').on('value', Snapshot => {
+			let table_ = []
+				Snapshot.forEach( childSnapshot => {
+					let data = childSnapshot.val()
+					data['name'] = data.userName
+					table_.push(data)
+				})
+			if(this.state) {				
+				this.setState({bidLists:table_.reverse()})
+			}
+		})
 
 	}
 
@@ -72,13 +74,20 @@ export default class Item extends Component {
 		if (newcurrent[0] !== null){
 
 			this.setState({newcurrent: newcurrent[0].current})
+			
 
-			if ( newcurrent[0].maxBid < newcurrent[0].current){
-				this.setState({bidStep_: 0})
+			if (newcurrent[0].maxBid !== null) {
 
-			} else {
-				this.setState({bidStep_: newcurrent[0].bidStep})
+				this.setState({maxBid: newcurrent[0].maxBid})
+
+				if ( newcurrent[0].maxBid < newcurrent[0].current){
+					this.setState({bidStep_: 0})
+				} else {
+					this.setState({bidStep_: newcurrent[0].bidStep})
+				}
+
 			}
+
 		} 
 
 
@@ -101,6 +110,50 @@ export default class Item extends Component {
 
 	toggleAutoBid = () => {
 		this.setState({seeAutoBid:!this.state.seeAutoBid})
+	}
+
+	handleMsg = (type,a,b,c) => {
+
+		switch(type){
+			case'default' :
+				this.setState({
+					bidIcon:'gavel',
+					bidColor_bg:'#f0f0f0',
+					bidColor_icon:'#126195',
+					bidColor:'#126195',
+					bidResult:'Really want to win?',
+					bidResult_:'Try Place Your high bid amount.'
+				})
+			break
+			case'lost' :
+				this.setState({
+					bidIcon:c,
+					bidColor_bg:'#ffdad5',
+					bidColor_icon:'#cc4b37',
+					bidColor:'#cc4b37',
+					bidResult: a,
+					bidResult_: b
+				})
+				setTimeout( () => {
+		        this.handleMsg('default','','','')
+		      	}, 5000)
+			break
+			case'win' :
+				this.setState({bidIcon:c,
+					bidColor_bg:'#B9F6CA',
+					bidColor_icon:'#ffae00',
+					bidColor:'#1B5E20',
+					bidResult: a,
+					bidResult_: b
+				})
+				setTimeout( () => {
+		        this.handleMsg('default','','','')
+		      	}, 5000)
+			break
+		}
+
+
+
 	}
 
 	render() {
@@ -138,12 +191,25 @@ export default class Item extends Component {
 								{ this.props.isLogin &&
 									<div className="small-7 medium-7 columns auct-from-bit">
 										<p className="time">Place Your Bid</p>
-										<BidForm recieve={this.recieve} waiting={this.waiting} wait={this.state.wait} newcurrent={this.state.newcurrent} mfkCurrent={this.props.current} open={this.props.triggler} item={this.state.item[0]} params={this.props.match.params.id} bidStep_={this.state.bidStep_} />
+										<BidForm recieve={this.recieve} msg={this.handleMsg} waiting={this.waiting} wait={this.state.wait} newcurrent={this.state.newcurrent} mfkCurrent={this.props.current} open={this.props.triggler} item={this.state.item[0]} params={this.props.match.params.id} bidStep_={this.state.bidStep_} />
 										{ this.state.newcurrent !== 0 &&
-											<p className="helper">Bids More Than {this.state.newcurrent}฿ To Win This Auction</p>
+											<p className="helper">Enter THB {this.state.newcurrent + this.state.bidStep_ } ฿ or more</p>
+										}
+										{ this.state.maxBid === 0 &&
+											<p className="helper">Your Max Bids {this.state.maxBid} ฿</p>
 										}
 									</div>
 								}
+							</div>
+							<div className="row auct-from-warp auct-msg" style={{background : this.state.bidColor_bg}}>
+								<div className="small-12 medium-12 columns auct-msg-col"  >
+									<div className="auct-msg-l" style={{color : this.state.bidColor_icon}} >
+										<i className={"fa fa-" + this.state.bidIcon} ></i>
+									</div>
+									<div className="auct-msg-r" style={{color : this.state.bidColor}} >
+										<p className="auct-msg-p">{this.state.bidResult}<span>{this.state.bidResult_}</span></p>
+									</div>
+								</div>
 							</div>
 							<div className="row auct-from-warp">
 								<div className="small-12 medium-12 columns">

@@ -17,7 +17,7 @@ class bidForm extends Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		this.state.validates !== prevState.validates &&
-		this.Validation(this.props.item,this.props.params,this.state.current,this.props.open,this.state.validates.endTime,this.state.validates.isActive,this.props.newcurrent)
+		this.Validation(this.props.item,this.props.params,this.state.current,this.props.open,this.props.msg,this.state.validates.endTime,this.state.validates.isActive,this.props.newcurrent)
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -29,7 +29,7 @@ class bidForm extends Component {
 	}
 
 
-    Validation = (oldItem,itemId,current,open,endTime,life,validatecurrent) => {
+    Validation = (oldItem,itemId,current,open,msg,endTime,life,validatecurrent) => {
 		var user = firebaseAuth().currentUser
 		if (user) {
 			let userId = user.uid
@@ -44,21 +44,33 @@ class bidForm extends Component {
 				this.bid.value = this.props.newcurrent + this.state.bidStep
 				switch(data[0]) {
 					case 'win':
-						open('alert','good','Win','fa-check-circle')
+						//open('alert','good','Win','fa-check-circle')
+						msg('win','Your bid has been registered','You are currently the highest bidder.','trophy','trophy')
 						break
-					case 'lost':
-						open('alert','bad','Lost','fa-thumbs-down')
+					case 'loser':
+						//open('alert','bad','Lost','fa-thumbs-down')
+						msg('lost','Your bid Lost !','Next minimum bid is ' + (this.props.newcurrent + this.state.bidStep) + '฿','times')
 						break
-					case 'lessThanOpenBid':
-						open('alert','bad','Less Than Open Bid','fa-thumbs-down')
+					case 'autoBid':
+						//open('alert','bad','Less Than Open Bid','fa-thumbs-down')
+						msg('lost','Please Try Agin !','Auto­bid from another was higher than yours.','times')
 						break
-					default:
-						open('alert','bad',data[0],'fa-thumbs-down')
+					case 'alreadywin':
+						//open('alert','bad','Less Than Open Bid','fa-thumbs-down')
+						msg('lost','Now you already win !','You are currently the highest bidder.','exclamation')
+						break	
+					case 'increase':
+						//open('alert','bad',data[0],'fa-thumbs-down')
+						msg('win','You inscress bid !','Now you add acceptable maximum bid','arrow-up')
+						break
+					default :
+						open('alert','bad',data[0],'fa-exclamation-triangle')
+						msg('default','','','')
 						break
 				}
 			  })
-			.catch( err => err && open('alert','bad','Unfortunately Bad Request'),'fa-thumbs-down')
-		} else open('alert','bad','Please LogIn','fa-thumbs-down')
+			.catch( err => err && open('alert','bad','Unfortunately <br> Bad Request please try agin','fa-thumbs-down'))
+		} else open('alert','bad','Please Log In','fa-thumbs-down')
 	}
 
 	isBidForm = (bid,open) => {
@@ -66,7 +78,7 @@ class bidForm extends Component {
 			this.props.recieve()
 			this.setState({bidStep_:this.state.bidStep})
 			this.bid.value = this.props.newcurrent + this.state.bidStep;
-			open('alert','bad','Enter a valid Prize','fa-thumbs-down')
+			open('alert','bad','Bad Request, Please try agin','fa-exclamation-triangle')
 		}
 		else {
 			this.setState({current: this.bid.value})
