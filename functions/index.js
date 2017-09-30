@@ -44,18 +44,22 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 		  		 		if ( tOut <= 0 && active != 0){
 			  				db.ref('/items/'+ itemKey ).update({
 			  					isActive :  0
+
 			  				})
-		  				}
+			  				data['isActive'] = 0;
+			  			}
 
-			  			 var helpp = {
-			  			 	_id: snapshot.key,
-			  			 	endTime: timeEnd,
-			  			 	current: data.bid.current,
-			  			 	isActive: data.isActive,
-			  			 	timeNow: getTime
-			  			 }
+				  		var helpp = {
+				  			 	_id: snapshot.key,
+				  			 	endTime: timeEnd,
+				  			 	current: data.bid.current,
+				  			 	isActive: data.isActive,
+				  			 	timeNow: getTime
+				  		}
 
-					 res.status(200).send(helpp);
+						res.status(200).send(helpp);
+
+
 
 				})
 			});
@@ -107,11 +111,14 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 				  				db.ref('/items/'+ key_ ).update({
 				  					isActive :  0
 				  				})
+				  				childData['isActive'] = 0;
+
 			  				}
 
-			  				//childData['bidList'] = listArrays;
-					      	arrays.push(childData);
+			  				arrays.push(childData);
 
+			  				//childData['bidList'] = listArrays;
+					      	
 					  	});
 						res.status(200).send(arrays);
 				  	});
@@ -255,14 +262,14 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 						  						}).then ( well => {
 
 									  				db.ref('/items/'+ itemKey + '/bid').update({
-									  					current : maxBid + 1,
+									  					current : maxBid + bidLast.bidStep,
 									  					userName : _info.displayName,
 									  					userId : uid,
 									  					maxBid : newBid,
 									  					maxBidTime : getTime
 										  			})
 										  			db.ref('/items/'+ itemKey + '/bidList').push({
-									  					bid : maxBid + 1,
+									  					bid : maxBid + bidLast.bidStep,
 									  					bidTimestamp : getTime,
 									  					userId : uid,
 									  					userName : _info.displayName,
@@ -302,7 +309,7 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 						  						if (newBid < maxBid) {
 
 								  					db.ref('/items/'+ itemKey + '/bid').update({
-									  					current : newBid + 1,
+									  					current : newBid + bidLast.bidStep,
 									  					userName : bidLast.userName,
 									  					userId : bidLast.userId,
 										  			})
@@ -314,7 +321,7 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 									  					auto : 0
 								  					})
 										  			db.ref('/items/'+ itemKey + '/bidList').push({
-									  					bid : newBid + 1,
+									  					bid : newBid + bidLast.bidStep,
 									  					bidTimestamp : bidLast.maxBidTime,
 									  					userId : bidLast.userId,
 									  					userName : bidLast.userName,

@@ -4,12 +4,13 @@ import { Link } from 'react-router-dom'
 import Clock from './Clock'
 
 class Sellingarea extends Component {
+
     render() {
         let {handleClose, style, item, timeNows, current, secondsToHms} = this.props
         return (
             <div className="small-6 medium-4 large-3 columns post-box">
                 <Animated.div style={style}>
-                    <Link onClick={handleClose} to={'/item/'+ item._id}>
+                    <Link onClick={handleClose} to={'/item/'+ item._id} >
                         <div className="post-box-top">
                             <img src={item.img} alt=""/>
                         </div>

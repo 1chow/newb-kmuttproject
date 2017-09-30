@@ -122,6 +122,10 @@ export default class Sellingareas extends Component {
 		window.scrollTo(0,0);
 	}
 
+	handleHeight = () => {
+		
+	}
+
 	render() {
 		return (
 			<div className="page items post-feed">

@@ -44,27 +44,6 @@ export default class App extends Component {
 	}
 	componentWillMount() {
 		this.getObjects()
-		db2.ref('/items').on('value', Snapshot => {
-	        let current_a = [];
-
-	        Snapshot.forEach( childSnapshot => {
-			  let data = childSnapshot.val();
-			  let key = childSnapshot.key;
-			  let current_ = data.bid.current;
-			  let catagory_ = data.catagory;
-			  let isActive_ = data.isActive;
-			  let endTime_ = data.bid.endTime;
-	          let obj = {
-	          	current  : current_,
-				itemId : key,
-				catagory: catagory_,
-				isActive: isActive_,
-				endTime: endTime_,	
-	          }
-	          current_a.push(obj);
-			})
-		    this.setState({current:current_a})
-		  });
 		this.removeListener = firebaseAuth().onAuthStateChanged( user => {
 			if (user) {
 				db.child(`users/${user.uid}/info`).on('value', dataSnapshot => {
@@ -121,21 +100,25 @@ export default class App extends Component {
 		db2.ref('/items').on('value', Snapshot => {
 			let current_a = [];
 
-			Snapshot.forEach( childSnapshot => {
-				let data = childSnapshot.val();
-				let key = childSnapshot.key;
-				let current_ = data.bid.current;
-				let catagory_ = data.catagory;
-				let isActive_ = data.isActive;
-				let endTime_ = data.bid.endTime;
-				let obj = {
-				current  : current_,
+	        Snapshot.forEach( childSnapshot => {
+			  let data = childSnapshot.val();
+			  let key = childSnapshot.key;
+			  let current_ = data.bid.current;
+			  let catagory_ = data.catagory;
+			  let isActive_ = data.isActive;
+			  let endTime_ = data.bid.endTime;
+			  let maxBid_ = data.bid.maxBid;
+			  let bidStep_ = data.bid.bidStep;
+	          let obj = {
+	          	current  : current_,
 				itemId : key,
 				catagory: catagory_,
 				isActive: isActive_,
-				endTime: endTime_,	
-				}
-				current_a.push(obj);
+				endTime: endTime_,
+				maxBid: maxBid_,
+				bidStep: bidStep_
+	          }
+	          current_a.push(obj);
 			})
 			this.setState({current:current_a},() => fetch("https://us-central1-auctkmutt.cloudfunctions.net/getItems")
 			.then(response => {

@@ -23,6 +23,7 @@ class Edit extends Component {
       productimage:'',
       productimageURL:'',
       firstbit:'',
+      bidStep:'',
       catagoriesselect:'', 
       desc: '',
       timeStart: moment(),
@@ -197,6 +198,7 @@ class Edit extends Component {
           maxBid : parseInt((this.state.firstbit - 1),10),
           maxBidTime : parseInt(this.state.timeStart.format('x'),10),
           openBid : parseInt(this.state.firstbit,10),
+          bidStep: parseInt(this.state.bidStep,10),
           endTime: parseInt(this.state.timeEnd.format('x'),10),
           startTime: parseInt(this.state.timeStart.format('x'),10),
           userName : '',
@@ -221,6 +223,7 @@ class Edit extends Component {
                 productimage:'',
                 productimageURL:'',
                 firstbit:'',
+                bidStep:'',
                 catagoriesselect:'', 
                 desc: '',
                 timeStart: moment(),
@@ -364,6 +367,15 @@ class Edit extends Component {
 											<p><i className="fi-alert"></i>{this.state.firstbitErr}</p>
 										</div>
 									}
+                </div>
+                <div className="small-12 columns">
+                  <label>Bid Increments
+                    <div className="input-group">
+                      <span className="input-group-label">฿</span>
+                      <input className="input-group-field" type="number" onChange={ this.onNewItemChange } value={ this.state.bidStep } name="bidStep"/>
+                    </div>
+                  </label>
+                  <span className="form-error" data-form-error-for="exampleNumberInput">Amount is required.</span>
                 </div>
 
                 <div className="small-12 medium-6 columns">
