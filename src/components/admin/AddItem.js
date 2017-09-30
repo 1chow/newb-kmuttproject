@@ -29,7 +29,13 @@ class Edit extends Component {
       timeEnd: moment().add(1, 'days'),
       boundedTime:'',
       catagories:[],
-      Error: null,
+      productnameErr: null,
+      descErr:null,
+      firstbitErr:null,
+      catagoriesErr:null,
+      imageErr:null,
+      timestartErr:null,
+      timeendErr:null,
     }
   }
 
@@ -54,78 +60,183 @@ class Edit extends Component {
 
   componentWillUnmount() {
     firebase.database().ref().child('catagories').off();
-    this.setState({Error: null })
+    this.setState({
+      productnameErr: null,
+      descErr:null,
+      firstbitErr:null,
+      catagoriesErr:null,
+      imageErr:null,
+      timestartErr:null,
+      timeendErr:null,
+    })
   }
 
   
   handleNewItemSubmit = (e) => {
     e.preventDefault();
     this.dbItems = firebase.database().ref().child('items');
-    if (
-        this.state.productname && 
-        this.state.desc.trim().length &&
-        this.state.catagoriesselect &&
-        this.state.productimageURL.length !== 0 &&
-        this.state.timeStart.lenght !== 0 &&
-        this.state.timeEnd.lenght !== 0 &&
-        this.state.productname.trim().length <= 10 &&
-        this.state.desc.trim().length <= 100 &&
-        this.state.firstbit.length <= 10 &&
-        this.state.firstbit > 0 &&
-        this.state.firstbit%Math.floor(this.state.firstbit) === 0
-      ) 
-      {
+    this.setState({
+      productnameErr: null,
+      descErr:null,
+      firstbitErr:null,
+      catagoriesErr:null,
+      imageErr:null,
+      timestartErr:null,
+      timeendErr:null,
+    })
+    let test_name = this.nameValidate(this.state.productname)
+    let test_desc = this.descValidate(this.state.desc)
+    let test_firstbit = this.firstbitValidate(this.state.firstbit)
+    let test_catagories = this.catagoriesValidate(this.state.catagoriesselect)
+    let test_image = this.productimageValidate(this.state.productimageURL)
+    let test_timestart = this.timestartValidate(this.state.timeStart)
+    let test_timeend = this.timeendValidate(this.state.timeEnd)
+    let isValid = test_name        &&
+                  test_desc        &&
+                  test_firstbit    &&
+                  test_catagories  &&
+                  test_image       &&
+                  test_timestart   &&
+                  test_timeend
+    if (isValid === true) {
         this.props.triggler('alert','good','Your Item has create','fa-check-circle')
-        this.setState({Error: null })
-        this.dbItems.push({
-        name: this.state.productname,
-        catagory: this.state.catagoriesselect,
-        isActive: 1,
-        desc:{
-              short: this.state.desc.slice(0,32),
-              fullHeader: this.state.desc.slice(0,16),
-              fullDesc : this.state.desc
-        },
-        bid:{
-            current : parseInt(this.state.firstbit,10),
-            maxBid : parseInt((this.state.firstbit - 1),10),
-            maxBidTime : parseInt(this.state.timeStart.format('x'),10),
-            openBid : parseInt(this.state.firstbit,10),
-            endTime: parseInt(this.state.timeEnd.format('x'),10),
-            startTime: parseInt(this.state.timeStart.format('x'),10),
+        this.addItem()
+    }
+  }
+
+ timestartValidate = input => {
+		if(input.lenght === 0){
+			this.setState({timestartErr:"Pls select start time"})
+			setTimeout(() => this.setState({timestartErr:null}),5000)
+			return false
+		} else return true
+  }
+
+  timeendValidate = input => {
+		if(input.lenght === 0){
+			this.setState({timeendErr:"Pls select start end"})
+			setTimeout(() => this.setState({timeendErr:null}),5000)
+			return false
+		} else return true
+  }
+
+
+  productimageValidate = input => {
+		if(input === ''){
+			this.setState({imageErr:"Pls upload image"})
+			setTimeout(() => this.setState({imageErr:null}),5000)
+			return false
+		} else return true
+  }
+
+  catagoriesValidate = input => {
+		if(!input){
+			this.setState({catagoriesErr:"Pls select catagoriey"})
+			setTimeout(() => this.setState({catagoriesErr:null}),5000)
+			return false
+		} else return true
+  }
+
+  nameValidate = input => {
+		if(input.trim().length === 0){
+			this.setState({productnameErr:"Productname was empty"})
+			setTimeout(() => this.setState({productnameErr:null}),5000)
+			return false
+		} else if(this.regCharacter(input.trim()) === false) {
+			this.setState({productnameErr:"Productname must be Character"})
+			setTimeout(() => this.setState({productnameErr:null}),5000)
+			return false
+		} else return true
+  }
+  
+  descValidate = input => {
+		if(input.trim().length === 0){
+			this.setState({descErr:"Description was empty"})
+			setTimeout(() => this.setState({descErr:null}),5000)
+			return false
+		} else return true
+  }
+  
+  firstbitValidate = input => {
+		if(input.trim().length === 0){
+			this.setState({firstbitErr:"Firstbit was empty"})
+			setTimeout(() => this.setState({firstbitErr:null}),5000)
+			return false
+		} else if(input.trim().length >= 10) {
+			this.setState({firstbitErr:"length >= 10"})
+			setTimeout(() => this.setState({firstbitErr:null}),5000)
+			return false
+		} else if(input < 1) {
+			this.setState({firstbitErr:"Firstbit must be at least 1฿"})
+			setTimeout(() => this.setState({firstbitErr:null}),5000)
+			return false
+		} else if(input%Math.floor(input) !== 0) {
+			this.setState({firstbitErr:"Firstbit must be Integer"})
+			setTimeout(() => this.setState({firstbitErr:null}),5000)
+			return false
+		} else return true
+  }
+
+  regCharacter = pw => {
+		let re = /^[-_a-zA-Z0-9.]+$/
+		return re.test(pw);
+	}
+
+  addItem = () => {
+    this.dbItems.push({
+      name: this.state.productname.slice(0,50),
+      catagory: this.state.catagoriesselect,
+      isActive: 1,
+      desc:{
+            short: this.state.desc.slice(0,32),
+            fullHeader: this.state.desc.slice(0,16),
+            fullDesc : this.state.desc.slice(0,200)
+      },
+      bid:{
+          current : parseInt(this.state.firstbit,10),
+          maxBid : parseInt((this.state.firstbit - 1),10),
+          maxBidTime : parseInt(this.state.timeStart.format('x'),10),
+          openBid : parseInt(this.state.firstbit,10),
+          endTime: parseInt(this.state.timeEnd.format('x'),10),
+          startTime: parseInt(this.state.timeStart.format('x'),10),
+          userName : '',
+          userId : ''
+      },
+      img: this.state.productimageURL,
+      own : this.state.User
+      
+    })
+    .then(snapshot => {
+          firebase.database().ref('/items/' + snapshot.key + '/bidList').push({
+            userId : '',
             userName : '',
-            userId : ''
-        },
-        img: this.state.productimageURL,
-        own : this.state.User
-        
+            bid : parseInt(this.state.firstbit,10),
+            bidTimestamp : this.state.timeStart.format('x'),
+            auto : 0
+          })
+          .then(   
+            this.setState({
+                User:'',
+                productname : '',
+                productimage:'',
+                productimageURL:'',
+                firstbit:'',
+                catagoriesselect:'', 
+                desc: '',
+                timeStart: moment(),
+                timeEnd: moment().add(1, 'days'),
+                boundedTime:'',
+                catagories:[],
+                productnameErr: null,
+                descErr:null,
+                firstbitErr:null,
+                catagoriesErr:null,
+                imageErr:null,
+                timestartErr:null,
+                timeendErr:null,
+              })
+          )
       })
-      .then(snapshot => {
-            firebase.database().ref('/items/' + snapshot.key + '/bidList').push({
-              userId : '',
-              userName : '',
-              bid : parseInt(this.state.firstbit,10),
-              bidTimestamp : this.state.timeStart.format('x'),
-              auto : 0
-            })
-            .then(   
-              this.setState({
-                  User:'',
-                  productname : '',
-                  productimage:'',
-                  productimageURL:'',
-                  firstbit:'',
-                  catagoriesselect:'', 
-                  desc: '',
-                  timeStart: moment(),
-                  timeEnd: moment().add(1, 'days'),
-                  boundedTime:'',
-                  catagories:[],
-                  Error: null,
-                })
-            )
-        })
-    } else this.setState({Error: 'Please filled a valid form' })
   }
 
   onNewItemChange = (e) => {
@@ -143,8 +254,10 @@ class Edit extends Component {
   }
 
   handleUploadError = (error) => {
-      this.setState({isUploading: false})
-      console.error(error)
+      this.setState({
+        isUploading: false,
+        catagoriesErr: error,
+      })
   }
   handleUploadSuccess = (filename) => {
       this.setState({productimage: filename});
@@ -214,15 +327,6 @@ class Edit extends Component {
               <div className="hr-text-center"><hr/></div>
             </div>
           <div className="small-12 columns profile-main">
-            { this.state.Error &&
-              <div className="small-12 columns">
-              <div className="small-12 columns">
-                <div className="alert callout">
-                  <p><i className="fi-alert"></i>{this.state.Error}</p>
-                </div>
-              </div>
-              </div>
-            }
             <form data-abide noValidate onSubmit={ this.handleNewItemSubmit } >
              <div className="small-12 medium-6 columns">
                 <div className="small-12 columns">
@@ -230,6 +334,11 @@ class Edit extends Component {
                     <input type="text" placeholder="Product Name" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={ this.onNewItemChange } value={ this.state.productname } name="productname"/>
                     <span className="form-error">Yo, Product name required!!</span>
                   </label>
+                  { this.state.productnameErr &&
+										<div className="alert callout">
+											<p><i className="fi-alert"></i>{this.state.productnameErr}</p>
+										</div>
+									}
                 </div>
                 <div className="small-12 columns">
                   <label>Product Description
@@ -237,6 +346,11 @@ class Edit extends Component {
                     onChange={ this.onNewItemChange } value={ this.state.desc } name="desc" ></textarea>
                     <span className="form-error">Yo, Product Description required!!</span>
                   </label>
+                  { this.state.descErr &&
+										<div className="alert callout">
+											<p><i className="fi-alert"></i>{this.state.descErr}</p>
+										</div>
+									}
                 </div>
                 <div className="small-12 columns">
                   <label>First Bit
@@ -245,7 +359,11 @@ class Edit extends Component {
                       <input className="input-group-field" type="number" onChange={ this.onNewItemChange } value={ this.state.firstbit } name="firstbit"/>
                     </div>
                   </label>
-                  <span className="form-error" data-form-error-for="exampleNumberInput">Amount is required.</span>
+                  { this.state.firstbitErr &&
+										<div className="alert callout">
+											<p><i className="fi-alert"></i>{this.state.firstbitErr}</p>
+										</div>
+									}
                 </div>
 
                 <div className="small-12 medium-6 columns">
@@ -258,6 +376,11 @@ class Edit extends Component {
                     </DatetimePickerTrigger>
                 {/*    <input type="text" placeholder="Timestamp" aria-describedby="help-signup" required pattern="text" value={ this.state.timeStart } name="timeStart" readOnly/> */}        
                   </label>
+                  { this.state.timestartErr &&
+                      <div className="alert callout">
+                        <p><i className="fi-alert"></i>{this.state.timestartErr}</p>
+                      </div>
+                    }
                 </div>
                 <div className="small-12 medium-6 columns">
                   <label>Time End
@@ -268,6 +391,11 @@ class Edit extends Component {
                       <input onChange={this.handleChange2} name="timeEnd" readOnly type="text" value={this.state.timeEnd.format('YYYY-MM-DD HH:mm')} />
                     </DatetimePickerTrigger>
                   </label>
+                  { this.state.timeendErr &&
+                      <div className="alert callout">
+                        <p><i className="fi-alert"></i>{this.state.timeendErr}</p>
+                      </div>
+                    }
                 </div>
               </div>
               <div className="small-12 medium-6 columns">
@@ -294,6 +422,11 @@ class Edit extends Component {
                         }
                      </div>
                     </label>
+                    { this.state.imageErr &&
+                      <div className="alert callout">
+                        <p><i className="fi-alert"></i>{this.state.imageErr}</p>
+                      </div>
+                    }
                 </div>
                 <div className="small-12 columns">
                     <label>Catagory
@@ -307,6 +440,11 @@ class Edit extends Component {
                           })}
                       </select>
                     </label>
+                    { this.state.catagoriesErr &&
+                      <div className="alert callout">
+                        <p><i className="fi-alert"></i>{this.state.catagoriesErr}</p>
+                      </div>
+                    }
                 </div>
                 <div className="small-12 columns admin-from-btm">
                   <button className="button success" type="submit" value="Submit">ADD AUCTION</button>
