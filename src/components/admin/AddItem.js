@@ -37,6 +37,7 @@ class Edit extends Component {
       imageErr:null,
       timestartErr:null,
       timeendErr:null,
+      bidstepErr:null,
     }
   }
 
@@ -69,6 +70,7 @@ class Edit extends Component {
       imageErr:null,
       timestartErr:null,
       timeendErr:null,
+      bidstepErr:null,
     })
   }
 
@@ -84,6 +86,7 @@ class Edit extends Component {
       imageErr:null,
       timestartErr:null,
       timeendErr:null,
+      bidstepErr:null,
     })
     let test_name = this.nameValidate(this.state.productname)
     let test_desc = this.descValidate(this.state.desc)
@@ -92,17 +95,39 @@ class Edit extends Component {
     let test_image = this.productimageValidate(this.state.productimageURL)
     let test_timestart = this.timestartValidate(this.state.timeStart)
     let test_timeend = this.timeendValidate(this.state.timeEnd)
+    let test_bidstep = this.bidstepValidate(this.state.bidStep)
     let isValid = test_name        &&
                   test_desc        &&
                   test_firstbit    &&
                   test_catagories  &&
                   test_image       &&
                   test_timestart   &&
-                  test_timeend
+                  test_timeend     &&
+                  test_bidstep
     if (isValid === true) {
         this.props.triggler('alert','good','Your Item has create','fa-check-circle')
         this.addItem()
     }
+  }
+
+  bidstepValidate = input => {
+    if(input.trim().length === 0){
+			this.setState({bidstepErr:"Bidstep was empty"})
+			setTimeout(() => this.setState({bidstepErr:null}),5000)
+			return false
+		} else if(input.trim().length >= 10) {
+			this.setState({bidstepErr:"length >= 10"})
+			setTimeout(() => this.setState({bidstepErr:null}),5000)
+			return false
+		} else if(input < 1) {
+			this.setState({bidstepErr:"Bidstep must be at least 1฿"})
+			setTimeout(() => this.setState({bidstepErr:null}),5000)
+			return false
+		} else if(input%Math.floor(input) !== 0) {
+			this.setState({bidstepErr:"Bidstep must be Integer"})
+			setTimeout(() => this.setState({bidstepErr:null}),5000)
+			return false
+		} else return true
   }
 
  timestartValidate = input => {
@@ -237,6 +262,7 @@ class Edit extends Component {
                 imageErr:null,
                 timestartErr:null,
                 timeendErr:null,
+                bidstepErr:null,
               })
           )
       })
@@ -375,7 +401,11 @@ class Edit extends Component {
                       <input className="input-group-field" type="number" onChange={ this.onNewItemChange } value={ this.state.bidStep } name="bidStep"/>
                     </div>
                   </label>
-                  <span className="form-error" data-form-error-for="exampleNumberInput">Amount is required.</span>
+                  { this.state.bidstepErr &&
+                      <div className="alert callout">
+                        <p><i className="fi-alert"></i>{this.state.bidstepErr}</p>
+                      </div>
+                    }
                 </div>
 
                 <div className="small-12 medium-6 columns">
