@@ -17,6 +17,7 @@ export default class Item extends Component {
 		bidResult:'',
 		bidResult_:'',
 		bidIcon:'',
+		isActive:null,
 	}
 
 	componentDidMount() {
@@ -97,7 +98,7 @@ export default class Item extends Component {
 		let newtimeNows = timeNows.filter( timeNow => {
 			return timeNow._id === this.props.match.params.id
 		})
-		newtimeNows.length !== 0 && this.setState({timeNow: newtimeNows[0].timeNow})
+		newtimeNows.length !== 0 && this.setState({timeNow: newtimeNows[0].timeNow,isActive: newtimeNows[0].isActive})
 	}
                  
 	recieve = () => {
@@ -156,6 +157,10 @@ export default class Item extends Component {
 
 	}
 
+	componentWillUnmount() {
+		firebase.database().ref('/items/'+this.props.match.params.id+'/bidList').orderByChild('bid').off();
+	}
+
 	render() {
 		return this.state.item[0] ? (
 			<div>
@@ -180,6 +185,7 @@ export default class Item extends Component {
 					</div>
 					<div className="small-12 medium-7 large-6 columns auct-r-container">
 						<div className="auct-content">
+							{ this.state.isActive === 1 &&
 							<div className="row auct-from-warp">
 								<div className="small-5 medium-5 columns">
 									<p className="time">Time Remaining<br></br>
@@ -188,19 +194,19 @@ export default class Item extends Component {
 									}
 									</p>
 								</div>
-								{ this.props.isLogin &&
+								{this.props.isLogin &&
 									<div className="small-7 medium-7 columns auct-from-bit">
 										<p className="time">Place Your Bid</p>
 										<BidForm recieve={this.recieve} msg={this.handleMsg} waiting={this.waiting} wait={this.state.wait} newcurrent={this.state.newcurrent} mfkCurrent={this.props.current} open={this.props.triggler} item={this.state.item[0]} params={this.props.match.params.id} bidStep_={this.state.bidStep_} />
-										{ this.state.newcurrent !== 0 &&
+										{ this.props.userUID !== this.state.item[0].bid.userId ?
 											<p className="helper">Enter THB {this.state.newcurrent + this.state.bidStep_ } ฿ or more</p>
-										}
-										{ this.state.maxBid === 0 &&
+											:
 											<p className="helper">Your Max Bids {this.state.maxBid} ฿</p>
 										}
 									</div>
 								}
 							</div>
+							}
 							<div className="row auct-from-warp auct-msg" style={{background : this.state.bidColor_bg}}>
 								<div className="small-12 medium-12 columns auct-msg-col"  >
 									<div className="auct-msg-l" style={{color : this.state.bidColor_icon}} >

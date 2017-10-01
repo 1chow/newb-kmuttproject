@@ -1,25 +1,6 @@
 import React, { Component } from 'react'
 import * as firebase from 'firebase'
 
-
-class ItemL extends Component {
-  render(){
-    return (
-        
-          <tr>
-              <td><i className={"fa fa-check-circle-o fa-2x" }></i></td>
-              <td>{this.props.key_}</td>
-              <td className="show-for-large">{this.props.name}</td>
-              <td className="show-for-large">{this.props.catagory}</td>
-              <td className="show-for-large">Time</td>
-              <td className="show-for-large">Time</td>
-              <td><button onClick={()=> this.props.hell(this.props.dbkey)} ><i className="fa fa-trash"></i></button></td>
-          </tr>
-        
-    );
-  }
-}
-
 class ItemsL extends Component {
   constructor () {
     super();
@@ -41,7 +22,7 @@ class ItemsL extends Component {
 
       this.setState({
         items: items
-      });
+      })
     });
   }
 
@@ -56,7 +37,7 @@ class ItemsL extends Component {
   }
 
   render() {
-    return (
+    return this.state.items ? (
       <div className="row">
           <div className="row auct-from-warp admin-table">
               <table className="hover">
@@ -70,15 +51,25 @@ class ItemsL extends Component {
                     <td className="show-for-large" width="150">End</td>
                     <td>Delete</td>
                 </tr>
-                {this.state.items.map((items,i) => {
-                  return ( 
-                    <ItemL key={items['key']} dbkey={items['key']} hell={this.removeItem} {...items} />
-                    );})}
+                {this.state.items.map((item,i) => {
+                    return ( 
+                      <tr key={i}>
+                          <td><i className={"fa fa-check-circle-o fa-2x" }></i></td>
+                          <td>{item.key}</td>
+                          <td className="show-for-large">{item.name}</td>
+                          <td className="show-for-large">{item.catagory}</td>
+                          <td className="show-for-large">{this.props.convertTimeM(item.bid.startTime)}</td>
+                          <td className="show-for-large">{this.props.convertTimeM(item.bid.endTime)}</td>
+                          <td><button onClick={()=> this.removeItem(item.key)} ><i className="fa fa-trash"></i></button></td>
+                      </tr>
+                      )
+                    })
+                  }
                 </tbody>
               </table>
             </div>
        </div>
-    );
+    ) : null
   }
 }
 

@@ -41,7 +41,7 @@ i.alert{color: #ffae00;}
 
 /* nav */
 .title-bar{color: #1779ba;background: #fff;padding: 0.75em;position: relative;z-index: 10000;transition: all 0.15s ease;}
-.title-bar.nav-fix{box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);}
+.title-bar.nav-fix{box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);position: fixed;}
 .title-bar h1{font-weight: 600;font-size: 2em;line-height: 1.75em;margin: 0;}
 .title-bar .nav-right{}
 .title-bar .nav-right button{font-size: 1.25em;margin-left: 0px;top: 5px;position: relative;z-index: 2000;}

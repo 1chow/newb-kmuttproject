@@ -163,7 +163,7 @@ export default class App extends Component {
 	}
 
 	convertTimeM = timestamp => {
-		var d = new Date(parseInt(timestamp)),
+		var d = new Date(parseInt(timestamp,10)),
 			yy = d.getFullYear(),
 			mm = ('0' + (d.getMonth() + 1)).slice(-2),
 			dd = ('0' + d.getDate()).slice(-2),
@@ -178,7 +178,7 @@ export default class App extends Component {
 	}
 
 	convertTime = timestamp => {
-		var d = new Date(parseInt(timestamp)),
+		var d = new Date(parseInt(timestamp,10)),
 			yy = d.getFullYear(),
 			mm = ('0' + (d.getMonth() + 1)).slice(-2),
 			dd = ('0' + d.getDate()).slice(-2),
@@ -356,7 +356,8 @@ export default class App extends Component {
 													triggler={this.alertOpenModal} 
 													current={this.state.current} 
 													{...props} 
-													items={this.state.items} 
+													items={this.state.items}
+													userUID={this.state.userUID}
 												/>
 											)}
 										/>
@@ -375,7 +376,7 @@ export default class App extends Component {
 										<Route
 											path="/admin"
 											render={props => this.state.isLogin === true ? (
-												<Admin triggler={this.alertOpenModal} profilePicture={this.state.profilePicture} role={this.state.role} />
+												<Admin triggler={this.alertOpenModal} profilePicture={this.state.profilePicture} role={this.state.role} convertTimeM={this.convertTimeM} />
 											) : <Redirect to={{pathname: '/', state: {from: props.location}}} />}
 										/>
 										{/* Test Zone */}
