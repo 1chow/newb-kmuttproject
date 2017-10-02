@@ -358,7 +358,11 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 
 									  		} else {
 									  			//alrady win
-							  					res.status(200).send(['alreadywin']);
+									  			if (newBid <= bidLast.current + bidLast.bidStep) {
+							  						res.status(200).send(['loser']);
+							  					} else if(newBid >= bidLast.current + bidLast.bidStep){
+							  						res.status(200).send(['alreadywin']);
+							  					}
 									  		}
 
 						  				}
@@ -370,7 +374,7 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 					  				if ( active === 0 || tOut_ <= 1000 ) {
 						  				//time up
 						  				res.status(200).send(['timeup']);
-						  			} else if( newBid < bidLast.current){
+						  			} else if( newBid <= bidLast.current ){
 						  				//already win
 					  					res.status(200).send(['loser']);
 					  				} else{

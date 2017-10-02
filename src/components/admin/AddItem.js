@@ -112,20 +112,20 @@ class Edit extends Component {
 
   bidstepValidate = input => {
     if(input.trim().length === 0){
-			this.setState({bidstepErr:"Bidstep was empty"})
-			setTimeout(() => this.setState({bidstepErr:null}),5000)
+			this.setState({bidstepErr:"bid increments was empty"})
+			setTimeout(() => this.setState({bidstepErr:null}),10000)
 			return false
 		} else if(input.trim().length >= 10) {
-			this.setState({bidstepErr:"length >= 10"})
-			setTimeout(() => this.setState({bidstepErr:null}),5000)
+			this.setState({bidstepErr:"it's over Bid increments"})
+			setTimeout(() => this.setState({bidstepErr:null}),10000)
 			return false
 		} else if(input < 1) {
-			this.setState({bidstepErr:"Bidstep must be at least 1฿"})
-			setTimeout(() => this.setState({bidstepErr:null}),5000)
+			this.setState({bidstepErr:"bid increments must be at least 1 THB"})
+			setTimeout(() => this.setState({bidstepErr:null}),10000)
 			return false
 		} else if(input%Math.floor(input) !== 0) {
-			this.setState({bidstepErr:"Bidstep must be Integer"})
-			setTimeout(() => this.setState({bidstepErr:null}),5000)
+			this.setState({bidstepErr:"bid increments must be amount of money"})
+			setTimeout(() => this.setState({bidstepErr:null}),10000)
 			return false
 		} else return true
   }
@@ -133,7 +133,7 @@ class Edit extends Component {
  timestartValidate = input => {
 		if(input.lenght === 0){
 			this.setState({timestartErr:"Pls select start time"})
-			setTimeout(() => this.setState({timestartErr:null}),5000)
+			setTimeout(() => this.setState({timestartErr:null}),10000)
 			return false
 		} else return true
   }
@@ -141,7 +141,7 @@ class Edit extends Component {
   timeendValidate = input => {
 		if(input.lenght === 0){
 			this.setState({timeendErr:"Pls select start end"})
-			setTimeout(() => this.setState({timeendErr:null}),5000)
+			setTimeout(() => this.setState({timeendErr:null}),10000)
 			return false
 		} else return true
   }
@@ -150,7 +150,7 @@ class Edit extends Component {
   productimageValidate = input => {
 		if(input === ''){
 			this.setState({imageErr:"Pls upload image"})
-			setTimeout(() => this.setState({imageErr:null}),5000)
+			setTimeout(() => this.setState({imageErr:null}),10000)
 			return false
 		} else return true
   }
@@ -158,7 +158,7 @@ class Edit extends Component {
   catagoriesValidate = input => {
 		if(!input){
 			this.setState({catagoriesErr:"Pls select catagoriey"})
-			setTimeout(() => this.setState({catagoriesErr:null}),5000)
+			setTimeout(() => this.setState({catagoriesErr:null}),10000)
 			return false
 		} else return true
   }
@@ -166,11 +166,11 @@ class Edit extends Component {
   nameValidate = input => {
 		if(input.trim().length === 0){
 			this.setState({productnameErr:"Productname was empty"})
-			setTimeout(() => this.setState({productnameErr:null}),5000)
+			setTimeout(() => this.setState({productnameErr:null}),10000)
 			return false
 		} else if(this.regCharacter(input.trim()) === false) {
 			this.setState({productnameErr:"Productname must be Character"})
-			setTimeout(() => this.setState({productnameErr:null}),5000)
+			setTimeout(() => this.setState({productnameErr:null}),10000)
 			return false
 		} else return true
   }
@@ -178,7 +178,7 @@ class Edit extends Component {
   descValidate = input => {
 		if(input.trim().length === 0){
 			this.setState({descErr:"Description was empty"})
-			setTimeout(() => this.setState({descErr:null}),5000)
+			setTimeout(() => this.setState({descErr:null}),10000)
 			return false
 		} else return true
   }
@@ -186,19 +186,19 @@ class Edit extends Component {
   firstbitValidate = input => {
 		if(input.trim().length === 0){
 			this.setState({firstbitErr:"Firstbit was empty"})
-			setTimeout(() => this.setState({firstbitErr:null}),5000)
+			setTimeout(() => this.setState({firstbitErr:null}),10000)
 			return false
 		} else if(input.trim().length >= 10) {
 			this.setState({firstbitErr:"length >= 10"})
-			setTimeout(() => this.setState({firstbitErr:null}),5000)
+			setTimeout(() => this.setState({firstbitErr:null}),10000)
 			return false
 		} else if(input < 1) {
 			this.setState({firstbitErr:"Firstbit must be at least 1฿"})
-			setTimeout(() => this.setState({firstbitErr:null}),5000)
+			setTimeout(() => this.setState({firstbitErr:null}),10000)
 			return false
 		} else if(input%Math.floor(input) !== 0) {
 			this.setState({firstbitErr:"Firstbit must be Integer"})
-			setTimeout(() => this.setState({firstbitErr:null}),5000)
+			setTimeout(() => this.setState({firstbitErr:null}),10000)
 			return false
 		} else return true
   }
@@ -364,8 +364,8 @@ class Edit extends Component {
                     <span className="form-error">Yo, Product name required!!</span>
                   </label>
                   { this.state.productnameErr &&
-										<div className="alert callout">
-											<p><i className="fi-alert"></i>{this.state.productnameErr}</p>
+										<div className="alert-error">
+											<p><i className="fa fa-times"></i> {this.state.productnameErr}</p>
 										</div>
 									}
                 </div>
@@ -376,8 +376,8 @@ class Edit extends Component {
                     <span className="form-error">Yo, Product Description required!!</span>
                   </label>
                   { this.state.descErr &&
-										<div className="alert callout">
-											<p><i className="fi-alert"></i>{this.state.descErr}</p>
+										<div className="alert-error">
+											<p><i className="fa fa-times"></i> {this.state.descErr}</p>
 										</div>
 									}
                 </div>
@@ -389,8 +389,8 @@ class Edit extends Component {
                     </div>
                   </label>
                   { this.state.firstbitErr &&
-										<div className="alert callout">
-											<p><i className="fi-alert"></i>{this.state.firstbitErr}</p>
+										<div className="alert-error">
+											<p><i className="fa fa-times"></i> {this.state.firstbitErr}</p>
 										</div>
 									}
                 </div>
@@ -402,8 +402,8 @@ class Edit extends Component {
                     </div>
                   </label>
                   { this.state.bidstepErr &&
-                      <div className="alert callout">
-                        <p><i className="fi-alert"></i>{this.state.bidstepErr}</p>
+                      <div className="alert-error">
+                        <p><i className="fa fa-times"></i> {this.state.bidstepErr}</p>
                       </div>
                     }
                 </div>
@@ -419,8 +419,8 @@ class Edit extends Component {
                 {/*    <input type="text" placeholder="Timestamp" aria-describedby="help-signup" required pattern="text" value={ this.state.timeStart } name="timeStart" readOnly/> */}        
                   </label>
                   { this.state.timestartErr &&
-                      <div className="alert callout">
-                        <p><i className="fi-alert"></i>{this.state.timestartErr}</p>
+                      <div className="alert-error">
+                        <p><i className="fa fa-times"></i> {this.state.timestartErr}</p>
                       </div>
                     }
                 </div>
@@ -434,8 +434,8 @@ class Edit extends Component {
                     </DatetimePickerTrigger>
                   </label>
                   { this.state.timeendErr &&
-                      <div className="alert callout">
-                        <p><i className="fi-alert"></i>{this.state.timeendErr}</p>
+                      <div className="alert-error">
+                        <p><i className="fa fa-times"></i> {this.state.timeendErr}</p>
                       </div>
                     }
                 </div>
@@ -465,8 +465,8 @@ class Edit extends Component {
                      </div>
                     </label>
                     { this.state.imageErr &&
-                      <div className="alert callout">
-                        <p><i className="fi-alert"></i>{this.state.imageErr}</p>
+                      <div className="alert-error">
+                        <p><i className="fa fa-times"></i> {this.state.imageErr}</p>
                       </div>
                     }
                 </div>
@@ -483,8 +483,8 @@ class Edit extends Component {
                       </select>
                     </label>
                     { this.state.catagoriesErr &&
-                      <div className="alert callout">
-                        <p><i className="fi-alert"></i>{this.state.catagoriesErr}</p>
+                      <div className="alert-error">
+                        <p><i className="fa fa-times"></i> {this.state.catagoriesErr}</p>
                       </div>
                     }
                 </div>
