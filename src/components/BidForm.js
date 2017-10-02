@@ -137,7 +137,13 @@ class bidForm extends Component {
 				</label>
 				{
 					this.props.wait === false ? (
-						<button className="button" type="submit" value="Submit">Bid</button>
+						<button 
+							className="button" 
+							type="submit" 
+							value="Submit"
+						 >
+						 Bid
+						 </button>
 					) : (
 						<button className="button gray" type="button"><img src={require("../images/Rolling.gif")} alt="Loading"></img></button>
 					)

@@ -22,7 +22,7 @@ class Header extends React.Component {
 
 	//Scroll function
 	handleScroll = e => {
-		let scrollTop = e.target.body.scrollTop
+		let scrollTop = e.target.body.scrollTop || window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
 		scrollTop >= 132 ?
 		this.setState({ scrollTop:true }) : this.setState({ scrollTop:false })
 	}

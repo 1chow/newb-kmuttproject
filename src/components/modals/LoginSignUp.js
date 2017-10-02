@@ -279,7 +279,7 @@ export default class LoginSignUp extends Component {
 										<button onClick={this.handleFilter} className="hollow button">Sign Up</button>
 									</div> :
 									<div className="small-12 medium-4 columns">
-										<button onClick={ () => {this.props.changeType("login"),this.fixHandleFilter()}} className="hollow button"><i className="fa fa-facebook"></i> Join !!</button>
+										<button onClick={ () => {this.props.changeType("login");this.fixHandleFilter();}} className="hollow button"><i className="fa fa-facebook"></i> Join !!</button>
 									</div>
 								}
 						</div>

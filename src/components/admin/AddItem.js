@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import * as firebase from 'firebase'
 import ImageUploader from 'react-firebase-image-uploader'
-//import ItemsL from './ItemsL'
+import ItemsL from './ItemsL'
 import moment from 'moment';
 import {DatetimePickerTrigger} from 'rc-datetime-picker';
 
@@ -142,6 +142,10 @@ class Edit extends Component {
 		if(input.lenght === 0){
 			this.setState({timeendErr:"Pls select start end"})
 			setTimeout(() => this.setState({timeendErr:null}),10000)
+			return false
+		} else if(input <= this.state.timeStart){
+			this.setState({timeendErr:"Time start <= Time end"})
+			setTimeout(() => this.setState({timeendErr:null}),5000)
 			return false
 		} else return true
   }
@@ -413,10 +417,11 @@ class Edit extends Component {
                     <DatetimePickerTrigger
                       shortcuts={shortcuts} 
                       moment={this.state.timeStart}
-                      onChange={this.handleChange}>
-                      <input onChange={this.handleChange} name="timeStart" readOnly type="text" value={this.state.timeStart.format('YYYY-MM-DD HH:mm')} />
-                    </DatetimePickerTrigger>
-                {/*    <input type="text" placeholder="Timestamp" aria-describedby="help-signup" required pattern="text" value={ this.state.timeStart } name="timeStart" readOnly/> */}        
+                      onChange={this.handleChange}
+                      closeOnSelectDay="true"
+                      >
+                      <input name="timeStart" readOnly type="text" value={this.state.timeStart.format('YYYY-MM-DD HH:mm')} />
+                    </DatetimePickerTrigger>      
                   </label>
                   { this.state.timestartErr &&
                       <div className="alert-error">
@@ -429,8 +434,10 @@ class Edit extends Component {
                       <DatetimePickerTrigger
                       shortcuts={shortcuts} 
                       moment={this.state.timeEnd}
-                      onChange={this.handleChange2}>
-                      <input onChange={this.handleChange2} name="timeEnd" readOnly type="text" value={this.state.timeEnd.format('YYYY-MM-DD HH:mm')} />
+                      onChange={this.handleChange2}
+                      closeOnSelectDay="true"
+                      >
+                      <input name="timeEnd" readOnly type="text" value={this.state.timeEnd.format('YYYY-MM-DD HH:mm')} />
                     </DatetimePickerTrigger>
                   </label>
                   { this.state.timeendErr &&
@@ -495,7 +502,7 @@ class Edit extends Component {
             </form>
           </div>
           <div className="small-12 columns profile-main">
-            {/*<ItemsL/>*/}
+            <ItemsL convertTimeM={this.props.convertTimeM}/>
             <button onClick={this.addMockup}>Add Mock Item</button>  
           </div>
         </div>
