@@ -263,7 +263,6 @@ export default class App extends Component {
 		this.setState({ showToggle: true });
 	}
 	handleclosetoggle = () => {
-		this.getObjects()
 		this.setState({ showToggle: false });
 	}
 	closetoggle = () => {
@@ -319,7 +318,6 @@ export default class App extends Component {
 						logout={this.logout} 
 						closetoggle={this.closetoggle} 
 						showToggle={this.state.showToggle}
-						getObjects={this.getObjects}
 					 />
 					{/* Application Routes Zone */}
 						<div className="row">

@@ -21,10 +21,8 @@ export default class Item extends Component {
 	}
 
 	componentDidMount() {
-
 		this._filterItems(this.props.items,this.props.current)
 		this._filtercurrent('',this.props.current)
-		this.handleMsg('default','','','')
 
 		firebase.database().ref('/items/'+this.props.match.params.id+'/bidList').orderByChild('bid').on('value', Snapshot => {
 			let table_ = []
@@ -41,6 +39,12 @@ export default class Item extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
+		if(nextProps.isLogin === false){
+			this.handleMsg('anonymusUser')
+		} else {
+			if(this.state.isActive !== 0)
+			 this.handleMsg('default','','','')
+		}
 		if (!this.props.items.length && nextProps.items.length) {
 			this._filterItems(nextProps.items,nextProps.current);
 		}
@@ -48,9 +52,8 @@ export default class Item extends Component {
 			this._filtercurrent(this.props.current,nextProps.current)
 		}
 		if (this.props.timeNows !== nextProps.timeNows) {
-			this._filtertimeNows(this.props.timeNows,nextProps.timeNows)
+			this._filtertimeNows(this.props.timeNows,nextProps.timeNows,nextProps.isLogin)
 		}
-
 	}
 
 	_filterItems = (items,currents) => {
@@ -94,11 +97,17 @@ export default class Item extends Component {
 
 	}
 
-	_filtertimeNows = (timeNows) => {
+	_filtertimeNows = (timeNows,anonymus,isLogin) => {
 		let newtimeNows = timeNows.filter( timeNow => {
 			return timeNow._id === this.props.match.params.id
 		})
-		newtimeNows.length !== 0 && this.setState({timeNow: newtimeNows[0].timeNow,isActive: newtimeNows[0].isActive})
+		if(newtimeNows.length !== 0) {
+			this.setState({timeNow: newtimeNows[0].timeNow,isActive: newtimeNows[0].isActive},() => {
+				if(isLogin === true){
+					newtimeNows[0].isActive === 0 && this.handleMsg('timeOut')
+				}
+			})
+		}
 	}
                  
 	recieve = () => {
@@ -125,6 +134,24 @@ export default class Item extends Component {
 					bidResult:'Really want to win?',
 					bidResult_:'Try Place Your high bid amount.'
 				})
+			break
+			case'anonymusUser' :
+			this.setState({bidIcon:'exclamation',
+				bidColor_bg:'#ffdad5',
+				bidColor_icon:'#cc4b37',
+				bidColor:'#cc4b37',
+				bidResult: 'User not login',
+				bidResult_: 'XXXXXXXXXXXXXXX'
+			})
+			break
+			case'timeOut' :
+			this.setState({bidIcon:'exclamation',
+				bidColor_bg:'#ffdad5',
+				bidColor_icon:'#cc4b37',
+				bidColor:'#cc4b37',
+				bidResult: 'Time Out',
+				bidResult_: 'XXXXXXXXXXXXXXX'
+			})
 			break
 			case'lost' :
 				this.setState({
@@ -194,7 +221,7 @@ export default class Item extends Component {
 									}
 									</p>
 								</div>
-								{this.props.isLogin &&
+								{this.props.isLogin ?
 									<div className="small-7 medium-7 columns auct-from-bit">
 										<p className="time">Place Your Bid</p>
 										<BidForm recieve={this.recieve} msg={this.handleMsg} waiting={this.waiting} wait={this.state.wait} newcurrent={this.state.newcurrent} mfkCurrent={this.props.current} open={this.props.triggler} item={this.state.item[0]} params={this.props.match.params.id} bidStep_={this.state.bidStep_} />
@@ -203,7 +230,11 @@ export default class Item extends Component {
 											:
 											<p className="helper">Your Max Bids {this.state.maxBid} ฿</p>
 										}
-									</div>
+									</div> 
+									: 
+									<div className="small-7 medium-7 columns auct-from-bit">
+										<p className="time">User not login</p>
+									</div> 
 								}
 							</div>
 							}
