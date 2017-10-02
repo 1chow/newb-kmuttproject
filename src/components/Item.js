@@ -185,9 +185,7 @@ export default class Item extends Component {
 	}
 
 	ImgToggle = (num) => {
-
 		this.setState({itemImage: num})
-
 	}
 
 	componentWillUnmount() {
@@ -216,7 +214,6 @@ export default class Item extends Component {
 								<img src={this.state.item[0].img_[this.state.itemImage]} alt=""/>
 							</div>
 							<div className="item-box-list">
-
 							{ this.state.item[0].img_.map( (img,i) => {
 								return <img key={i} className={this.state.itemImage === i ? 'active' : ''} src={img} onClick={() => this.ImgToggle(i)} alt=""/>
 							})}

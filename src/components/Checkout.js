@@ -63,6 +63,12 @@ export default class Checkout extends Component {
 	    window.print();
 	}
 
+	componentWillUnmount() {
+		firebase.database().ref('/users/'+ this.props.userUID + '/info' ).off()
+		firebase.database().ref('orders/'+ this.props.userUID +'/orderList').off()
+		firebase.database().ref('/orders/'+ this.props.userUID).off()
+	}
+
     render() {
         return (
         <div className="row ">
@@ -108,11 +114,19 @@ export default class Checkout extends Component {
 	                  					return ( 
 	                  						<CheckoutList key={orderL.itemId} {...orderL} />
 									);})}
-									<tr>
-										<td>Delivery Charge</td>
-										<td className="text-center">-</td>
-										<td className="text-right">39.00 <span>THB</span></td>
-									</tr>
+									{this.state.orderL.length !== 0 ?
+										<tr>
+											<td>Delivery Charge</td>
+											<td className="text-center">-</td>
+											<td className="text-right">39.00 <span>THB</span></td>
+										</tr>
+										:
+										<tr>
+											<td>Delivery Charge</td>
+											<td className="text-center">-</td>
+											<td className="text-right">-</td>
+										</tr>
+									}
 									{this.state.orderDesc[1] &&
 										<tr>
 											<th className="text-right">Total</th>

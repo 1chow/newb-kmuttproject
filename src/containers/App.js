@@ -266,6 +266,32 @@ export default class App extends Component {
 		this.setState({ showToggle: false });
 	}
 	closetoggle = () => {
+		fetch("https://us-central1-auctkmutt.cloudfunctions.net/getItems")
+		.then(response => {
+			return response.json();
+		})
+		.then(json => {
+			let timeNows =[]
+			json.forEach( (object,i) => {
+				let timeNow_ = ((object.bid.endTime - object.timeNow)/1000)
+				let id_ = object._id
+				let catagory_ = object.catagory
+				let isActive_ = object.isActive
+				let endTime_ = object.bid.endTime
+				let timeNows_ = {
+					timeNow  : timeNow_,
+					_id  	 : id_,
+					catagory : catagory_,
+					isActive : isActive_,
+					endTime : endTime_
+				}
+				timeNows.push(timeNows_);
+			})
+			this.setState({
+				items: json,
+				timeNows:timeNows
+			})
+		})
 		this.setState({ showToggle: false });
 	}
 	logout = () => {

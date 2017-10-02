@@ -22,6 +22,9 @@ class Edit extends Component {
       productname : '',
       productimage:'',
       productimageURL:'',
+      productimageURL2:null,
+      productimageURL3:null,
+      productimageURL4:null,
       firstbit:'',
       bidStep:'',
       catagoriesselect:'', 
@@ -234,6 +237,12 @@ class Edit extends Component {
           userId : ''
       },
       img: this.state.productimageURL,
+      img_:{
+        0 : this.state.productimageURL,
+        1 : this.state.productimageURL2,
+        2 : this.state.productimageURL3,
+        3 : this.state.productimageURL4,
+      },
       own : this.state.User
       
     })
@@ -251,6 +260,9 @@ class Edit extends Component {
                 productname : '',
                 productimage:'',
                 productimageURL:'',
+                productimageURL2:'',
+                productimageURL3:'',
+                productimageURL4:'',
                 firstbit:'',
                 bidStep:'',
                 catagoriesselect:'', 
@@ -281,20 +293,91 @@ class Edit extends Component {
     this.setState({isUploading: true})
   }
 
+  handleUploadStart2 = () => {
+    this.setState({productimageURL2: null})
+    this.setState({isUploading2: true})
+  }
+
+  handleUploadStart3 = () => {
+    this.setState({productimageURL3: null})
+    this.setState({isUploading3: true})
+  }
+
+  handleUploadStart4 = () => {
+    this.setState({productimageURL4: null})
+    this.setState({isUploading4: true})
+  }
+
   handleProgress = () => {
     this.state.productimageURL !== null && 
      this.setState({isUploading: false})
   }
 
+  handleProgress2 = () => {
+    this.state.productimageURL2 !== null && 
+     this.setState({isUploading2: false})
+  }
+
+  handleProgress3 = () => {
+    this.state.productimageURL3 !== null && 
+     this.setState({isUploading3: false})
+  }
+
+  handleProgress4 = () => {
+    this.state.productimageURL4 !== null && 
+     this.setState({isUploading4: false})
+  }
+
   handleUploadError = (error) => {
       this.setState({
         isUploading: false,
-        catagoriesErr: error,
+        imageErr: error,
       })
+      setTimeout(() => this.setState({imageErr:null}),10000)
   }
+
+  handleUploadError2 = (error) => {
+      this.setState({
+        isUploading2: false,
+        imageErr: error,
+      })
+      setTimeout(() => this.setState({imageErr:null}),10000)
+  }
+
+  handleUploadError3 = (error) => {
+      this.setState({
+        isUploading3: false,
+        imageErr: error,
+      })
+      setTimeout(() => this.setState({imageErr:null}),10000)
+  }
+
+  handleUploadError4 = (error) => {
+    this.setState({
+      isUploading4: false,
+      imageErr: error,
+    })
+    setTimeout(() => this.setState({imageErr:null}),10000)
+}
+
   handleUploadSuccess = (filename) => {
       this.setState({productimage: filename});
       firebase.storage().ref('images').child(filename).getDownloadURL().then(url => this.setState({productimageURL: url,isUploading: false}))
+  }
+
+  handleUploadSuccess2 = (filename) => {
+      this.setState({productimage: filename});
+      firebase.storage().ref('images').child(filename).getDownloadURL().then(url => this.setState({productimageURL2: url,isUploading2: false}))
+  }
+
+  handleUploadSuccess3 = (filename) => {
+      this.setState({productimage: filename});
+      firebase.storage().ref('images').child(filename).getDownloadURL().then(url => this.setState({productimageURL3: url,isUploading3: false}))
+  }
+
+  handleUploadSuccess4 = (filename) => {
+      this.setState({productimage: filename});
+      firebase.storage().ref('images').child(filename).getDownloadURL().then(url => this.setState({productimageURL4: url,isUploading4: false}))
   }
 
   handleChange = (timeStart) => {
@@ -332,6 +415,12 @@ class Edit extends Component {
           userId : ''
       },
       img: "https://firebasestorage.googleapis.com/v0/b/auctkmutt.appspot.com/o/images%2Fa4a9443d-099f-4e24-bce0-6c5b3331c18c.jpg?alt=media&token=ef33603d-1a09-4292-8ec4-e1402afd51ab",
+      img_:{
+        0 : "https://firebasestorage.googleapis.com/v0/b/auctkmutt.appspot.com/o/images%2Fa4a9443d-099f-4e24-bce0-6c5b3331c18c.jpg?alt=media&token=ef33603d-1a09-4292-8ec4-e1402afd51ab",
+        1 : "https://firebasestorage.googleapis.com/v0/b/auctkmutt.appspot.com/o/images%2Fa4a9443d-099f-4e24-bce0-6c5b3331c18c.jpg?alt=media&token=ef33603d-1a09-4292-8ec4-e1402afd51ab",
+        2 : "https://firebasestorage.googleapis.com/v0/b/auctkmutt.appspot.com/o/images%2Fa4a9443d-099f-4e24-bce0-6c5b3331c18c.jpg?alt=media&token=ef33603d-1a09-4292-8ec4-e1402afd51ab",
+        3 : "https://firebasestorage.googleapis.com/v0/b/auctkmutt.appspot.com/o/images%2Fa4a9443d-099f-4e24-bce0-6c5b3331c18c.jpg?alt=media&token=ef33603d-1a09-4292-8ec4-e1402afd51ab"
+      },
       own : this.state.User
     })
     .then(snapshot => {
@@ -462,7 +551,7 @@ class Edit extends Component {
                                 onProgress={this.handleProgress}
                             />
                         </label>
-                        {this.state.isUploading  === true ?
+                        {this.state.isUploading  === true  ?
                             <img className="load-small" src={require("../../images/Rolling.gif")} alt="PreviewPic" />
                           : <img className="load-small none" src={require("../../images/Rolling.gif")} alt="PreviewPic" />
                         }
@@ -470,6 +559,72 @@ class Edit extends Component {
                           <img src={this.state.productimageURL} alt="PreviewPic" />
                         }
                      </div>
+                     {this.state.productimageURL &&
+                        <div className="box-img">
+                            <label className="button btn-file">
+                            + ADD Photo
+                                <ImageUploader
+                                    name="avatar"
+                                    storageRef={firebase.storage().ref('images')}
+                                    onUploadStart={this.handleUploadStart2}
+                                    onUploadError={this.handleUploadError2}
+                                    onUploadSuccess={this.handleUploadSuccess2}
+                                    onProgress={this.handleProgress2}
+                                />
+                            </label>
+                            {this.state.isUploading2  === true ?
+                                <img className="load-small" src={require("../../images/Rolling.gif")} alt="PreviewPic" />
+                              : <img className="load-small none" src={require("../../images/Rolling.gif")} alt="PreviewPic" />
+                            }
+                            {this.state.productimageURL2 && 
+                              <img src={this.state.productimageURL2} alt="PreviewPic" />
+                            }
+                        </div>
+                      }
+                      {this.state.productimageURL2 &&
+                        <div className="box-img">
+                            <label className="button btn-file">
+                            + ADD Photo
+                                <ImageUploader
+                                    name="avatar"
+                                    storageRef={firebase.storage().ref('images')}
+                                    onUploadStart={this.handleUploadStart3}
+                                    onUploadError={this.handleUploadError3}
+                                    onUploadSuccess={this.handleUploadSuccess3}
+                                    onProgress={this.handleProgress3}
+                                />
+                            </label>
+                            {this.state.isUploading3  === true ?
+                                <img className="load-small" src={require("../../images/Rolling.gif")} alt="PreviewPic" />
+                              : <img className="load-small none" src={require("../../images/Rolling.gif")} alt="PreviewPic" />
+                            }
+                            {this.state.productimageURL3 && 
+                              <img src={this.state.productimageURL3} alt="PreviewPic" />
+                            }
+                        </div>
+                      }
+                      {this.state.productimageURL3 &&
+                        <div className="box-img">
+                            <label className="button btn-file">
+                            + ADD Photo
+                                <ImageUploader
+                                    name="avatar"
+                                    storageRef={firebase.storage().ref('images')}
+                                    onUploadStart={this.handleUploadStart4}
+                                    onUploadError={this.handleUploadError4}
+                                    onUploadSuccess={this.handleUploadSuccess4}
+                                    onProgress={this.handleProgress4}
+                                />
+                            </label>
+                            {this.state.isUploading4  === true ?
+                                <img className="load-small" src={require("../../images/Rolling.gif")} alt="PreviewPic" />
+                              : <img className="load-small none" src={require("../../images/Rolling.gif")} alt="PreviewPic" />
+                            }
+                            {this.state.productimageURL4 && 
+                              <img src={this.state.productimageURL4} alt="PreviewPic" />
+                            }
+                        </div>
+                      }
                     </label>
                     { this.state.imageErr &&
                       <div className="alert-error">
