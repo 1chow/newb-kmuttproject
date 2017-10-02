@@ -17,6 +17,8 @@ export default class Item extends Component {
 		bidResult:'',
 		bidResult_:'',
 		bidIcon:'',
+		itemImage:0,
+		selected: [],
 		isActive:null,
 	}
 
@@ -164,7 +166,7 @@ export default class Item extends Component {
 				})
 				setTimeout( () => {
 		        this.handleMsg('default','','','')
-		      	}, 5000)
+		      	}, 6000)
 			break
 			case'win' :
 				this.setState({bidIcon:c,
@@ -176,11 +178,15 @@ export default class Item extends Component {
 				})
 				setTimeout( () => {
 		        this.handleMsg('default','','','')
-		      	}, 5000)
+		      	}, 6000)
 			break
 		}
 
+	}
 
+	ImgToggle = (num) => {
+
+		this.setState({itemImage: num})
 
 	}
 
@@ -189,6 +195,7 @@ export default class Item extends Component {
 	}
 
 	render() {
+
 		return this.state.item[0] ? (
 			<div>
 				<div className="row auct-content">
@@ -206,7 +213,14 @@ export default class Item extends Component {
 					<div className="small-12 medium-5 large-6 columns auct-l-container">
 						<div className="item-warper">
 							<div className="item">
-								<img src={this.state.item[0].img} alt=""/>
+								<img src={this.state.item[0].img_[this.state.itemImage]} alt=""/>
+							</div>
+							<div className="item-box-list">
+
+							{ this.state.item[0].img_.map( (img,i) => {
+								return <img key={i} className={this.state.itemImage === i ? 'active' : ''} src={img} onClick={() => this.ImgToggle(i)} alt=""/>
+							})}
+
 							</div>
 						</div>
 					</div>
