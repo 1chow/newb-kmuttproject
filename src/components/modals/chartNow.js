@@ -135,7 +135,7 @@ class chartNow extends Component {
 	}
 
     render() {
-        return this.state.chartNow ? (
+        return this.state.chartnows_ ? (
             <div className="page items post-feed">
 				<TransitionGroup>
 					{this.state.items.map((item, i) => {
