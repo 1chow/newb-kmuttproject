@@ -22,12 +22,12 @@ export function auth (email, pw, displayName) {
             displayName: displayName,
             email: user.email,
             uid: user.uid,
-            photoUrl: 'http://via.placeholder.com/500/5c5c5c/ffffff?text='+firstName,
+            photoUrl: 'https://via.placeholder.com/500/5c5c5c/ffffff?text='+firstName,
             role: 'member'
         })
         .then(user.updateProfile({
           displayName: displayName,
-          photoUrl: 'http://via.placeholder.com/500/5c5c5c/ffffff?text='+firstName,
+          photoUrl: 'https://via.placeholder.com/500/5c5c5c/ffffff?text='+firstName,
         }))
     })
 }

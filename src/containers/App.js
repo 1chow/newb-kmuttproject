@@ -435,7 +435,9 @@ export default class App extends Component {
 					alertCloseModal={this.alertCloseModal}
 					feel={this.state.feel}	
 					message={this.state.message}
-					icon={this.state.icon}			
+					icon={this.state.icon}
+					timeNows={this.state.timeNows}
+					secondsToHms={this.secondsToHms} 			
 				/>
 			</div>
 		) : <div className='preload'><img src={require("../images/Rolling.gif")} alt="Loading"></img></div>

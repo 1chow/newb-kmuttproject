@@ -203,6 +203,7 @@ export default class Item extends Component {
 	render() {
 
 		return this.state.isActive !== null ? (
+
 			<div>
 				<div className="row auct-content">
 					<div className="small-9 columns">
