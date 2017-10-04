@@ -26,7 +26,7 @@ export default class Admin extends Component {
 		        	     <li className={(this.state.select === "setting"  && 'active')}>
 	                        <button onClick={ () => this.selected("setting")}>
 	                            <i className="fa fa-user"></i>
-	                            <p className='show-for-large'> Setting</p>
+	                            <p className='show-for-large'> Your Profile</p>
 	                        </button>
 	                    </li>
 						{ this.props.role === 'admin' &&

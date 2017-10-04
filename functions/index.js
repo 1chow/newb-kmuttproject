@@ -244,6 +244,7 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 					  		 		
 									var _data = userSnapshot.val();
 									var _info = _data.info;
+									var _now = _data.now;
 
 						  				if (newBid > maxBid) {
 
@@ -275,6 +276,12 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 									  					userName : _info.displayName,
 									  					auto : 1
 									  				})
+
+									  				db.ref('/users/'+ uid + '/now/' + itemKey).set({
+									  					bidTimestamp: getTime,
+									  					itemId: itemKey									  					
+										  			})
+										  			
 
 									  				//win bid
 						  							res.status(200).send(['win']);
