@@ -26,6 +26,7 @@ export default class Item extends Component {
 	componentDidMount() {
 		this._filterItems(this.props.items,this.props.current)
 		this._filtercurrent('',this.props.current)
+		this.handleMsg('default','','','')
 
 		firebase.database().ref('/items/'+this.props.match.params.id+'/bidList').orderByChild('bid').on('value', Snapshot => {
 			let table_ = []
@@ -42,12 +43,13 @@ export default class Item extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
+
 		if(nextProps.isLogin === false){
-			this.handleMsg('anonymusUser')
-		} else {
-			if(this.state.isActive !== 0)
-			 this.handleMsg('default','','','')
+			 this.handleMsg('anonymusUser','','','')	
+		} else if(this.state.isActive !== 0 && this.state.isMsg !==1){
+		 	this.handleMsg('default','','','')
 		}
+
 		if (!this.props.items.length && nextProps.items.length) {
 			this._filterItems(nextProps.items,nextProps.current);
 		}
@@ -139,21 +141,21 @@ export default class Item extends Component {
 				})
 			break
 			case'anonymusUser' :
-			this.setState({bidIcon:'exclamation',
-				bidColor_bg:'#ffdad5',
-				bidColor_icon:'#cc4b37',
-				bidColor:'#cc4b37',
-				bidResult: 'User not login',
-				bidResult_: 'XXXXXXXXXXXXXXX'
+			this.setState({bidIcon:'sign-in',
+					bidColor_bg:'#B9F6CA',
+					bidColor_icon:'#ffae00',
+					bidColor:'#1B5E20',
+					bidResult: 'Log in to join',
+					bidResult_: 'Please log in to try wins this auctions.'
 			})
 			break
 			case'timeOut' :
-			this.setState({bidIcon:'exclamation',
-				bidColor_bg:'#ffdad5',
-				bidColor_icon:'#cc4b37',
-				bidColor:'#cc4b37',
-				bidResult: 'Time Out',
-				bidResult_: 'XXXXXXXXXXXXXXX'
+			this.setState({bidIcon:'clock-o',
+					bidColor_bg:'#ffdad5',
+					bidColor_icon:'#cc4b37',
+					bidColor:'#cc4b37',
+					bidResult: 'Ended Auctions',
+					bidResult_: 'Thank for your interest in this auction.'
 			})
 			break
 			case'lost' :
@@ -163,11 +165,13 @@ export default class Item extends Component {
 					bidColor_icon:'#cc4b37',
 					bidColor:'#cc4b37',
 					bidResult: a,
-					bidResult_: b
+					bidResult_: b,
+					isMsg : 1
 				})
 				setTimeout( () => {
 		        this.handleMsg('default','','','')
-		      	}, 6000)
+		        this.setState({isMsg : 0})
+		      	},6000)
 			break
 			case'win' :
 				this.setState({bidIcon:c,
@@ -175,18 +179,22 @@ export default class Item extends Component {
 					bidColor_icon:'#ffae00',
 					bidColor:'#1B5E20',
 					bidResult: a,
-					bidResult_: b
+					bidResult_: b,
+					isMsg : 1
 				})
 				setTimeout( () => {
 		        this.handleMsg('default','','','')
-		      	}, 6000)
+		        this.setState({isMsg : 0})
+		      	},6000)
 			break
 		}
 
 	}
 
 	ImgToggle = (num) => {
+
 		this.setState({itemImage: num})
+
 	}
 
 	componentWillUnmount() {
@@ -195,12 +203,13 @@ export default class Item extends Component {
 
 	render() {
 
-		return this.state.isActive ? (
+		return this.state.isActive !== null ? (
+
 			<div>
 				<div className="row auct-content">
 					<div className="small-9 columns">
 						<h1>{this.state.item[0].name}</h1>
-						<p className="p-desc">{this.state.item[0].desc.short}</p>
+						<p className="p-desc p-sub-desc">{this.state.item[0].desc.short}</p>
 					</div>
 					<div className="small-3 columns">
 						{ this.state.newcurrent !== 0 &&
@@ -215,6 +224,7 @@ export default class Item extends Component {
 								<img src={this.state.item[0].img_[this.state.itemImage]} alt=""/>
 							</div>
 							<div className="item-box-list">
+
 							{ this.state.item[0].img_.map( (img,i) => {
 								return <img key={i} className={this.state.itemImage === i ? 'active' : ''} src={img} onClick={() => this.ImgToggle(i)} alt=""/>
 							})}
@@ -224,15 +234,15 @@ export default class Item extends Component {
 					</div>
 					<div className="small-12 medium-7 large-6 columns auct-r-container">
 						<div className="auct-content">
-							{ this.state.isActive === 1 &&
-							<div className="row auct-from-warp">
-								<div className="small-5 medium-5 columns">
-									<p className="time">Time Remaining<br></br>
-									{this.state.timeNow !== null &&
-										<Clock secondsToHms={this.props.secondsToHms} timeNow={this.state.timeNow-1}/>
-									}
-									</p>
-								</div>
+							{ this.state.isActive !== 0 &&
+								<div className="row auct-from-warp">
+									<div className="small-5 medium-5 columns">
+										<p className="time">Time Remaining<br></br>
+										{this.state.timeNow !== null &&
+											<Clock secondsToHms={this.props.secondsToHms} timeNow={this.state.timeNow-1}/>
+										}
+										</p>
+									</div>
 								{this.props.isLogin ?
 									<div className="small-7 medium-7 columns auct-from-bit">
 										<p className="time">Place Your Bid</p>
@@ -245,7 +255,7 @@ export default class Item extends Component {
 									</div> 
 									: 
 									<div className="small-7 medium-7 columns auct-from-bit">
-										<p className="time">User not login</p>
+										
 									</div> 
 								}
 							</div>

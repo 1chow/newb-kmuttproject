@@ -16,7 +16,7 @@ class Sellingarea extends Component {
                         </div>
                         <div className="post-box-content">
                             <h3>{item.name}</h3>
-                            <p className="desc">{item.desc.short.slice(0,20)}</p>
+                            <p className="desc">{item.desc.short.slice(0,65)} ...</p>
                             <Clock secondsToHms={secondsToHms} timeNows={timeNows}  />
                             <p className="price">{current}<span className="curentcy">Bath</span></p>
                             <button><i className="fa fa2x "></i></button>

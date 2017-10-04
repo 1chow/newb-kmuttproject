@@ -201,7 +201,7 @@ class Edit extends Component {
   }
 
   regCharacter = pw => {
-		let re = /^[-_a-zA-Z0-9.]+$/
+		let re = /^[a-zA-Z0-9_ ]+$/
 		return re.test(pw);
 	}
 
@@ -211,13 +211,13 @@ class Edit extends Component {
       catagory: this.state.catagoriesselect,
       isActive: 1,
       desc:{
-            short: this.state.desc.slice(0,32),
-            fullHeader: this.state.desc.slice(0,16),
-            fullDesc : this.state.desc.slice(0,200)
+            short: this.state.desc.slice(0,350),
+            fullHeader: this.state.productname,
+            fullDesc : this.state.desc
       },
       bid:{
           current : parseInt(this.state.firstbit,10),
-          maxBid : parseInt((this.state.firstbit - 1),10),
+          maxBid : parseInt((this.state.firstbit - this.state.bidStep),10),
           maxBidTime : parseInt(this.state.timeStart.format('x'),10),
           openBid : parseInt(this.state.firstbit,10),
           bidStep: parseInt(this.state.bidStep,10),

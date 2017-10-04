@@ -194,11 +194,11 @@ export default class Setting extends Component {
 	                    :<p className='user-p'>{ this.state.username }</p>
 	                   }
 	                  </label>
-										{ this.state.usernameErr &&
-											<div className="alert callout">
-												<p><i className="fi-alert"></i>{this.state.usernameErr}</p>
-											</div>
-										}
+							{ this.state.usernameErr &&
+								<div className="alert-error">
+									<p><i className="fa fa-times"></i> {this.state.usernameErr}</p>
+								</div>
+							}
     	     		</div>
     	     		<div className="small-12 columns">
 	                  <label>E-mail
@@ -207,35 +207,38 @@ export default class Setting extends Component {
 	                    :<p className='user-p'>{ this.state.email } </p>
 	                   }
 	                  </label>
-										{ this.state.emailErr &&
-											<div className="alert callout">
-												<p><i className="fi-alert"></i>{this.state.emailErr}</p>
-											</div>
-										}
+							{ this.state.emailErr &&
+								<div className="alert-error">
+									<p><i className="fa fa-times"></i> {this.state.emailErr}</p>
+								</div>
+							}
     	     		</div>
 	     			<div className="small-12 columns">
 	                  <label>Address
 	                    { this.state.setting === true ?
 	                    	this.state.address && 
 							this.state.address.trim().length === 0 ? 
-							<textarea className="checkout-address-active" name="newaddress" rows="5" autoCorrect="off" spellCheck="false" value="Pls fill your address" ></textarea>
+							<p className='user-p'> Pls fill your address </p>
 							:
-							<textarea className="checkout-address-active" name="newaddress" rows="5" autoCorrect="off" spellCheck="false" onChange={this.onNewItemChange} value={this.state.newaddress} ></textarea>
+							<textarea className="checkout-address-active" name="newaddress" rows="4" autoCorrect="off" spellCheck="false" onChange={this.onNewItemChange} value={this.state.newaddress} ></textarea>
 							: 
 							this.state.address && 
-							<textarea name="address" className="checkout-address"rows="5" autoCorrect="off"  readOnly value={this.state.address}></textarea>
+							<p className='user-p'>{ this.state.address } </p>
 	                   }
 	                  </label>
-										{ this.state.addressErr &&
-											<div className="alert callout">
-												<p><i className="fi-alert"></i>{this.state.addressErr}</p>
-											</div>
-										}
+							{ this.state.addressErr &&
+								<div className="alert-error">
+									<p><i className="fa fa-times"></i> {this.state.addressErr}</p>
+								</div>
+							}
     	     		</div>
-	     		 </div>
+	     		 
 						{ this.state.setting === true &&
-						<button type='submit'>Submit</button>
+						<div className="small-6 columns admin-from-btm">
+							<button className="button success" type='submit'>Submit</button>
+						</div>
 						}
+					</div>
 	            </form>
 	            </div>
 	          </div>

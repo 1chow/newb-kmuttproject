@@ -4,8 +4,11 @@ import ModalLoginSignUp from './modals/LoginSignUp'
 import Allinone from './modals/Modal-All'
 
 const Modals = props => {
+
+
+
     return props.isOpen === true ? (
-	    	<div className="modal-container">
+	    	<div className={"modal-container"}>
 				  {(() => {
 						switch (props.type) {
 							case 'checkout':

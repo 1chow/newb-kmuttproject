@@ -21,11 +21,11 @@ class Header extends React.Component {
 	}
 
 	//Scroll function
-	handleScroll = e => {
+/*	handleScroll = e => {
 		let scrollTop = e.target.body.scrollTop || window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
 		scrollTop >= 132 ?
 		this.setState({ scrollTop:true }) : this.setState({ scrollTop:false })
-	}
+	}*/
 
 	handleLink = () => {
 		this.props.getObjects()
@@ -36,7 +36,7 @@ class Header extends React.Component {
 		return (
 		<header>
 				<div data-sticky-container>
-					<div className={"title-bar " + (this.state.scrollTop ? 'nav-fix' : null)} data-sticky data-options="marginTop:0;" style={{width:100+'%'}}>
+					<div className="title-bar" data-sticky data-options="marginTop:0;" style={{width:100+'%'}}>
 						<div className="row">
 							<NavLink  onClick={this.handleLink} exact to="/">
 								<div className="title-bar-left nav-left">

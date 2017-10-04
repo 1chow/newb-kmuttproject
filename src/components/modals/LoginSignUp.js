@@ -206,8 +206,8 @@ export default class LoginSignUp extends Component {
 											<input ref={ user => this.user = user} type="text" placeholder="Your User Name"></input>
 										</label>
 										{ this.state.user &&
-											<div className="alert callout">
-												<p><i className="fi-alert"></i>{this.state.user}</p>
+											<div className="alert-error">
+												<p><i className="fa fa-times"></i> {this.state.user}</p>
 											</div>
 										}
 									</div>
@@ -217,8 +217,8 @@ export default class LoginSignUp extends Component {
 										<input ref={ email => this.email = email} type="email" placeholder="E-mail Address"></input>
 									</label>
 									{ this.state.email &&
-										<div className="alert callout">
-											<p><i className="fi-alert"></i>{this.state.email}</p>
+										<div className="alert-error">
+											<p><i className="fa fa-times"></i> {this.state.email}</p>
 										</div>
 									}
 								</div>
@@ -227,8 +227,8 @@ export default class LoginSignUp extends Component {
 										<input ref={ pw => this.pw = pw} type="password" id="password" placeholder="Password"></input>
 									</label>
 									{ this.state.pw &&
-										<div className="alert callout">
-											<p><i className="fi-alert"></i>{this.state.pw}</p>
+										<div className="alert-error">
+											<p><i className="fa fa-times"></i> {this.state.pw}</p>
 										</div>
 									}
 								</div>
@@ -238,8 +238,8 @@ export default class LoginSignUp extends Component {
 											<input ref={ _pw => this._pw = _pw} type="password" id="password" placeholder="Re-Type Password"></input>
 										</label>
 										{ this.state._pw &&
-											<div className="alert callout">
-												<p><i className="fi-alert"></i>{this.state._pw}</p>
+											<div className="alert-error">
+												<p><i className="fa fa-times"></i> {this.state._pw}</p>
 											</div>
 										}
 									</div>

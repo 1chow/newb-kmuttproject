@@ -50,13 +50,6 @@ class AddCatagoriy extends Component {
                 <div className="hr-text-center"><hr/></div>
             </div>
             <div className="small-12 large-6 columns">
-               { this.state.Error &&
-                  <div className="small-12 columns">
-                    <div className="alert callout">
-                      <p><i className="fi-alert"></i>{this.state.Error}</p>
-                    </div>
-                  </div>
-                }
               <form  onSubmit={ this.handleNewItemSubmit }>
                 <div className="small-9 columns">
                     <label>Catagory Name
@@ -66,7 +59,7 @@ class AddCatagoriy extends Component {
                 <div className="small-3 columns">
                   <label>Icon
                     <select id="select" className="icon-font" onChange={ this.onNewItemChange } value={ this.state.icon } name="icon" >
-                        <option value=''></option>
+                        <option value=''> - </option>
                         <option value="fa-home">&#xf015;</option>
                         <option value="fa-plug">&#xf1e6;</option>
                         <option value="fa-diamond">&#xf219;</option>
@@ -111,6 +104,13 @@ class AddCatagoriy extends Component {
                         <option value="fa-briefcase">&#xf0b1; </option>
                     </select>
                   </label>
+                </div>
+                <div className="small-12 columns">
+                { this.state.Error &&
+                      <div className="alert-error">
+                        <p><i className="fa fa-times"></i> {this.state.Error}</p>
+                      </div>
+                  }
                 </div>
                 <div className="small-12 columns admin-from-btm">
                   <button className="button success" type="submit" value="Submit">ADD Catagories</button>
