@@ -29,6 +29,12 @@ export default class Admin extends Component {
 	                            <p className='show-for-large'> Setting</p>
 	                        </button>
 	                    </li>
+						<li className={(this.state.select === "recentchart"  && 'active')}>
+	                        <button onClick={ () => this.selected("recentchart")}>
+	                            <i className="fa fa-user"></i>
+	                            <p className='show-for-large'> Recent Chart</p>
+	                        </button>
+	                    </li>
 						{ this.props.role === 'admin' &&
 							<li className={(this.state.select === "category"  && 'active')}>
 								<button onClick={ () => this.selected("category")}>
@@ -45,25 +51,38 @@ export default class Admin extends Component {
 								</button>
 							</li>
 						}
+						{ this.props.role === 'admin' &&
+							<li className={(this.state.select === "sellingitem"  && 'active')}>
+								<button onClick={ () => this.selected("sellingitem")}>
+									<i className="fa fa-suitcase"></i>
+									<p className='show-for-large'> Selling Item</p>
+								</button>
+							</li>
+						}
 	                 </ul>
 	            </div>
 	        </div>
-			{/* Fucking Bug */}
 	        <div className="small-10 large-10 admin-r columns">
-	        	
 		        <div className="small-12 columns profile-main">
 		            <div className="small-12 columns">
 		            	{ this.state.select === 'category' ?
 			            	<AddCatagory />
-			            	: this.state.select === 'item' ? <AddItem triggler={this.props.triggler} convertTimeM={this.props.convertTimeM} /> 
-								: <Setting triggler={this.props.triggler} profilePicture={this.props.profilePicture} />
+			            	: this.state.select === 'item' ? 
+								<AddItem 
+									triggler={this.props.triggler} 
+									convertTimeM={this.props.convertTimeM} 
+								/> 
+								: this.state.select === 'setting' ?
+									<Setting 
+										triggler={this.props.triggler} 
+										profilePicture={this.props.profilePicture}
+									/> : this.state.select === 'recentchart' ?
+										<div>Recent Chart</div> :
+										<div>Selling Area</div>
 		            	}
 		            </div>            
 		        </div>
-
 	        </div>
-			{/* Fucking Bug */}
-
         </div>
         )
 

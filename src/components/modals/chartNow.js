@@ -18,7 +18,13 @@ class chartNow extends Component {
 		let user = firebase.auth().currentUser;
 		if (user) {
 			firebase.database().ref('/users/' + user.uid + '/now').on('value', dataSnapshot => {
-				this.setState({chartNow: dataSnapshot.val()},() => {
+				let table_ = []
+				dataSnapshot.forEach( childSnapshot => {
+					let chartnows = childSnapshot.val()
+					let chartnows_ = chartnows.itemId
+					table_.push(chartnows_)
+				})
+				this.setState({chartNow: table_},() => {
 					if(this.state.chartNow){
 						this._renderProjects(this.props.items)
 						this._filtercurrent(this.props.current)
@@ -27,11 +33,11 @@ class chartNow extends Component {
 				})
 			})
 		}
-    }
+	}
     
     componentWillReceiveProps(nextProps) {
-		if(nextProps.current && this.state.chartNow) {
-			if(this.state.newcurrent.length !== nextProps.current.filter( current => current.isActive !== 0).length){
+		if(nextProps.items) {
+			if(this.state.items.length !== nextProps.items.filter( item => item.isActive !== 0).length){
 				this._renderDelete(nextProps.items)
 				this._filtertimeNows(nextProps.timeNows)
 				this._filtercurrent(nextProps.current)
