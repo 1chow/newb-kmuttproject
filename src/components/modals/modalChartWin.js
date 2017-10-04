@@ -54,6 +54,14 @@ export default class ModalChartWin extends Component {
 		this.props.close()
 		this.props.filter('YD')
 	}
+
+	componentWillUnmount() {
+		let user = firebaseAuth().currentUser
+		if (user) {
+			db.child(`orders/${user.uid}/orderPrice`).off()
+		}
+	}
+
 	render() {
 		return (
 			<div className="row">

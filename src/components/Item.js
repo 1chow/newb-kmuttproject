@@ -194,7 +194,7 @@ export default class Item extends Component {
 
 	render() {
 
-		return this.state.item[0] ? (
+		return this.state.isActive ? (
 			<div>
 				<div className="row auct-content">
 					<div className="small-9 columns">

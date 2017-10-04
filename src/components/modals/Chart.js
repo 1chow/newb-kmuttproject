@@ -1,43 +1,12 @@
 import React , { Component }  from 'react'
-
 import ModalChartWin from "./modalChartWin"
-import * as Animated from "animated/lib/targets/react-dom";
+import ChartNow from "./chartNow"
 
 export default class Chart extends Component {
-
-	constructor(props) {
-		super(props);
-		this.state = {
+	state = {
 			cartType : 'nowAuction',
 		}
-	}
-
-	componentDidMount() {
-		this._sortModalItems(this.props.items);
-	}
-	
-	//For First Render
-	componentWillReceiveProps(nextProps) {
-		if (!this.props.items.length && nextProps.items.length) {
-			this._sortModalItems(nextProps.items);
-		}
-	}
-
-	_sortModalItems = ( items ) => {
-		if (this.state.cartType === 'nowAuction')
-		var newitems = items.filter( (item,n) => {
-			return item.catagory === this.props.isActive
-		})
-		else newitems = items
-		this.setState(
-			{
-				items: newitems,
-				animations: newitems.map((_, i) => new Animated.Value(0))
-			}
-		)
-	}
-
-
+		
 	render() {
 	    return (
 	            <div className="modal-core modal-fw modal-chart">
@@ -45,11 +14,40 @@ export default class Chart extends Component {
 						<h3><i className="fa fa-shopping-basket"></i> Cart</h3>
 						<button onClick={this.props.close} className="close"><i className="fa fa-times"></i></button>
 					</div>
-					
 					<div className="row">
-
-						<ModalChartWin orderLists={this.props.orderLists} close={this.props.close} filter={this.props.filter} />
-					
+						<div className="home-cat">
+							<ul>
+								<li className={(this.state.cartType === 'nowAuction'  && 'active')}>
+									<button onClick={() => this.setState({cartType:'nowAuction'})}>
+										<i className="fa fa-gavel"></i>
+										<p className={(this.state.cartType === 'nowAuction'  ? 'show-for-medium' : 'show-for-large')}>Chart Now</p>
+									</button>
+								</li>
+								<li className={(this.state.cartType !== 'nowAuction'  && 'active')}>
+									<button onClick={() => this.setState({cartType:'winAuction'})}>
+										<i className="fa fa-trophy"></i>
+										<p className={(this.state.cartType !== 'nowAuction'  ? 'show-for-medium' : 'show-for-large')}>Chart Win</p>
+									</button>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div className="row">
+						{this.state.cartType === 'nowAuction' ?
+							<ChartNow
+								items={this.props.items}
+								timeNows={this.props.timeNows}
+								current={this.props.current} 
+								close={this.props.close}
+								secondsToHms={this.props.secondsToHms} 
+							/>
+							:
+							<ModalChartWin 
+								orderLists={this.props.orderLists} 
+								close={this.props.close} 
+								filter={this.props.filter}
+							/>
+						}
 					</div>
 				</div>				
 	    )

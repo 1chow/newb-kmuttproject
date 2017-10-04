@@ -18,7 +18,7 @@ class Sellingarea extends Component {
                             <h3>{item.name}</h3>
                             <p className="desc">{item.desc.short.slice(0,20)}</p>
                             <Clock secondsToHms={secondsToHms} timeNows={timeNows}  />
-                                <p className="price">{current}<span className="curentcy">Bath</span></p>
+                            <p className="price">{current}<span className="curentcy">Bath</span></p>
                             <button><i className="fa fa2x "></i></button>
                         </div>
                     </Link>

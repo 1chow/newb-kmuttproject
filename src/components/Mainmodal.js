@@ -16,6 +16,8 @@ const Modals = props => {
 										isActive={props.isActive}
 										orderLists={props.orderLists}
 										current={props.current}
+										timeNows={props.timeNows}
+										secondsToHms={props.secondsToHms} 
 										/>
 							case 'login':
 								return <ModalLoginSignUp 
