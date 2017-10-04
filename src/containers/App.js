@@ -109,6 +109,7 @@ export default class App extends Component {
 			  let endTime_ = data.bid.endTime;
 			  let maxBid_ = data.bid.maxBid;
 			  let bidStep_ = data.bid.bidStep;
+			  let own_ = data.bid.userId;
 	          let obj = {
 	          	current  : current_,
 				itemId : key,
@@ -116,7 +117,8 @@ export default class App extends Component {
 				isActive: isActive_,
 				endTime: endTime_,
 				maxBid: maxBid_,
-				bidStep: bidStep_
+				bidStep: bidStep_,
+				own: own_
 	          }
 	          current_a.push(obj);
 			})

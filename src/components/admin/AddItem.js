@@ -64,17 +64,7 @@ class Edit extends Component {
   }
 
   componentWillUnmount() {
-    firebase.database().ref().child('catagories').off();
-    this.setState({
-      productnameErr: null,
-      descErr:null,
-      firstbitErr:null,
-      catagoriesErr:null,
-      imageErr:null,
-      timestartErr:null,
-      timeendErr:null,
-      bidstepErr:null,
-    })
+    firebase.database().ref().child('catagories').off()
   }
 
   

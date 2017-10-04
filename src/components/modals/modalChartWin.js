@@ -63,8 +63,8 @@ export default class ModalChartWin extends Component {
 	}
 
 	render() {
-		return this.state.orderLists ?  (
-			<div className="row">
+		return this.props.orderLists.length !== 0 ?  (
+				<div className="row">
 					<div className="small-12 large-6 columns post-feed win-list">
 						<TransitionGroup>
 								{this.state.orderLists.map((orderList, i) => {
@@ -128,7 +128,6 @@ export default class ModalChartWin extends Component {
 		<div className="row">
 			<div className="page-404-container">
 				<div className="page-404">
-					<h3>Not Found</h3>
 					<p className="quote">User was empty list</p>
 					<Link to="/" onClick={this.props.close} className="button success">Just Auction</Link>
 				</div>

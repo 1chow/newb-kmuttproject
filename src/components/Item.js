@@ -20,6 +20,7 @@ export default class Item extends Component {
 		itemImage:0,
 		selected: [],
 		isActive:null,
+		own:null,
 	}
 
 	componentDidMount() {
@@ -65,7 +66,7 @@ export default class Item extends Component {
 		let newcurrent = currents.filter( current => {
 			return current.itemId === this.props.match.params.id
 		})
-		newcurrent.length !== 0 && this.setState({newcurrent: newcurrent[0].current})
+		newcurrent.length !== 0 && this.setState({newcurrent: newcurrent[0].current,own:newcurrent[0].own})
 		if(item){
 			item.length !== 0 ? this.setState({item: item}) : this.props.history.push('/')
 		}
@@ -79,7 +80,7 @@ export default class Item extends Component {
 
 		if (newcurrent[0] !== null){
 
-			this.setState({newcurrent: newcurrent[0].current})
+			this.setState({newcurrent: newcurrent[0].current,own:newcurrent[0].own})
 			
 
 			if (newcurrent[0].maxBid !== null) {
@@ -236,7 +237,7 @@ export default class Item extends Component {
 									<div className="small-7 medium-7 columns auct-from-bit">
 										<p className="time">Place Your Bid</p>
 										<BidForm recieve={this.recieve} msg={this.handleMsg} waiting={this.waiting} wait={this.state.wait} newcurrent={this.state.newcurrent} mfkCurrent={this.props.current} open={this.props.triggler} item={this.state.item[0]} params={this.props.match.params.id} bidStep_={this.state.bidStep_} />
-										{ this.props.userUID !== this.state.item[0].bid.userId ?
+										{ this.props.userUID !== this.state.own ?
 											<p className="helper">Enter THB {this.state.newcurrent + this.state.bidStep_ } ฿ or more</p>
 											:
 											<p className="helper">Your Max Bids {this.state.maxBid} ฿</p>

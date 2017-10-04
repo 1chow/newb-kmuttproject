@@ -135,7 +135,7 @@ class chartNow extends Component {
 	}
 
     render() {
-        return this.state.chartNow ? (
+        return (this.state.chartNow && this.state.items.length !== 0 ) ? (
             <div className="page items post-feed">
 				<TransitionGroup>
 					{this.state.items.map((item, i) => {
@@ -178,7 +178,7 @@ class chartNow extends Component {
 					})}
 				</TransitionGroup>
 			</div>
-        ) : 
+        ) : this.props.items.filter( item => item.isActive !== 0).length === 0 ?
 		<div className="row">
 			<div className="page-404-container">
 				<div className="page-404">
@@ -187,7 +187,7 @@ class chartNow extends Component {
 					<Link to="/" onClick={this.props.close} className="button success">Just Auction</Link>
 				</div>
 			</div>
-		</div>
+		</div> : null
     }
 }
 
