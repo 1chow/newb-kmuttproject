@@ -26,6 +26,7 @@ table tbody{border-bottom: 1px solid #f1f1f1 !important;border: none;}
 .preload{width: 150px;position: absolute;top: calc(50vh - 75px);left: 0;right: 0;margin: 0 auto;}
 
 .none{display: none;}
+.fade-animate{animation-name: fade-up;animation-duration: 0.5s;position: relative;}
 
 .button{font-family: 'sukhumvit_semi_bold';color: #fff !important;padding: 10px;margin: 0 0 0 0.5rem;border-radius: 5px;position: relative;top: 0px;left: 0px;transition: all 0.1s ease-in;}
 .relative{position: relative;}
@@ -82,12 +83,6 @@ i.alert{color: #ffae00;}
 
 .modal-login .head{font-size: 1.75em;font-family: 'sukhumvit_semi_bold';margin: 15px 0;padding: 0 15px;display: inline-block;background: #fff;position: relative;z-index: 2;}
 .modal-login .hr-head{position: relative;margin-bottom: -2.25em;margin-top: 25px;z-index: 1;}
-
-
-@keyframes fade-modal {
-    from {opacity: 0;top:15px;}
-    to {opacity: 1;top:0;}
-}
 
 
 .modal-container{position: fixed;z-index: 10001;width: 100%;top:0;left: 0;min-height: 100vh;overflow-y: scroll;overflow-x: hidden;animation-name:fade-modal;animation-duration: 0.25s;}
@@ -260,6 +255,7 @@ i.alert{color: #ffae00;}
 .page-404 h3{font-size: 15vw;font-family: 'sukhumvit_bold';line-height: 0.8em;color: #5e5e5e;}
 .page-404 p{color: #5e5e5e;}
 .page-404 a{font-size: 1.25em;padding: 10px 30px;}
+.page-404-chart{height: calc(82.5vh - 150px);}
 
 .print-table tbody{font-size: 1.5em;background-color: transparent !important;}
 .print-table tr{background-color: transparent !important;}
@@ -462,4 +458,16 @@ footer .footer-r{text-align: right;font-size: 1em;}
 @media print {
 header, footer, .home-cat, .print-none, .toggle{display: none !important;}
 .print-warpper{font-size: 0.5em;}
+}
+
+
+@keyframes fade-modal {
+    from {opacity: 0;top:15px;}
+    to {opacity: 1;top:0;}
+}
+
+@keyframes fade-up {
+    0% {opacity: 0;top:25px;}
+    30% {opacity: 0;top:15px;}
+    100% {opacity: 1;top:0;}
 }
