@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import * as firebase from 'firebase'
+import Additem from './AddItem'
 
 class ItemsL extends Component {
   constructor () {
     super();
     this.state = {
       items: [],
+      activeKey: null,
     };
     this.dbItems = firebase.database().ref().child('items');
     this.removeItem = this.removeItem.bind(this);
@@ -36,6 +38,14 @@ class ItemsL extends Component {
     } 
   }
 
+  handleEdit = index => {
+    this.state.activeKey === null ? (
+      this.setState({activeKey:index})
+    ) : (
+      this.setState({activeKey:null})
+    )
+  }
+
   render() {
     return this.state.items ? (
       <div className="row">
@@ -50,9 +60,10 @@ class ItemsL extends Component {
                     <td className="show-for-large" width="150">Start</td>
                     <td className="show-for-large" width="150">End</td>
                     <td>Delete</td>
+                    <td>Edit</td>
                 </tr>
                 {this.state.items.map((item,i) => {
-                    return ( 
+                    return ([
                       <tr key={i}>
                           <td><i className={"fa fa-check-circle-o fa-2x" }></i></td>
                           <td>{item.key}</td>
@@ -60,9 +71,27 @@ class ItemsL extends Component {
                           <td className="show-for-large">{item.catagory}</td>
                           <td className="show-for-large">{this.props.convertTimeM(item.bid.startTime)}</td>
                           <td className="show-for-large">{this.props.convertTimeM(item.bid.endTime)}</td>
-                          <td><button onClick={()=> this.removeItem(item.key)} ><i className="fa fa-trash"></i></button></td>
+                          <td><button onClick={() => this.removeItem(item.key)} ><i className="fa fa-trash"></i></button></td>
+                          <td><button onClick={() => this.handleEdit(i)} ><i className="fa fa-edit"></i></button></td>
+                      </tr>,
+                      <tr className={this.state.activeKey === i ? null : 'none'}>
+                        <td colSpan="8">
+                        {this.state.activeKey === i &&
+                          <Additem 
+                            triggler={this.props.triggler}
+                            name={item.name}
+                            desc={item.desc.fullDesc}
+                            firstBid={item.bid.openBid}
+                            bidStep={item.bid.bidStep}
+                            timeStart={item.bid.startTime}
+                            timeEnd={item.bid.endTime}
+                            catagory={item.catagory}
+                            image={item.img_}
+                          />
+                        }
+                        </td>
                       </tr>
-                      )
+                    ])
                     })
                   }
                 </tbody>

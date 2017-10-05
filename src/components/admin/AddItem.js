@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import * as firebase from 'firebase'
 import ImageUploader from 'react-firebase-image-uploader'
-import ItemsL from './ItemsL'
 import moment from 'moment';
 import {DatetimePickerTrigger} from 'rc-datetime-picker';
 
@@ -45,6 +44,7 @@ class Edit extends Component {
   }
 
   componentDidMount() {
+    let {name,  desc, firstBid,  bidStep,  timeStart, timeEnd, catagory, image} = this.props
      let user = firebase.auth().currentUser;
         if (user) {
         this.setState({
@@ -61,6 +61,18 @@ class Edit extends Component {
         catagories: catagories
       })
     })
+    if(name && desc && firstBid &&  bidStep &&  timeStart && timeEnd && catagory && image){
+      this.setState({
+        productname : name,
+        firstbit : firstBid,
+        bidStep : bidStep,
+        catagoriesselect : catagory, 
+        desc : desc,
+        timeStart:moment(timeStart),
+        timeEnd:moment(timeEnd),
+        productimageURL:image[0],
+      })
+    }
   }
 
   componentWillUnmount() {
@@ -426,6 +438,7 @@ class Edit extends Component {
 
 
   render() {
+    let {name} = this.props
     const shortcuts = {
       'Today': moment(),
       'Yesterday': moment().subtract(1, 'days'),
@@ -433,11 +446,13 @@ class Edit extends Component {
     };
     return (
         <div className="row">
+          { !name &&
             <div className="small-12 columns">
               <h1>ADD Product</h1>
               <p>to Catagories</p>
               <div className="hr-text-center"><hr/></div>
             </div>
+          }
           <div className="small-12 columns profile-main">
             <form data-abide noValidate onSubmit={ this.handleNewItemSubmit } >
              <div className="small-12 medium-6 columns">
@@ -641,15 +656,20 @@ class Edit extends Component {
                     }
                 </div>
                 <div className="small-12 columns admin-from-btm">
+                { !name ?
                   <button className="button success" type="submit" value="Submit">ADD AUCTION</button>
+                  :
+                  <button className="button success" type="submit" value="Submit" disabled="true">Edit</button>
+                }
                 </div>
               </div>
             </form>
           </div>
+          { !name &&
           <div className="small-12 columns profile-main">
-            <ItemsL convertTimeM={this.props.convertTimeM}/>
             <button onClick={this.addMockup}>Add Mock Item</button>  
           </div>
+          }
         </div>
     );
   }
