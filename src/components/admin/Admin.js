@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import AddCatagory from './AddCatagory'
 import AddItem from './AddItem'
 import Setting from './Setting'
+import RecentChart from './RecentChart'
+import ItemsL from './ItemsL'
 
 
 export default class Admin extends Component {
@@ -31,8 +33,8 @@ export default class Admin extends Component {
 	                    </li>
 						<li className={(this.state.select === "recentchart"  && 'active')}>
 	                        <button onClick={ () => this.selected("recentchart")}>
-	                            <i className="fa fa-user"></i>
-	                            <p className='show-for-large'> Recent Chart</p>
+	                            <i className="fa fa-history"></i>
+	                            <p className='show-for-large'> Recent Auction</p>
 	                        </button>
 	                    </li>
 						{ this.props.role === 'admin' &&
@@ -46,7 +48,7 @@ export default class Admin extends Component {
 						{ this.props.role === 'admin' &&
 							<li className={(this.state.select === "item"  && 'active')}>
 								<button onClick={ () => this.selected("item")}>
-									<i className="fa fa-suitcase"></i>
+									<i className="fa fa-sign-in"></i>
 									<p className='show-for-large'> Add Item</p>
 								</button>
 							</li>
@@ -66,19 +68,28 @@ export default class Admin extends Component {
 		        <div className="small-12 columns profile-main">
 		            <div className="small-12 columns">
 		            	{ this.state.select === 'category' ?
-			            	<AddCatagory />
+			            		<AddCatagory />
 			            	: this.state.select === 'item' ? 
 								<AddItem 
-									triggler={this.props.triggler} 
-									convertTimeM={this.props.convertTimeM} 
+									triggler={this.props.triggler}
 								/> 
-								: this.state.select === 'setting' ?
-									<Setting 
-										triggler={this.props.triggler} 
-										profilePicture={this.props.profilePicture}
-									/> : this.state.select === 'recentchart' ?
-										<div>Recent Chart</div> :
-										<div>Selling Area</div>
+							: this.state.select === 'setting' ?
+								<Setting 
+									triggler={this.props.triggler} 
+									profilePicture={this.props.profilePicture}
+								/> 
+							: this.state.select === 'recentchart' ?
+								<RecentChart
+									chartNow={this.props.chartNow}
+									items={this.props.items}
+									current={this.props.current} 
+									convertTimeM={this.props.convertTimeM}
+								/> 
+							:
+								<ItemsL
+									convertTimeM={this.props.convertTimeM}
+									triggler={this.props.triggler}
+								/>
 		            	}
 		            </div>            
 		        </div>

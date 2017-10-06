@@ -40,6 +40,7 @@ export default class Chart extends Component {
 								current={this.props.current} 
 								close={this.props.close}
 								secondsToHms={this.props.secondsToHms} 
+								chartNow={this.props.chartNow}	
 							/>
 							:
 							<ModalChartWin 

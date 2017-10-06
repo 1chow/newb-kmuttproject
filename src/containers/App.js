@@ -40,6 +40,7 @@ export default class App extends Component {
 			icon:null,
 			userUID: '',
 			timeNows: '',
+			chartNow:[],
 		};
 	}
 	componentWillMount() {
@@ -66,6 +67,15 @@ export default class App extends Component {
 					 this.setState({
 						orderLists: orderLists
 					})
+				})
+				db2.ref('/users/' + user.uid + '/now').on('value', dataSnapshot => {
+					let table_ = []
+					dataSnapshot.forEach( childSnapshot => {
+						let chartnows = childSnapshot.val()
+						let chartnows_ = chartnows.itemId
+						table_.push(chartnows_)
+					})
+					this.setState({chartNow: table_})
 				})
 			} else {
 				this.setState({
@@ -396,13 +406,28 @@ export default class App extends Component {
 										<Route
 											path="/setting"
 											render={props => this.state.isLogin === true ? (
-												<Admin triggler={this.alertOpenModal} profilePicture={this.state.profilePicture} role={this.state.role} />
+												<Admin
+													triggler={this.alertOpenModal}
+													profilePicture={this.state.profilePicture}
+													role={this.state.role}
+													chartNow={this.state.chartNow}
+													items={this.state.items}
+													current={this.state.current}
+												/>
 											) : <Redirect to={{pathname: '/', state: {from: props.location}}} />}
 										/>
 										<Route
 											path="/admin"
 											render={props => this.state.isLogin === true ? (
-												<Admin triggler={this.alertOpenModal} profilePicture={this.state.profilePicture} role={this.state.role} convertTimeM={this.convertTimeM} />
+												<Admin
+													triggler={this.alertOpenModal}
+													profilePicture={this.state.profilePicture}
+													role={this.state.role}
+													convertTimeM={this.convertTimeM}
+													chartNow={this.state.chartNow}
+													items={this.state.items}
+													current={this.state.current}
+												/>
 											) : <Redirect to={{pathname: '/', state: {from: props.location}}} />}
 										/>
 										{/* Test Zone */}
@@ -439,9 +464,10 @@ export default class App extends Component {
 					message={this.state.message}
 					icon={this.state.icon}
 					timeNows={this.state.timeNows}
-					secondsToHms={this.secondsToHms} 			
+					secondsToHms={this.secondsToHms} 	
+					chartNow={this.state.chartNow}		
 				/>
 			</div>
-		) : <div className='preload'><img src={require("../images/Rolling.gif")} alt="Loading"></img></div>
+		) : <div className='preload-gavel'><img src={require("../images/loading.png")} alt="Loading"></img></div>
 	}
 }

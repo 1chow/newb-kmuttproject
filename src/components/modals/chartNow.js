@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import * as Animated from "animated/lib/targets/react-dom"
-import * as firebase from 'firebase'
 import TransitionGroup from "react-transition-group/TransitionGroup"
 import Clock from '../Clock'
 
@@ -11,28 +10,16 @@ class chartNow extends Component {
         animations: [],
         newcurrent:[],
 		timeNows:[],
-		chartNow:[],
     }
 
     componentDidMount() {
-		let user = firebase.auth().currentUser;
-		if (user) {
-			firebase.database().ref('/users/' + user.uid + '/now').on('value', dataSnapshot => {
-				let table_ = []
-				dataSnapshot.forEach( childSnapshot => {
-					let chartnows = childSnapshot.val()
-					let chartnows_ = chartnows.itemId
-					table_.push(chartnows_)
-				})
-				this.setState({chartNow: table_},() => {
-					if(this.state.chartNow){
-						this._renderProjects(this.props.items)
-						this._filtercurrent(this.props.current)
-						this._filtertimeNows(this.props.timeNows)
-					}
-				})
-			})
-		}
+		this.setState({chartNow: this.props.chartNow},() => {
+			if(this.state.chartNow){
+				this._renderProjects(this.props.items)
+				this._filtercurrent(this.props.current)
+				this._filtertimeNows(this.props.timeNows)
+			}
+		})
 	}
     
     componentWillReceiveProps(nextProps) {
@@ -127,15 +114,10 @@ class chartNow extends Component {
         newtimenows.length !== 0 && this.setState({timeNows: newtimenows})
 	}
 
-	componentWillUnmount() {
-		let user = firebase.auth().currentUser;
-		if (user) {
-			firebase.database().ref('/users/' + user.uid + '/now').off()
-		}
-	}
-
     render() {
-    	let {chartNow} = this.state
+
+		let {chartNow} = this.props
+
         return (this.state.chartNow && this.state.items.length !== 0 ) ? (
 
             <div className="page items post-feed">
@@ -180,7 +162,9 @@ class chartNow extends Component {
 					})}
 				</TransitionGroup>
 			</div>
-        ) : this.props.items.filter( item => item.isActive !== 0 && chartNow.indexOf(item._id) !== -1 ).length === 0 ? 
+
+        ) : this.props.items.filter( item => item.isActive !== 0 && chartNow.indexOf(item._id) !== -1).length === 0 ?
+
 		<div className="row">
 			<div className="page-404-chart page-404-container fade-animate">
 				<div className="page-404 ">
