@@ -54,7 +54,7 @@ class CategoriesL extends Component {
   render() {
     return (
       <div className="row">
-          <div className="row auct-from-warp admin-table">
+          <div className="row auct-from-warp admin-table admin-cat-table">
               <table className="hover unstriped">
                 <tbody>
                 <tr>

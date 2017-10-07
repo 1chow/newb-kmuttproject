@@ -126,9 +126,9 @@ export default class ModalChartWin extends Component {
 			</div>
 		) : 
 		<div className="row">
-			<div className="page-404-container">
+			<div className="page-404-chart page-404-container fade-animate">
 				<div className="page-404">
-					<p className="quote">User was empty list</p>
+					<p className="quote">Your shopping cart was empty list !!</p>
 					<Link to="/" onClick={this.props.close} className="button success">Just Auction</Link>
 				</div>
 			</div>

@@ -469,6 +469,6 @@ export default class App extends Component {
 					chartNow={this.state.chartNow}		
 				/>
 			</div>
-		) : <div className='preload'><img src={require("../images/Rolling.gif")} alt="Loading"></img></div>
+		) : <div className='preload-gavel'><img src={require("../images/loading.png")} alt="Loading"></img></div>
 	}
 }

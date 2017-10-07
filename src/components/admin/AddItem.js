@@ -487,7 +487,7 @@ class Edit extends Component {
           { !name &&
             <div className="small-12 columns">
               <h1>ADD Product</h1>
-              <p>to Catagories</p>
+              <p>Add product for selling</p>
               <div className="hr-text-center"><hr/></div>
             </div>
           }

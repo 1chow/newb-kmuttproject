@@ -20,13 +20,13 @@ export default class Chart extends Component {
 								<li className={(this.state.cartType === 'nowAuction'  && 'active')}>
 									<button onClick={() => this.setState({cartType:'nowAuction'})}>
 										<i className="fa fa-gavel"></i>
-										<p className={(this.state.cartType === 'nowAuction'  ? 'show-for-medium' : 'show-for-large')}>Chart Now</p>
+										<p className={(this.state.cartType === 'nowAuction'  ? 'show-for-medium' : 'show-for-large')}>Now Auction</p>
 									</button>
 								</li>
 								<li className={(this.state.cartType !== 'nowAuction'  && 'active')}>
 									<button onClick={() => this.setState({cartType:'winAuction'})}>
 										<i className="fa fa-trophy"></i>
-										<p className={(this.state.cartType !== 'nowAuction'  ? 'show-for-medium' : 'show-for-large')}>Chart Win</p>
+										<p className={(this.state.cartType !== 'nowAuction'  ? 'show-for-medium' : 'show-for-large')}>Win Orders</p>
 									</button>
 								</li>
 							</ul>

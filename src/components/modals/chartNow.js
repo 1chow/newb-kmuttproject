@@ -115,8 +115,11 @@ class chartNow extends Component {
 	}
 
     render() {
+
 		let {chartNow} = this.props
+
         return (this.state.chartNow && this.state.items.length !== 0 ) ? (
+
             <div className="page items post-feed">
 				<TransitionGroup>
 					{this.state.items.map((item, i) => {
@@ -159,12 +162,13 @@ class chartNow extends Component {
 					})}
 				</TransitionGroup>
 			</div>
+
         ) : this.props.items.filter( item => item.isActive !== 0 && chartNow.indexOf(item._id) !== -1).length === 0 ?
+
 		<div className="row">
-			<div className="page-404-container">
-				<div className="page-404">
-					<h3>Not Found</h3>
-					<p className="quote">User was empty list</p>
+			<div className="page-404-chart page-404-container fade-animate">
+				<div className="page-404 ">
+					<p className="quote">Your current bidding was empty list !!</p>
 					<Link to="/" onClick={this.props.close} className="button success">Just Auction</Link>
 				</div>
 			</div>

@@ -86,6 +86,11 @@ class RecentChart extends Component {
 		let {chartNow} = this.props
         return (this.state.chartNow && this.state.items.length !== 0 ) ? (
 			<div className="row">
+			    <div className="small-12 columns">
+		              <h1>Recent Auction</h1>
+		              <p>Your auction history</p>
+		              <div className="hr-text-center"><hr/></div>
+	            </div>
 				<div className="row auct-from-warp admin-table">
 					<table className="hover">
 						<tbody>
@@ -115,10 +120,14 @@ class RecentChart extends Component {
 			</div>
         ) : this.props.items.filter( item => item.isActive === 0 && chartNow.indexOf(item._id) !== -1).length === 0 ?
 		<div className="row">
-			<div className="page-404-container">
+			<div className="small-12 columns">
+	              <h1>Recent Auction</h1>
+	              <p>Your auction history</p>
+	              <div className="hr-text-center"><hr/></div>
+            </div>
+			<div className="page-404-chart page-404-container fade-animate">
 				<div className="page-404">
-					<h3>Not Found</h3>
-					<p className="quote">User was empty list</p>
+					<p className="quote">Your auction history was empty list !!</p>
 					<Link to="/" onClick={this.props.close} className="button success">Just Auction</Link>
 				</div>
 			</div>

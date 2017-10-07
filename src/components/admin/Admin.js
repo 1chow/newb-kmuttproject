@@ -33,8 +33,8 @@ export default class Admin extends Component {
 	                    </li>
 						<li className={(this.state.select === "recentchart"  && 'active')}>
 	                        <button onClick={ () => this.selected("recentchart")}>
-	                            <i className="fa fa-user"></i>
-	                            <p className='show-for-large'> Recent Chart</p>
+	                            <i className="fa fa-history"></i>
+	                            <p className='show-for-large'> Recent Auction</p>
 	                        </button>
 	                    </li>
 						{ this.props.role === 'admin' &&
@@ -48,7 +48,7 @@ export default class Admin extends Component {
 						{ this.props.role === 'admin' &&
 							<li className={(this.state.select === "item"  && 'active')}>
 								<button onClick={ () => this.selected("item")}>
-									<i className="fa fa-suitcase"></i>
+									<i className="fa fa-sign-in"></i>
 									<p className='show-for-large'> Add Item</p>
 								</button>
 							</li>

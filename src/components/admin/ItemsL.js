@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from "react-router-dom";
 import * as firebase from 'firebase'
 import Additem from './AddItem'
 import { Link } from 'react-router-dom'
@@ -51,6 +52,11 @@ class ItemsL extends Component {
   render() {
     return this.state.items ? (
       <div className="row">
+          <div className="small-12 columns">
+              <h1>Selling Items</h1>
+              <p>Manage your products.</p>
+              <div className="hr-text-center"><hr/></div>
+          </div>
           <div className="row auct-from-warp admin-table">
               <table className="hover">
                 <tbody>
@@ -84,7 +90,7 @@ class ItemsL extends Component {
                             <td><p style={{color:'red'}}>Time Out</p></td> 
                           }
                       </tr>,
-                      <tr className={this.state.activeKey === i ? null : 'none'}>
+                      <tr className={"admin-iteml-editable "+(this.state.activeKey === i ? null : 'none')}>
                         <td colSpan="8">
                         {this.state.activeKey === i &&
                           <Additem 
@@ -110,7 +116,19 @@ class ItemsL extends Component {
               </table>
             </div>
        </div>
-    ) : null
+    ) : <div className="row">
+        <div className="small-12 columns">
+                  <h1>Selling Items</h1>
+                  <p>Manage your products.</p>
+                  <div className="hr-text-center"><hr/></div>
+        </div>
+        <div className="page-404-chart page-404-container fade-animate">
+          <div className="page-404">
+            <p className="quote">Your auction history was empty list !!</p>
+            <Link to="/" onClick={this.props.close} className="button success">Just Auction</Link>
+          </div>
+        </div>
+      </div>
   }
 }
 

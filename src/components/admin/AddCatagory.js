@@ -49,7 +49,7 @@ class AddCatagoriy extends Component {
                 <p>for Product</p>
                 <div className="hr-text-center"><hr/></div>
             </div>
-            <div className="small-12 large-6 columns">
+            <div className="small-12 large-6 columns admin-cat">
               <form  onSubmit={ this.handleNewItemSubmit }>
                 <div className="small-9 columns">
                     <label>Catagory Name
