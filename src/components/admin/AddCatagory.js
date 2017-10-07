@@ -119,6 +119,7 @@ class AddCatagoriy extends Component {
             </div>
             <div className="small-12 large-6 columns admin-chart">
               <CategoriesL
+              items={this.props.items}
               triggler={this.props.triggler} 
               />
             </div>

@@ -8,7 +8,7 @@ class CategoryL extends Component {
           <tr>
               <td><i className={"fa " + this.props.icon + " fa-2x" }></i></td>
               <td>{this.props.name}</td>
-              <td><button onClick={()=> this.props.hell(this.props.dbkey)} ><i className="fa fa-trash"></i></button></td>
+              <td><button onClick={()=> this.props.hell(this.props.dbkey,this.props.name)} ><i className="fa fa-trash"></i></button></td>
           </tr>
         
     );
@@ -44,11 +44,17 @@ class CategoriesL extends Component {
     this.dbItems.off();
   }
 
-  removeItem(key){
+  removeItem(key,name){
     if (window.confirm("Do you want to remove this?") === true) {
-      this.dbItems.child(key).remove();
-      this.props.triggler('alert','good','Your catagory was delete','fa-check-circle')
-    }  
+      if(this.props.items.filter( item => item.catagory === name).length === 0){
+        this.dbItems.child(key).remove();
+        this.props.triggler('alert','good','Your catagory was delete','fa-check-circle')
+      } else this.props.triggler('alert','bad','That catagory was Item','fa-exclamation')
+    } 
+    
+       
+    
+    
   }
 
   render() {

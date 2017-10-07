@@ -69,7 +69,8 @@ export default class Admin extends Component {
 		            <div className="small-12 columns">
 		            	{ this.state.select === 'category' ?
 			            		<AddCatagory
-									triggler={this.props.triggler} 
+									triggler={this.props.triggler}
+									items={this.props.items}
 								 />
 			            	: this.state.select === 'item' ? 
 								<AddItem 
