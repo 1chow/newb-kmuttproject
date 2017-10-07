@@ -47,6 +47,7 @@ class CategoriesL extends Component {
   removeItem(key){
     if (window.confirm("Do you want to remove this?") === true) {
       this.dbItems.child(key).remove();
+      this.props.triggler('alert','good','Your catagory was delete','fa-check-circle')
     }  
   }
 

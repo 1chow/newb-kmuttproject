@@ -93,7 +93,15 @@ export default class Setting extends Component {
 		let test_newaddress = this.addressValidate(this.state.newaddress)
 		let isValid = test_mail && test_username && test_newaddress
 		if(isValid === true){
-			this.updateProfile()
+			if (window.confirm("Do you want to update your profile?") === true) {
+				this.updateProfile()
+			} else {
+				this.setState({
+					newusername: this.state.username,
+					newemail:this.state.email,
+					newaddress:this.state.address,
+				})
+			}
 		}
 	}
 
@@ -163,7 +171,12 @@ export default class Setting extends Component {
 	            <div className="small-12 columns user-container">
 	              <h1> Your Profile</h1>
 	              <p>Detail of You</p>
-	              <button className="user-edit" onClick={this.Setting}><i className={"fa fa-pencil-square-o " +  (this.state.setting === true && "active") }></i></button>
+				  {
+					this.state.setting !== true ?
+					<button className="user-edit" onClick={this.Setting}><i className={"fa fa-pencil-square-o " +  (this.state.setting === true && "active") }></i></button>
+					:
+					<button className="user-edit" onClick={this.Setting}><i className={"fa fa-close " +  (this.state.setting === true && "active") }></i></button>
+				  }
 	              <div className="hr-text-center"><hr/></div>
 	          	</div>
 	          	<div className="small-12 large-4 columns img-uploader">

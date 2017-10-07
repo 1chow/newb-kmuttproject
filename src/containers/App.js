@@ -413,6 +413,7 @@ export default class App extends Component {
 													chartNow={this.state.chartNow}
 													items={this.state.items}
 													current={this.state.current}
+													convertTimeM={this.convertTimeM}
 												/>
 											) : <Redirect to={{pathname: '/', state: {from: props.location}}} />}
 										/>

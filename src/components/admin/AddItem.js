@@ -71,12 +71,16 @@ class Edit extends Component {
         timeStart:moment(timeStart),
         timeEnd:moment(timeEnd),
         productimageURL:image[0],
+        productimageURL2:image[1],
+        productimageURL3:image[2],
+        productimageURL4:image[3],
       })
     }
   }
 
   componentWillUnmount() {
     firebase.database().ref().child('catagories').off()
+    firebase.database().ref().child('items').off()
   }
 
   
@@ -110,17 +114,24 @@ class Edit extends Component {
                   test_timeend     &&
                   test_bidstep
     if (isValid === true) {
-        this.props.triggler('alert','good','Your Item has create','fa-check-circle')
-        this.addItem()
+        if(this.props.name){
+          if (window.confirm("Do you want to edit this item?") === true) {
+          this.props.triggler('alert','good','Edit','fa-check-circle')
+          this.editItem()
+          }
+        } else {
+          this.props.triggler('alert','good','Your Item has create','fa-check-circle')
+          this.addItem()
+        }
     }
   }
 
   bidstepValidate = input => {
-    if(input.trim().length === 0){
+    if(String(input).trim().length === 0){
 			this.setState({bidstepErr:"bid increments was empty"})
 			setTimeout(() => this.setState({bidstepErr:null}),10000)
 			return false
-		} else if(input.trim().length >= 10) {
+		} else if(String(input).trim().length >= 10) {
 			this.setState({bidstepErr:"it's over Bid increments"})
 			setTimeout(() => this.setState({bidstepErr:null}),10000)
 			return false
@@ -135,232 +146,259 @@ class Edit extends Component {
 		} else return true
   }
 
- timestartValidate = input => {
-		if(input.lenght === 0){
-			this.setState({timestartErr:"Pls select start time"})
-			setTimeout(() => this.setState({timestartErr:null}),10000)
-			return false
-		} else return true
-  }
+  timestartValidate = input => {
+      if(input.lenght === 0){
+        this.setState({timestartErr:"Pls select start time"})
+        setTimeout(() => this.setState({timestartErr:null}),10000)
+        return false
+      } else return true
+    }
 
-  timeendValidate = input => {
-		if(input.lenght === 0){
-			this.setState({timeendErr:"Pls select start end"})
-			setTimeout(() => this.setState({timeendErr:null}),10000)
-			return false
-		} else if(input <= this.state.timeStart){
-			this.setState({timeendErr:"Time start <= Time end"})
-			setTimeout(() => this.setState({timeendErr:null}),5000)
-			return false
-		} else return true
-  }
+    timeendValidate = input => {
+      if(input.lenght === 0){
+        this.setState({timeendErr:"Pls select start end"})
+        setTimeout(() => this.setState({timeendErr:null}),10000)
+        return false
+      } else if(input <= this.state.timeStart){
+        this.setState({timeendErr:"Time start <= Time end"})
+        setTimeout(() => this.setState({timeendErr:null}),5000)
+        return false
+      } else return true
+    }
 
 
-  productimageValidate = input => {
-		if(input === ''){
-			this.setState({imageErr:"Pls upload image"})
-			setTimeout(() => this.setState({imageErr:null}),10000)
-			return false
-		} else return true
-  }
+    productimageValidate = input => {
+      if(input === ''){
+        this.setState({imageErr:"Pls upload image"})
+        setTimeout(() => this.setState({imageErr:null}),10000)
+        return false
+      } else return true
+    }
 
-  catagoriesValidate = input => {
-		if(!input){
-			this.setState({catagoriesErr:"Pls select catagoriey"})
-			setTimeout(() => this.setState({catagoriesErr:null}),10000)
-			return false
-		} else return true
-  }
+    catagoriesValidate = input => {
+      if(!input){
+        this.setState({catagoriesErr:"Pls select catagoriey"})
+        setTimeout(() => this.setState({catagoriesErr:null}),10000)
+        return false
+      } else return true
+    }
 
-  nameValidate = input => {
-		if(input.trim().length === 0){
-			this.setState({productnameErr:"Productname was empty"})
-			setTimeout(() => this.setState({productnameErr:null}),10000)
-			return false
-		} else if(this.regCharacter(input.trim()) === false) {
-			this.setState({productnameErr:"Productname must be Character"})
-			setTimeout(() => this.setState({productnameErr:null}),10000)
-			return false
-		} else return true
-  }
-  
-  descValidate = input => {
-		if(input.trim().length === 0){
-			this.setState({descErr:"Description was empty"})
-			setTimeout(() => this.setState({descErr:null}),10000)
-			return false
-		} else return true
-  }
-  
-  firstbitValidate = input => {
-		if(input.trim().length === 0){
-			this.setState({firstbitErr:"Firstbit was empty"})
-			setTimeout(() => this.setState({firstbitErr:null}),10000)
-			return false
-		} else if(input.trim().length >= 10) {
-			this.setState({firstbitErr:"length >= 10"})
-			setTimeout(() => this.setState({firstbitErr:null}),10000)
-			return false
-		} else if(input < 1) {
-			this.setState({firstbitErr:"Firstbit must be at least 1฿"})
-			setTimeout(() => this.setState({firstbitErr:null}),10000)
-			return false
-		} else if(input%Math.floor(input) !== 0) {
-			this.setState({firstbitErr:"Firstbit must be Integer"})
-			setTimeout(() => this.setState({firstbitErr:null}),10000)
-			return false
-		} else return true
-  }
+    nameValidate = input => {
+      if(input.trim().length === 0){
+        this.setState({productnameErr:"Productname was empty"})
+        setTimeout(() => this.setState({productnameErr:null}),10000)
+        return false
+      } else if(this.regCharacter(input.trim()) === false) {
+        this.setState({productnameErr:"Productname must be Character"})
+        setTimeout(() => this.setState({productnameErr:null}),10000)
+        return false
+      } else return true
+    }
+    
+    descValidate = input => {
+      if(input.trim().length === 0){
+        this.setState({descErr:"Description was empty"})
+        setTimeout(() => this.setState({descErr:null}),10000)
+        return false
+      } else return true
+    }
+    
+    firstbitValidate = input => {
+      if(String(input).trim().length === 0){
+        this.setState({firstbitErr:"Firstbit was empty"})
+        setTimeout(() => this.setState({firstbitErr:null}),10000)
+        return false
+      } else if(String(input).trim().length >= 10) {
+        this.setState({firstbitErr:"length >= 10"})
+        setTimeout(() => this.setState({firstbitErr:null}),10000)
+        return false
+      } else if(input < 1) {
+        this.setState({firstbitErr:"Firstbit must be at least 1฿"})
+        setTimeout(() => this.setState({firstbitErr:null}),10000)
+        return false
+      } else if(input%Math.floor(input) !== 0) {
+        this.setState({firstbitErr:"Firstbit must be Integer"})
+        setTimeout(() => this.setState({firstbitErr:null}),10000)
+        return false
+      } else return true
+    }
 
-  regCharacter = pw => {
-		let re = /^[a-zA-Z0-9_ ]+$/
-		return re.test(pw);
-	}
+    regCharacter = pw => {
+      let re = /^[a-zA-Z0-9_ ]+$/
+      return re.test(pw);
+    }
 
-  addItem = () => {
-    this.dbItems.push({
-      name: this.state.productname.slice(0,50),
-      catagory: this.state.catagoriesselect,
-      isActive: 1,
-      desc:{
-            short: this.state.desc.slice(0,350),
-            fullHeader: this.state.productname,
-            fullDesc : this.state.desc
-      },
-      bid:{
+    addItem = () => {
+      this.dbItems.push({
+        name: this.state.productname.slice(0,50),
+        catagory: this.state.catagoriesselect,
+        isActive: 1,
+        desc:{
+              short: this.state.desc.slice(0,350),
+              fullHeader: this.state.productname,
+              fullDesc : this.state.desc
+        },
+        bid:{
+            current : parseInt(this.state.firstbit,10),
+            maxBid : parseInt((this.state.firstbit - this.state.bidStep),10),
+            maxBidTime : parseInt(this.state.timeStart.format('x'),10),
+            openBid : parseInt(this.state.firstbit,10),
+            bidStep: parseInt(this.state.bidStep,10),
+            endTime: parseInt(this.state.timeEnd.format('x'),10),
+            startTime: parseInt(this.state.timeStart.format('x'),10),
+            userName : '',
+            userId : ''
+        },
+        img: this.state.productimageURL,
+        img_:{
+          0 : this.state.productimageURL,
+          1 : this.state.productimageURL2,
+          2 : this.state.productimageURL3,
+          3 : this.state.productimageURL4,
+        },
+        own : this.state.User
+        
+      })
+      .then(snapshot => {
+            firebase.database().ref('/items/' + snapshot.key + '/bidList').push({
+              userId : '',
+              userName : '',
+              bid : parseInt(this.state.firstbit,10),
+              bidTimestamp : this.state.timeStart.format('x'),
+              auto : 0
+            })
+            .then(   
+              this.setState({
+                  User:'',
+                  productname : '',
+                  productimage:'',
+                  productimageURL:'',
+                  productimageURL2:'',
+                  productimageURL3:'',
+                  productimageURL4:'',
+                  firstbit:'',
+                  bidStep:'',
+                  catagoriesselect:'', 
+                  desc: '',
+                  timeStart: moment(),
+                  timeEnd: moment().add(1, 'days'),
+                  boundedTime:'',
+                  catagories:[],
+                  productnameErr: null,
+                  descErr:null,
+                  firstbitErr:null,
+                  catagoriesErr:null,
+                  imageErr:null,
+                  timestartErr:null,
+                  timeendErr:null,
+                  bidstepErr:null,
+                })
+            )
+        })
+    }
+
+    editItem = () => {
+      firebase.database().ref('items').child(this.props.id).update({
+        name: this.state.productname.slice(0,50),
+        catagory: this.state.catagoriesselect,
+        desc:{
+              short: this.state.desc.slice(0,350),
+              fullHeader: this.state.productname,
+              fullDesc : this.state.desc
+        },
+        img: this.state.productimageURL,
+        img_:{
+          0 : this.state.productimageURL,
+          1 : this.state.productimageURL2 || null,
+          2 : this.state.productimageURL3 || null,
+          3 : this.state.productimageURL4 || null,
+        }
+      })
+      .then( snapshot => {
+        firebase.database().ref('/items/' + this.props.id + '/bid').update({
           current : parseInt(this.state.firstbit,10),
-          maxBid : parseInt((this.state.firstbit - this.state.bidStep),10),
-          maxBidTime : parseInt(this.state.timeStart.format('x'),10),
-          openBid : parseInt(this.state.firstbit,10),
           bidStep: parseInt(this.state.bidStep,10),
           endTime: parseInt(this.state.timeEnd.format('x'),10),
           startTime: parseInt(this.state.timeStart.format('x'),10),
-          userName : '',
-          userId : ''
-      },
-      img: this.state.productimageURL,
-      img_:{
-        0 : this.state.productimageURL,
-        1 : this.state.productimageURL2,
-        2 : this.state.productimageURL3,
-        3 : this.state.productimageURL4,
-      },
-      own : this.state.User
-      
-    })
-    .then(snapshot => {
-          firebase.database().ref('/items/' + snapshot.key + '/bidList').push({
-            userId : '',
-            userName : '',
-            bid : parseInt(this.state.firstbit,10),
-            bidTimestamp : this.state.timeStart.format('x'),
-            auto : 0
-          })
-          .then(   
-            this.setState({
-                User:'',
-                productname : '',
-                productimage:'',
-                productimageURL:'',
-                productimageURL2:'',
-                productimageURL3:'',
-                productimageURL4:'',
-                firstbit:'',
-                bidStep:'',
-                catagoriesselect:'', 
-                desc: '',
-                timeStart: moment(),
-                timeEnd: moment().add(1, 'days'),
-                boundedTime:'',
-                catagories:[],
-                productnameErr: null,
-                descErr:null,
-                firstbitErr:null,
-                catagoriesErr:null,
-                imageErr:null,
-                timestartErr:null,
-                timeendErr:null,
-                bidstepErr:null,
-              })
-          )
+        })
       })
-  }
+    }
 
-  onNewItemChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value })
-  }
+    onNewItemChange = (e) => {
+      this.setState({ [e.target.name]: e.target.value })
+    }
 
-  handleUploadStart = () => {
-    this.setState({productimageURL: null})
-    this.setState({isUploading: true})
-  }
+    handleUploadStart = () => {
+      this.setState({productimageURL: null})
+      this.setState({isUploading: true})
+    }
 
-  handleUploadStart2 = () => {
-    this.setState({productimageURL2: null})
-    this.setState({isUploading2: true})
-  }
+    handleUploadStart2 = () => {
+      this.setState({productimageURL2: null})
+      this.setState({isUploading2: true})
+    }
 
-  handleUploadStart3 = () => {
-    this.setState({productimageURL3: null})
-    this.setState({isUploading3: true})
-  }
+    handleUploadStart3 = () => {
+      this.setState({productimageURL3: null})
+      this.setState({isUploading3: true})
+    }
 
-  handleUploadStart4 = () => {
-    this.setState({productimageURL4: null})
-    this.setState({isUploading4: true})
-  }
+    handleUploadStart4 = () => {
+      this.setState({productimageURL4: null})
+      this.setState({isUploading4: true})
+    }
 
-  handleProgress = () => {
-    this.state.productimageURL !== null && 
-     this.setState({isUploading: false})
-  }
+    handleProgress = () => {
+      this.state.productimageURL !== null && 
+      this.setState({isUploading: false})
+    }
 
-  handleProgress2 = () => {
-    this.state.productimageURL2 !== null && 
-     this.setState({isUploading2: false})
-  }
+    handleProgress2 = () => {
+      this.state.productimageURL2 !== null && 
+      this.setState({isUploading2: false})
+    }
 
-  handleProgress3 = () => {
-    this.state.productimageURL3 !== null && 
-     this.setState({isUploading3: false})
-  }
+    handleProgress3 = () => {
+      this.state.productimageURL3 !== null && 
+      this.setState({isUploading3: false})
+    }
 
-  handleProgress4 = () => {
-    this.state.productimageURL4 !== null && 
-     this.setState({isUploading4: false})
-  }
+    handleProgress4 = () => {
+      this.state.productimageURL4 !== null && 
+      this.setState({isUploading4: false})
+    }
 
-  handleUploadError = (error) => {
+    handleUploadError = (error) => {
+        this.setState({
+          isUploading: false,
+          imageErr: error,
+        })
+        setTimeout(() => this.setState({imageErr:null}),10000)
+    }
+
+    handleUploadError2 = (error) => {
+        this.setState({
+          isUploading2: false,
+          imageErr: error,
+        })
+        setTimeout(() => this.setState({imageErr:null}),10000)
+    }
+
+    handleUploadError3 = (error) => {
+        this.setState({
+          isUploading3: false,
+          imageErr: error,
+        })
+        setTimeout(() => this.setState({imageErr:null}),10000)
+    }
+
+    handleUploadError4 = (error) => {
       this.setState({
-        isUploading: false,
+        isUploading4: false,
         imageErr: error,
       })
       setTimeout(() => this.setState({imageErr:null}),10000)
   }
-
-  handleUploadError2 = (error) => {
-      this.setState({
-        isUploading2: false,
-        imageErr: error,
-      })
-      setTimeout(() => this.setState({imageErr:null}),10000)
-  }
-
-  handleUploadError3 = (error) => {
-      this.setState({
-        isUploading3: false,
-        imageErr: error,
-      })
-      setTimeout(() => this.setState({imageErr:null}),10000)
-  }
-
-  handleUploadError4 = (error) => {
-    this.setState({
-      isUploading4: false,
-      imageErr: error,
-    })
-    setTimeout(() => this.setState({imageErr:null}),10000)
-}
 
   handleUploadSuccess = (filename) => {
       this.setState({productimage: filename});
@@ -438,7 +476,7 @@ class Edit extends Component {
 
 
   render() {
-    let {name} = this.props
+    let {name,isBided} = this.props
     const shortcuts = {
       'Today': moment(),
       'Yesterday': moment().subtract(1, 'days'),
@@ -481,10 +519,16 @@ class Edit extends Component {
                 </div>
                 <div className="small-12 columns">
                   <label>First Bit
+                  { (isBided && Object.keys(isBided).length > 1) ? 
                     <div className="input-group">
-                      <span className="input-group-label">฿</span>
-                      <input className="input-group-field" type="number" onChange={ this.onNewItemChange } value={ this.state.firstbit } name="firstbit"/>
+                      <p>{ this.state.firstbit }</p>
                     </div>
+                      :
+                    <div className="input-group">
+                       <span className="input-group-label">฿</span>
+                       <input className="input-group-field" type="number" onChange={ this.onNewItemChange } value={ this.state.firstbit } name="firstbit"/>
+                    </div>
+                  }
                   </label>
                   { this.state.firstbitErr &&
 										<div className="alert-error">
@@ -494,10 +538,16 @@ class Edit extends Component {
                 </div>
                 <div className="small-12 columns">
                   <label>Bid Increments
+                  {(isBided && Object.keys(isBided).length > 1) ? 
                     <div className="input-group">
-                      <span className="input-group-label">฿</span>
-                      <input className="input-group-field" type="number" onChange={ this.onNewItemChange } value={ this.state.bidStep } name="bidStep"/>
+                      <p>{ this.state.bidStep }</p>
                     </div>
+                      :
+                    <div className="input-group">
+                        <span className="input-group-label">฿</span>
+                        <input className="input-group-field" type="number" onChange={ this.onNewItemChange } value={ this.state.bidStep } name="bidStep"/>
+                    </div>
+                  }
                   </label>
                   { this.state.bidstepErr &&
                       <div className="alert-error">
@@ -656,11 +706,12 @@ class Edit extends Component {
                     }
                 </div>
                 <div className="small-12 columns admin-from-btm">
-                { !name ?
-                  <button className="button success" type="submit" value="Submit">ADD AUCTION</button>
-                  :
-                  <button className="button success" type="submit" value="Submit" disabled="true">Edit</button>
-                }
+                  {
+                    !name ?
+                    <button className="button success" type="submit" value="Submit">ADD AUCTION</button>
+                    :
+                    <button className="button success" type="submit" value="Submit">Edit</button>
+                   }
                 </div>
               </div>
             </form>

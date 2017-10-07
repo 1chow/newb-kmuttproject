@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import * as firebase from 'firebase'
 import Additem from './AddItem'
+import { Link } from 'react-router-dom'
 
 class ItemsL extends Component {
   constructor () {
@@ -35,6 +36,7 @@ class ItemsL extends Component {
   removeItem(key){
     if (window.confirm("Do you want to remove this?") === true) {
       this.dbItems.child(key).remove();
+      this.props.triggler('alert','good','Your item was deleted','fa-check-circle')
     } 
   }
 
@@ -65,14 +67,22 @@ class ItemsL extends Component {
                 {this.state.items.map((item,i) => {
                     return ([
                       <tr key={i}>
-                          <td><i className={"fa fa-check-circle-o fa-2x" }></i></td>
-                          <td>{item.key}</td>
-                          <td className="show-for-large">{item.name}</td>
-                          <td className="show-for-large">{item.catagory}</td>
-                          <td className="show-for-large">{this.props.convertTimeM(item.bid.startTime)}</td>
-                          <td className="show-for-large">{this.props.convertTimeM(item.bid.endTime)}</td>
+                          { item.isActive === 1 ?
+                            <td><i style={{color:'green'}} className={"fa fa-check-circle-o fa-2x" }></i></td> 
+                            :
+                            <td><i style={{color:'red'}} className={"fa fa-clock-o fa-2x" }></i></td> 
+                          }
+                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.key}</Link></td>
+                          <td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.name}</Link></td>
+                          <td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.catagory}</Link></td>
+                          <td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{this.props.convertTimeM(item.bid.startTime)}</Link></td>
+                          <td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{this.props.convertTimeM(item.bid.endTime)}</Link></td>
                           <td><button onClick={() => this.removeItem(item.key)} ><i className="fa fa-trash"></i></button></td>
-                          <td><button onClick={() => this.handleEdit(i)} ><i className="fa fa-edit"></i></button></td>
+                          { item.isActive === 1 ?
+                            <td><button onClick={() => this.handleEdit(i)} ><i className="fa fa-edit"></i></button></td>
+                          :
+                            <td><p style={{color:'red'}}>Time Out</p></td> 
+                          }
                       </tr>,
                       <tr className={this.state.activeKey === i ? null : 'none'}>
                         <td colSpan="8">
@@ -87,6 +97,8 @@ class ItemsL extends Component {
                             timeEnd={item.bid.endTime}
                             catagory={item.catagory}
                             image={item.img_}
+                            id={item.key}
+                            isBided={item.bidList}
                           />
                         }
                         </td>

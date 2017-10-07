@@ -100,12 +100,12 @@ class RecentChart extends Component {
 						{this.state.items.map((item,i) => {
 							return (
 							<tr key={i}>
-								<td><i className={"fa fa-check-circle-o fa-2x" }></i></td>
-								<td>{item.key}</td>
-								<td className="show-for-large">{item.name}</td>
-								<td className="show-for-large">{item.catagory}</td>
-								<td className="show-for-large">{this.props.convertTimeM(item.bid.startTime)}</td>
-								<td className="show-for-large">{this.props.convertTimeM(item.bid.endTime)}</td>
+								<td><i style={{color:'red'}} className={"fa fa-clock-o fa-2x" }></i></td> 
+								<td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item._id}</Link></td>
+								<td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.name}</Link></td>
+								<td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.catagory}</Link></td>
+								<td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{this.props.convertTimeM(item.bid.startTime)}</Link></td>
+								<td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{this.props.convertTimeM(item.bid.endTime)}</Link></td>
 							</tr>
 							)})
 						}
