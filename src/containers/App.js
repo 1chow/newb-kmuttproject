@@ -275,35 +275,10 @@ export default class App extends Component {
 		this.setState({ showToggle: true });
 	}
 	handleclosetoggle = () => {
+		this.getObjects()
 		this.setState({ showToggle: false });
 	}
 	closetoggle = () => {
-		fetch("https://us-central1-auctkmutt.cloudfunctions.net/getItems")
-		.then(response => {
-			return response.json();
-		})
-		.then(json => {
-			let timeNows =[]
-			json.forEach( (object,i) => {
-				let timeNow_ = ((object.bid.endTime - object.timeNow)/1000)
-				let id_ = object._id
-				let catagory_ = object.catagory
-				let isActive_ = object.isActive
-				let endTime_ = object.bid.endTime
-				let timeNows_ = {
-					timeNow  : timeNow_,
-					_id  	 : id_,
-					catagory : catagory_,
-					isActive : isActive_,
-					endTime : endTime_
-				}
-				timeNows.push(timeNows_);
-			})
-			this.setState({
-				items: json,
-				timeNows:timeNows
-			})
-		})
 		this.setState({ showToggle: false });
 	}
 	logout = () => {
@@ -356,6 +331,7 @@ export default class App extends Component {
 						logout={this.logout} 
 						closetoggle={this.closetoggle} 
 						showToggle={this.state.showToggle}
+						getObjects={this.handleclosetoggle}
 					 />
 					{/* Application Routes Zone */}
 						<div className="row">
@@ -414,6 +390,7 @@ export default class App extends Component {
 													items={this.state.items}
 													current={this.state.current}
 													convertTimeM={this.convertTimeM}
+													userUID={this.state.userUID}
 												/>
 											) : <Redirect to={{pathname: '/', state: {from: props.location}}} />}
 										/>
@@ -428,6 +405,7 @@ export default class App extends Component {
 													chartNow={this.state.chartNow}
 													items={this.state.items}
 													current={this.state.current}
+													userUID={this.state.userUID}
 												/>
 											) : <Redirect to={{pathname: '/', state: {from: props.location}}} />}
 										/>

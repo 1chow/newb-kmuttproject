@@ -101,6 +101,7 @@ class RecentChart extends Component {
 							<td className="show-for-large" width="150">Categories</td>
 							<td className="show-for-large" width="150">Start</td>
 							<td className="show-for-large" width="150">End</td>
+							<td className="show-for-large" width="150">Status</td>
 						</tr>
 						{this.state.items.map((item,i) => {
 							return (
@@ -111,6 +112,7 @@ class RecentChart extends Component {
 								<td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.catagory}</Link></td>
 								<td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{this.props.convertTimeM(item.bid.startTime)}</Link></td>
 								<td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{this.props.convertTimeM(item.bid.endTime)}</Link></td>
+								<td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.bid.userId === this.props.userUID ? 'Win' : 'Lose'}</Link></td>
 							</tr>
 							)})
 						}

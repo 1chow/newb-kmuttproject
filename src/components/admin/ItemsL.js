@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Link } from "react-router-dom";
 import * as firebase from 'firebase'
 import Additem from './AddItem'
 import { Link } from 'react-router-dom'

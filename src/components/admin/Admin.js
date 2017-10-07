@@ -86,6 +86,7 @@ export default class Admin extends Component {
 									items={this.props.items}
 									current={this.props.current} 
 									convertTimeM={this.props.convertTimeM}
+									userUID={this.props.userUID}
 								/> 
 							:
 								<ItemsL

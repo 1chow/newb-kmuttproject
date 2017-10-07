@@ -9,7 +9,7 @@ const Toggle = props => (
                         <button onClick={props.closetoggle} className="close">
                             <i className="fa fa-close fa-2x" aria-hidden="true"></i>
                         </button>	
-                        <Link onClick={props.closetoggle} to='/' className="button">
+                        <Link onClick={props.getObjects} to='/' className="button">
                             <i className="fa fa-gavel fa-2x" aria-hidden="true"></i>
                             <p>Now Auct.</p>
                         </Link> 

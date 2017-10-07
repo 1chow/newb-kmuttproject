@@ -40,6 +40,7 @@ class Edit extends Component {
       timestartErr:null,
       timeendErr:null,
       bidstepErr:null,
+      imageStack:1,
     }
   }
 
@@ -74,6 +75,7 @@ class Edit extends Component {
         productimageURL2:image[1],
         productimageURL3:image[2],
         productimageURL4:image[3],
+        imageStack:Object.keys(image).length,
       })
     }
   }
@@ -96,6 +98,7 @@ class Edit extends Component {
       timestartErr:null,
       timeendErr:null,
       bidstepErr:null,
+      imageStack:1,
     })
     let test_name = this.nameValidate(this.state.productname)
     let test_desc = this.descValidate(this.state.desc)
@@ -292,6 +295,7 @@ class Edit extends Component {
                   timestartErr:null,
                   timeendErr:null,
                   bidstepErr:null,
+                  imageStack:1,
                 })
             )
         })
@@ -474,6 +478,14 @@ class Edit extends Component {
     })
   }
 
+  moreImage = e => {
+    e.preventDefault()
+    this.state.imageStack < 4 &&
+    this.setState((prevState) => ({
+      imageStack: prevState.imageStack + 1
+    }));
+  }
+
 
   render() {
     let {name,isBided} = this.props
@@ -593,7 +605,7 @@ class Edit extends Component {
               </div>
               <div className="small-12 medium-6 columns">
                 <div className="small-12 columns img-uploader">
-                   <label>Product Image
+                   <label>{'Product Image '+this.state.imageStack+'/4'  }
                     <div className="box-img">
                         <label className="button btn-file">
                         + ADD Photo
@@ -614,7 +626,7 @@ class Edit extends Component {
                           <img src={this.state.productimageURL} alt="PreviewPic" />
                         }
                      </div>
-                     {this.state.productimageURL &&
+                     {this.state.imageStack > 1 &&
                         <div className="box-img">
                             <label className="button btn-file">
                             + ADD Photo
@@ -636,7 +648,7 @@ class Edit extends Component {
                             }
                         </div>
                       }
-                      {this.state.productimageURL2 &&
+                      {this.state.imageStack > 2 &&
                         <div className="box-img">
                             <label className="button btn-file">
                             + ADD Photo
@@ -658,7 +670,7 @@ class Edit extends Component {
                             }
                         </div>
                       }
-                      {this.state.productimageURL3 &&
+                      {this.state.imageStack > 3 &&
                         <div className="box-img">
                             <label className="button btn-file">
                             + ADD Photo
@@ -685,6 +697,9 @@ class Edit extends Component {
                       <div className="alert-error">
                         <p><i className="fa fa-times"></i> {this.state.imageErr}</p>
                       </div>
+                    }
+                    {this.state.imageStack < 4 &&
+                    <button onClick={this.moreImage}>Test</button>
                     }
                 </div>
                 <div className="small-12 columns">
