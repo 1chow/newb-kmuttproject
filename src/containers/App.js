@@ -132,6 +132,7 @@ export default class App extends Component {
 	          }
 	          current_a.push(obj);
 			})
+			console.log('execute')
 			this.setState({current:current_a},() => fetch("https://us-central1-auctkmutt.cloudfunctions.net/getItems")
 			.then(response => {
 				return response.json();
@@ -157,6 +158,9 @@ export default class App extends Component {
 					items: json,
 					timeNows:timeNows
 				})
+			})
+			.catch( err => {  
+				console.log(err)
 			}))
 		})
 	}
@@ -164,15 +168,18 @@ export default class App extends Component {
 
 	secondsToHms = d => {
 		d = Number(d);
-		var h = Math.floor(d / 3600);
+		var day = Math.floor(d / 3600 / 24);
+		var h = Math.floor(d / 3600 % 24);
 		var m = Math.floor(d % 3600 / 60);
 		var s = Math.floor(d % 3600 % 60);
 
+		var dayDisplay = day > 0 ? day+"day " : "" 
 		var hDisplay = h > 0 ? (h > 9 ? h+':' : '0'+h+':') : "00:"
 		var mDisplay = m > 0 ? (m > 9 ? m+':' : '0'+m+':') : "00:"
 		var sDisplay = s > 0 ? (s > 9 ? s : '0'+s) : "00"
-		return hDisplay + mDisplay + sDisplay; 
+		return dayDisplay + hDisplay + mDisplay + sDisplay; 
 	}
+
 
 	convertTimeM = timestamp => {
 		var d = new Date(parseInt(timestamp,10)),

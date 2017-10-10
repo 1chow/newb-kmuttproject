@@ -50,7 +50,7 @@ export default class Item extends Component {
 		 	this.handleMsg('default','','','')
 		}
 
-		if (!this.props.items.length && nextProps.items.length) {
+		if (nextProps.items.length) {
 			this._filterItems(nextProps.items,nextProps.current);
 		}
 		if (this.props.current !== nextProps.current) {
@@ -168,7 +168,7 @@ export default class Item extends Component {
 					bidResult_: b,
 					isMsg : 1
 				})
-				setTimeout( () => {
+				this.timeout = setTimeout( () => {
 		        this.handleMsg('default','','','')
 		        this.setState({isMsg : 0})
 		      	},6000)
@@ -182,7 +182,7 @@ export default class Item extends Component {
 					bidResult_: b,
 					isMsg : 1
 				})
-				setTimeout( () => {
+				this.timeout = setTimeout( () => {
 		        this.handleMsg('default','','','')
 		        this.setState({isMsg : 0})
 		      	},6000)
@@ -199,6 +199,9 @@ export default class Item extends Component {
 
 	componentWillUnmount() {
 		firebase.database().ref('/items/'+this.props.match.params.id+'/bidList').orderByChild('bid').off();
+		if (this.timeout) {
+			clearTimeout(this.timeout)
+		}
 	}
 
 	render() {

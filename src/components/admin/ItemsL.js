@@ -15,27 +15,24 @@ class ItemsL extends Component {
   }
 
   componentDidMount() {
-    this.dbItems.on('value', dataSnapshot => {
-      let items = [];
-        dataSnapshot.forEach( childSnapshot => {
-        let category = childSnapshot.val();
-        category['key'] = childSnapshot.key;
-        items.push(category);
-      });
-
       this.setState({
-        items: items
+        items:this.props.items
       })
-    });
   }
 
-  componentWillUnmount() {
-    this.dbItems.off();
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.items !== null){
+      this.setState({
+        items:nextProps.items
+      })
+    }
   }
 
   removeItem(key){
     if (window.confirm("Do you want to remove this?") === true) {
-      this.dbItems.child(key).remove();
+      this.dbItems.child(key).update({
+        isActive:0,
+      })
       this.props.triggler('alert','good','Your item was deleted','fa-check-circle')
     } 
   }
@@ -77,12 +74,12 @@ class ItemsL extends Component {
                             :
                             <td><i style={{color:'red'}} className={"fa fa-clock-o fa-2x" }></i></td> 
                           }
-                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.key}</Link></td>
-                          <td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.name}</Link></td>
-                          <td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.catagory}</Link></td>
-                          <td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{this.props.convertTimeM(item.bid.startTime)}</Link></td>
-                          <td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{this.props.convertTimeM(item.bid.endTime)}</Link></td>
-                          <td><button onClick={() => this.removeItem(item.key)} ><i className="fa fa-trash"></i></button></td>
+                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item._id}</Link></td>
+                          <td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.name}</Link></td>
+                          <td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.catagory}</Link></td>
+                          <td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{this.props.convertTimeM(item.bid.startTime)}</Link></td>
+                          <td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{this.props.convertTimeM(item.bid.endTime)}</Link></td>
+                          <td><button onClick={() => this.removeItem(item._id)} ><i className="fa fa-trash"></i></button></td>
                           { item.isActive === 1 ?
                             <td><button onClick={() => this.handleEdit(i)} ><i className="fa fa-edit"></i></button></td>
                           :
@@ -102,7 +99,7 @@ class ItemsL extends Component {
                             timeEnd={item.bid.endTime}
                             catagory={item.catagory}
                             image={item.img_}
-                            id={item.key}
+                            id={item._id}
                             isBided={item.bidList}
                           />
                         }
