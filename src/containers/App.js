@@ -383,7 +383,10 @@ export default class App extends Component {
 										<Route
 											path="/checkout"
 											render={props => (
-												<CheckOut userUID={this.state.userUID} filter={this.filter}/>
+												<CheckOut 
+													userUID={this.state.userUID} 
+													filter={this.filter}
+												/>
 											)}
 										/>
 										<Route

@@ -28,7 +28,7 @@ class chartNow extends Component {
 				this._renderDelete(nextProps.items)
 				this._filtertimeNows(nextProps.timeNows)
 				this._filtercurrent(nextProps.current)
-			}
+			} else this._renderDelete(nextProps.items)
 		}
 		if (this.props.items.length !== nextProps.items.length && this.state.chartNow) {
 			this._renderProjects(nextProps.items);
