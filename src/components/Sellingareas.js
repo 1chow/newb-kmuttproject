@@ -25,7 +25,7 @@ export default class Sellingareas extends Component {
 				this._renderDelete(nextProps.items,nextProps.isActive)
 				this._filtertimeNows(nextProps.timeNows,this.props.isActive)
 				this._filtercurrent(nextProps.current,this.props.isActive)
-			}
+			} else this._renderDelete(nextProps.items,nextProps.isActive)
 		}
 		if (this.props.items.length !== nextProps.items.length) {
 			this._renderProjects(nextProps.items,nextProps.isActive);

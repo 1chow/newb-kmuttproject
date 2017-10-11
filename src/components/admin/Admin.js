@@ -93,6 +93,7 @@ export default class Admin extends Component {
 								<ItemsL
 									convertTimeM={this.props.convertTimeM}
 									triggler={this.props.triggler}
+									items={this.props.items}
 								/>
 		            	}
 		            </div>            

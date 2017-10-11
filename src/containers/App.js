@@ -132,6 +132,7 @@ export default class App extends Component {
 	          }
 	          current_a.push(obj);
 			})
+			console.log('execute')
 			this.setState({current:current_a},() => fetch("https://us-central1-auctkmutt.cloudfunctions.net/getItems")
 			.then(response => {
 				return response.json();
@@ -157,6 +158,9 @@ export default class App extends Component {
 					items: json,
 					timeNows:timeNows
 				})
+			})
+			.catch( err => {  
+				console.log(err)
 			}))
 		})
 	}
@@ -168,6 +172,7 @@ export default class App extends Component {
 		var h = Math.floor(d / 3600 % 24);
 		var m = Math.floor(d % 3600 / 60);
 		var s = Math.floor(d % 3600 % 60);
+
 
 		var dayDisplay = day > 0 ? (day > 9 ? day : '0'+day ) : "00"
 		var hDisplay = h > 0 ? (h > 9 ? h : '0'+h ) : "00"
@@ -188,6 +193,7 @@ export default class App extends Component {
 		}
 
 	}
+
 
 	convertTimeM = timestamp => {
 		var d = new Date(parseInt(timestamp,10)),
@@ -398,7 +404,10 @@ export default class App extends Component {
 										<Route
 											path="/checkout"
 											render={props => (
-												<CheckOut userUID={this.state.userUID} filter={this.filter}/>
+												<CheckOut 
+													userUID={this.state.userUID} 
+													filter={this.filter}
+												/>
 											)}
 										/>
 										<Route
