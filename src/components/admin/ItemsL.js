@@ -60,37 +60,55 @@ class ItemsL extends Component {
               <table className="hover">
                 <tbody>
                 <tr>
-                    <td width="40"></td>
-                    <td width="210">ID</td>
-                    <td className="show-for-large" width="210">Name</td>
-                    <td className="show-for-large" width="150">Categories</td>
-                    <td className="show-for-large" width="150">Start</td>
-                    <td className="show-for-large" width="150">End</td>
-                    <td>Delete</td>
-                    <td>Edit</td>
+                    <td width="50"></td>
+                    <td width="100">Product</td>
+                    <td className="show-for-large" width="100">Categories</td>
+                    <td className="show-for-large" width="100">increment</td>
+                    <td className="show-for-large" width="100">Open</td>
+                    <td className="show-for-large" width="100">Price</td>
+                    <td className="show-for-large" width="100">Win</td>
+                    <td className="show-for-large" width="100">Start</td>
+                    <td className="show-for-large" width="100">End</td>
+                    <td width="50">Delete</td>
+                    <td width="50">Edit</td>
                 </tr>
                 {this.state.items.map((item,i) => {
                     return ([
                       <tr key={i}>
                           { item.isActive === 1 ?
-                            <td><i style={{color:'green'}} className={"fa fa-check-circle-o fa-2x" }></i></td> 
+                            <td style={{color:'#22bb5b'}}><i className={"fa fa-check-circle-o fa-2x"}></i><p className="p-small" style={{color:'#22bb5b'}}>Now Bids</p></td> 
                             :
-                            <td><i style={{color:'red'}} className={"fa fa-clock-o fa-2x" }></i></td> 
+                            <td style={{color:'#ff0000'}}><i className={"fa fa-clock-o fa-2x"}></i><p className="p-small" style={{color:'#ff0000'}}>Time Out</p></td> 
                           }
-                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.key}</Link></td>
-                          <td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.name}</Link></td>
-                          <td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.catagory}</Link></td>
-                          <td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{this.props.convertTimeM(item.bid.startTime)}</Link></td>
-                          <td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{this.props.convertTimeM(item.bid.endTime)}</Link></td>
+                          <td className="thump">
+                              <Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}><img className="admin-table-thump" src={item.img} alt="PreviewPic" />
+                                <p className="p-name">{item.name}</p>
+                                <p className="p-small">{item.key}</p>
+                              </Link>
+                          </td>
+                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.catagory}</Link></td>
+                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.bid.bidStep}.00 ฿</Link></td>
+                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.bid.openBid}.00 ฿</Link></td>
+                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.bid.current}.00 ฿</Link></td>
+                          <td>
+                  
+                            { item.isActive !== 1 ?
+                             (<Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}><i className="fa fa-trophy"></i> {item.bid.userName}</Link>) 
+                            : 
+                             (<Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}><i className="fa fa-clock-o" style={{color:'#22bb5b'}}></i> {item.bid.userName}</Link>)}
+                             
+                          </td>
+                          <td className="show-for-large td-time"><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{this.props.convertTimeM(item.bid.startTime)}</Link></td>
+                          <td className="show-for-large td-time"><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{this.props.convertTimeM(item.bid.endTime)}</Link></td>
                           <td><button onClick={() => this.removeItem(item.key)} ><i className="fa fa-trash"></i></button></td>
                           { item.isActive === 1 ?
-                            <td><button onClick={() => this.handleEdit(i)} ><i className="fa fa-edit"></i></button></td>
+                            <td><button onClick={() => this.handleEdit(i)} ><i className="fa fa-edit fa-edit-admin"></i></button></td>
                           :
-                            <td><p style={{color:'red'}}>Time Out</p></td> 
+                            <td><p className="p-small" style={{color:'#ff0000'}}>Time Out</p></td> 
                           }
                       </tr>,
                       <tr className={"admin-iteml-editable "+(this.state.activeKey === i ? null : 'none')}>
-                        <td colSpan="8">
+                        <td colSpan="10">
                         {this.state.activeKey === i &&
                           <Additem 
                             triggler={this.props.triggler}

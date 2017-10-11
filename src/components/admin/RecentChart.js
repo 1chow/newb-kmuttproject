@@ -95,24 +95,37 @@ class RecentChart extends Component {
 					<table className="hover">
 						<tbody>
 						<tr>
-							<td width="40"></td>
-							<td width="210">ID</td>
-							<td className="show-for-large" width="210">Name</td>
-							<td className="show-for-large" width="150">Categories</td>
-							<td className="show-for-large" width="150">Start</td>
-							<td className="show-for-large" width="150">End</td>
-							<td className="show-for-large" width="150">Status</td>
+							<td width="50"></td>
+							<td width="100">Product</td>
+		                    <td width="100">Price</td>
+							<td width="100">increment</td>
+		                    <td width="100">Open</td>
+							<td width="100">Start</td>
+							<td width="100">End</td>
+							<td width="100">Status</td>
 						</tr>
 						{this.state.items.map((item,i) => {
 							return (
 							<tr key={i}>
-								<td><i style={{color:'red'}} className={"fa fa-clock-o fa-2x" }></i></td> 
-								<td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item._id}</Link></td>
-								<td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.name}</Link></td>
-								<td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.catagory}</Link></td>
-								<td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{this.props.convertTimeM(item.bid.startTime)}</Link></td>
-								<td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{this.props.convertTimeM(item.bid.endTime)}</Link></td>
-								<td className="show-for-large"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.bid.userId === this.props.userUID ? 'Win' : 'Lose'}</Link></td>
+								<td>{(i+1) + ")"}</td> 
+	                          	<td className="thump">
+	                              <Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}><img className="admin-table-thump" src={item.img} alt="PreviewPic" />
+	                                <p className="p-name">{item.name}</p>
+	                              </Link>
+	                          	</td>
+	                            <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.bid.current}.00 ฿</Link></td>							
+	                          	<td><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.bid.bidStep}.00 ฿</Link></td>
+	                            <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.bid.openBid}.00 ฿</Link></td>
+								<td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{this.props.convertTimeM(item.bid.startTime)}</Link></td>
+								<td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{this.props.convertTimeM(item.bid.endTime)}</Link></td>
+								<td>
+									
+									{item.bid.userId === this.props.userUID ?
+									 (<Link to={'/item/'+item._id}><i className="fa fa-trophy fa-2x"></i><p className="p-small" style={{color:'#22bb5b'}}>You Win</p></Link>) 
+									: 
+									 (<Link to={'/item/'+item._id}><i className="fa fa-frown-o fa-2x" style={{color:'#ff0000'}}></i><p className="p-small" style={{color:'#ff0000'}}>You Lost</p></Link>)}
+									 
+								</td>
 							</tr>
 							)})
 						}

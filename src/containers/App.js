@@ -162,16 +162,31 @@ export default class App extends Component {
 	}
 
 
-	secondsToHms = d => {
+	secondsToHms = (d,format) => {
 		d = Number(d);
-		var h = Math.floor(d / 3600);
+		var day = Math.floor(d / 3600 / 24);
+		var h = Math.floor(d / 3600 % 24);
 		var m = Math.floor(d % 3600 / 60);
 		var s = Math.floor(d % 3600 % 60);
 
-		var hDisplay = h > 0 ? (h > 9 ? h+':' : '0'+h+':') : "00:"
-		var mDisplay = m > 0 ? (m > 9 ? m+':' : '0'+m+':') : "00:"
-		var sDisplay = s > 0 ? (s > 9 ? s : '0'+s) : "00"
-		return hDisplay + mDisplay + sDisplay; 
+		var dayDisplay = day > 0 ? (day > 9 ? day : '0'+day ) : "00"
+		var hDisplay = h > 0 ? (h > 9 ? h : '0'+h ) : "00"
+		var mDisplay = m > 0 ? (m > 9 ? m : '0'+m ) : "00"
+		var sDisplay = s > 0 ? (s > 9 ? s : '0'+s ) : "00"
+
+		switch (format) {
+			case 'day':
+				return dayDisplay
+			case 'hr':
+				return hDisplay
+			case 'min':
+				return mDisplay
+			case 'sec':
+				return sDisplay
+			default :
+				return dayDisplay + hDisplay + mDisplay + sDisplay;
+		}
+
 	}
 
 	convertTimeM = timestamp => {
@@ -270,6 +285,12 @@ export default class App extends Component {
 		document.body.style.overflow = null
 	}
 
+	priceFormat = (price) => {
+		var prices = price.toString().split(".");
+	    prices[0] = prices[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	    return prices.join(".");
+	}
+
 
 	toggle = () => {
 		this.setState({ showToggle: true });
@@ -353,6 +374,7 @@ export default class App extends Component {
 													isActive={this.state.isActive} 
 													close={this.handleCloseModal} 
 													items={this.state.items}
+													priceFormat={this.priceFormat}
 												/>
 											)}
 										/>
@@ -447,6 +469,6 @@ export default class App extends Component {
 					chartNow={this.state.chartNow}		
 				/>
 			</div>
-		) : <div className='preload-gavel'><img src={require("../images/loading.png")} alt="Loading"></img></div>
+		) : <div className='preload'><img src={require("../images/Rolling.gif")} alt="Loading"></img></div>
 	}
 }
