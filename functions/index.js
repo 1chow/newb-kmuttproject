@@ -267,7 +267,8 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 									  					userName : _info.displayName,
 									  					userId : uid,
 									  					maxBid : newBid,
-									  					maxBidTime : getTime
+									  					maxBidTime : getTime,
+									  					count: bidLast.count+1
 										  			})
 										  			db.ref('/items/'+ itemKey + '/bidList').push({
 									  					bid : maxBid + bidLast.bidStep,
@@ -319,6 +320,7 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 									  					current : newBid + bidLast.bidStep,
 									  					userName : bidLast.userName,
 									  					userId : bidLast.userId,
+									  					count: bidLast.count+1
 										  			})
 										  			db.ref('/items/'+ itemKey + '/bidList').push({
 									  					bid : newBid,
@@ -341,6 +343,7 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 									  					current : newBid,
 									  					userName : bidLast.userName,
 									  					userId : bidLast.userId,
+									  					count: bidLast.count+1
 										  			})
 										  			db.ref('/items/'+ itemKey + '/bidList').push({
 									  					bid : newBid,
@@ -611,6 +614,14 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 	   	}
 	});
 
+	exports.sendEmail = functions.auth.user().onCreate(function(event) {
+	  // Get the uid and display name of the newly created user.
+	  var uid = event.data.uid;
+	  var displayName = event.data.displayName;
 
+	  // Send a welcome email to the newly created user.
+	  // The sendEmail() method is left as an exercise to the reader.
+	  return sendEmail(uid, displayName);
+	});
 
 

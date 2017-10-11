@@ -14,7 +14,17 @@ class Clock extends React.Component {
 
   render() {
     return  (
-      <span className={"timecount " + (this.state.hotTime ? 'red' : 'green')}>{this.props.secondsToHms(this.props.timeNows.timeNow)}</span>
+      <span className={"timecount " + (this.state.hotTime ? 'red' : 'green')}>
+          <ul className="post-box-time">
+            <li>{this.props.secondsToHms(this.props.timeNows.timeNow,'day')}<span className="info">day</span></li>
+            <li className="next">:</li>
+            <li>{this.props.secondsToHms(this.props.timeNows.timeNow,'hr')}<span className="info">hr</span></li>
+            <li className="next">:</li>
+            <li>{this.props.secondsToHms(this.props.timeNows.timeNow,'min')}<span className="info">min</span></li>
+            <li className="next">:</li>
+            <li>{this.props.secondsToHms(this.props.timeNows.timeNow,'sec')}<span className="info">sec</span></li>
+          </ul>
+      </span>
     )
   }
 }

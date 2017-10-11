@@ -131,7 +131,7 @@ class bidForm extends Component {
         return  (
 			<form className="auct-form" onSubmit={this.handleSubmit} autoComplete="off">
 				<label>
-					<input ref={ bid => this.bid = bid } onBlur={this.handleBlur} className="auct-form-input" id="NumberInput"/>
+					<input ref={ bid => this.bid = bid } type="number" onBlur={this.handleBlur} className="auct-form-input" id="NumberInput"/>
 					<button className="value value-l" type="button" onClick={this.bidMinus}><i className="fa fa-minus-circle"></i></button>
 					<button className="value value-r" type="button" onClick={this.bidPlus}><i className="fa fa-plus-circle"></i></button>
 				</label>

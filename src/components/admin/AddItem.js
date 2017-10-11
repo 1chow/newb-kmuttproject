@@ -227,7 +227,7 @@ class Edit extends Component {
     }
 
     regCharacter = pw => {
-      let re = /^[a-zA-Z0-9_ ]+$/
+      let re = /^[ a-zA-Z0-9_ .'"ก-ฮะ-์ -+*%]+$/
       return re.test(pw);
     }
 
@@ -249,6 +249,7 @@ class Edit extends Component {
             bidStep: parseInt(this.state.bidStep,10),
             endTime: parseInt(this.state.timeEnd.format('x'),10),
             startTime: parseInt(this.state.timeStart.format('x'),10),
+            count: 0,
             userName : '',
             userId : ''
         },
@@ -495,7 +496,7 @@ class Edit extends Component {
                       :
                     <div className="input-group">
                        <span className="input-group-label">฿</span>
-                       <input className="input-group-field" type="number" onChange={ this.onNewItemChange } value={ this.state.firstbit } name="firstbit"/>
+                       <input className="input-group-field text-right" type="number" pattern="[0-9]*" onChange={ this.onNewItemChange } value={ this.state.firstbit } name="firstbit"/>
                     </div>
                   }
                   </label>
@@ -514,7 +515,7 @@ class Edit extends Component {
                       :
                     <div className="input-group">
                         <span className="input-group-label">฿</span>
-                        <input className="input-group-field" type="number" onChange={ this.onNewItemChange } value={ this.state.bidStep } name="bidStep"/>
+                        <input className="input-group-field text-right" type="number" pattern="[0-9]*" onChange={ this.onNewItemChange } value={ this.state.bidStep } name="bidStep"/>
                     </div>
                   }
                   </label>
@@ -656,7 +657,7 @@ class Edit extends Component {
                       </div>
                     }
                     {this.state.imageStack < 4 &&
-                    <button onClick={this.moreImage}>Test</button>
+                    <button className="admin-from-addimg" onClick={this.moreImage}><i className="fa fa-plus"> </i> Add More Photo</button>
                     }
                 </div>
                 <div className="small-12 columns">

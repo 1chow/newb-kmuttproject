@@ -156,6 +156,7 @@ export default class Sellingareas extends Component {
 							timeNows={this.state.timeNows[i]}
 							current={this.state.newcurrent[i].current}
 							secondsToHms={this.props.secondsToHms}
+							priceFormat={this.props.priceFormat}
 						/>
 						) : null
 					})}
