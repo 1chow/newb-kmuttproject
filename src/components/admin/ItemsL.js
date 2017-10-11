@@ -79,15 +79,15 @@ class ItemsL extends Component {
                           }
 
                           <td className="thump">
-                              <Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}><img className="admin-table-thump" src={item.img} alt="PreviewPic" />
+                              <Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}><img className="admin-table-thump" src={item.img} alt="PreviewPic" />
                                 <p className="p-name">{item.name}</p>
-                                <p className="p-small">{item.key}</p>
+                                <p className="p-small">{item._id}</p>
                               </Link>
                           </td>
-                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.catagory}</Link></td>
-                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.bid.bidStep}.00 ฿</Link></td>
-                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.bid.openBid}.00 ฿</Link></td>
-                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.bid.current}.00 ฿</Link></td>
+                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.catagory}</Link></td>
+                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.bid.bidStep}.00 ฿</Link></td>
+                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.bid.openBid}.00 ฿</Link></td>
+                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.bid.current}.00 ฿</Link></td>
                           <td>
                   
                             { item.isActive !== 1 ?
@@ -96,9 +96,9 @@ class ItemsL extends Component {
                              (<Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}><i className="fa fa-clock-o" style={{color:'#22bb5b'}}></i> {item.bid.userName}</Link>)}
                              
                           </td>
-                          <td className="show-for-large td-time"><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{this.props.convertTimeM(item.bid.startTime)}</Link></td>
-                          <td className="show-for-large td-time"><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{this.props.convertTimeM(item.bid.endTime)}</Link></td>
-                          <td><button onClick={() => this.removeItem(item.key)} ><i className="fa fa-trash"></i></button></td>
+                          <td className="show-for-large td-time"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{this.props.convertTimeM(item.bid.startTime)}</Link></td>
+                          <td className="show-for-large td-time"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{this.props.convertTimeM(item.bid.endTime)}</Link></td>
+                          <td><button onClick={() => this.removeItem(item._id)} ><i className="fa fa-trash"></i></button></td>
 
                           { item.isActive === 1 ?
                             <td><button onClick={() => this.handleEdit(i)} ><i className="fa fa-edit fa-edit-admin"></i></button></td>

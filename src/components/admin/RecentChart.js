@@ -109,13 +109,13 @@ class RecentChart extends Component {
 							<tr key={i}>
 								<td>{(i+1) + ")"}</td> 
 	                          	<td className="thump">
-	                              <Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}><img className="admin-table-thump" src={item.img} alt="PreviewPic" />
+	                              <Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}><img className="admin-table-thump" src={item.img} alt="PreviewPic" />
 	                                <p className="p-name">{item.name}</p>
 	                              </Link>
 	                          	</td>
-	                            <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.bid.current}.00 ฿</Link></td>							
-	                          	<td><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.bid.bidStep}.00 ฿</Link></td>
-	                            <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item.key}>{item.bid.openBid}.00 ฿</Link></td>
+	                            <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.bid.current}.00 ฿</Link></td>							
+	                          	<td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.bid.bidStep}.00 ฿</Link></td>
+	                            <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.bid.openBid}.00 ฿</Link></td>
 								<td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{this.props.convertTimeM(item.bid.startTime)}</Link></td>
 								<td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{this.props.convertTimeM(item.bid.endTime)}</Link></td>
 								<td>
