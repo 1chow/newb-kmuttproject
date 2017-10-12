@@ -57,7 +57,7 @@ class Clock2 extends React.Component {
   }
 }
 
-export default function Clocks(props) {
+export default  function Clocks(props) {
   return props.timeNows ? (
       <Clock secondsToHms={props.secondsToHms} timeNows={props.timeNows} />
   ) : props.timeNow ? (
