@@ -368,6 +368,7 @@ footer .footer-r{line-height: 1em;}
 .admin-from-addimg{float: right;position:relative;top:-3px;cursor: pointer;color: #0a0a0a;font-size: 0.966em;transition: all 0.2s ease;}
 .admin-from-addimg:hover{color: #126195;}
 .admin-from-addimg i{margin-right:3px}
+.admin-from-removeimg{margin: 15px;float: right;position:relative;top:-3px;cursor: pointer;color: #0a0a0a;font-size: 0.966em;transition: all 0.2s ease;}
 
 .alert-error{}
 .alert-error p{font-size: 1em;position: relative;top: -8px;left: 1px;margin-bottom: 5px;color: #ff2200;}
