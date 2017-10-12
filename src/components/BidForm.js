@@ -10,9 +10,7 @@ class bidForm extends Component {
 	}
 
 	componentDidMount() {
-
-			this.bid.value = this.props.newcurrent + this.props.bidStep_
-
+		this.bid.value = this.props.newcurrent + this.props.bidStep_
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -89,7 +87,6 @@ class bidForm extends Component {
 		}
 	}
 
-
 	bidPlus = () => {
 
 		let intBid = parseInt(this.bid.value, 10)
@@ -125,7 +122,6 @@ class bidForm extends Component {
 		this.props.waiting()
 		this.isBidForm(this.bid,this.props.open)
 	}
-
 
     render() {
         return  (
