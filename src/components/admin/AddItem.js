@@ -83,6 +83,42 @@ class Edit extends Component {
   componentWillUnmount() {
     firebase.database().ref().child('catagories').off()
     firebase.database().ref().child('items').off()
+    if (this.timerHandle_name) {               
+			clearTimeout(this.timerHandle_name);     
+			this.timerHandle_name = 0;                
+    }
+    if (this.timerHandle_desc) {               
+			clearTimeout(this.timerHandle_desc);     
+			this.timerHandle_desc = 0;                
+    }
+    if (this.timerHandle_firstbit) {               
+			clearTimeout(this.timerHandle_firstbit);     
+			this.timerHandle_firstbit = 0;                
+    }
+    if (this.timerHandle_catagories) {               
+			clearTimeout(this.timerHandle_catagories);     
+			this.timerHandle_catagories = 0;                
+    }
+    if (this.timerHandle_image) {               
+			clearTimeout(this.timerHandle_image);     
+			this.timerHandle_image = 0;                
+    }
+    if (this.timerHandle_timestart) {               
+			clearTimeout(this.timerHandle_timestart);     
+			this.timerHandle_timestart = 0;                
+    }
+    if (this.timerHandle_timeend) {               
+			clearTimeout(this.timerHandle_timeend);     
+			this.timerHandle_timeend = 0;                
+    }
+    if (this.timerHandle_bidstep) {               
+			clearTimeout(this.timerHandle_bidstep);     
+			this.timerHandle_bidstep = 0;                
+    }
+    if (this.timerHandle_images) {               
+			clearTimeout(this.timerHandle_images);     
+			this.timerHandle_images = 0;                
+    }
   }
 
   
@@ -139,19 +175,19 @@ class Edit extends Component {
   bidstepValidate = input => {
     if(String(input).trim().length === 0){
 			this.setState({bidstepErr:"bid increments was empty"})
-			setTimeout(() => this.setState({bidstepErr:null}),10000)
+			this.timerHandle_bidstep = setTimeout(() => this.setState({bidstepErr:null}),10000)
 			return false
 		} else if(String(input).trim().length >= 10) {
 			this.setState({bidstepErr:"it's over Bid increments"})
-			setTimeout(() => this.setState({bidstepErr:null}),10000)
+			this.timerHandle_bidstep = setTimeout(() => this.setState({bidstepErr:null}),10000)
 			return false
 		} else if(input < 1) {
 			this.setState({bidstepErr:"bid increments must be at least 1 THB"})
-			setTimeout(() => this.setState({bidstepErr:null}),10000)
+			this.timerHandle_bidstep = setTimeout(() => this.setState({bidstepErr:null}),10000)
 			return false
 		} else if(input%Math.floor(input) !== 0) {
 			this.setState({bidstepErr:"bid increments must be amount of money"})
-			setTimeout(() => this.setState({bidstepErr:null}),10000)
+			this.timerHandle_bidstep = setTimeout(() => this.setState({bidstepErr:null}),10000)
 			return false
 		} else return true
   }
@@ -159,7 +195,7 @@ class Edit extends Component {
   timestartValidate = input => {
       if(input.lenght === 0){
         this.setState({timestartErr:"Pls select start time"})
-        setTimeout(() => this.setState({timestartErr:null}),10000)
+        this.timerHandle_timestart = setTimeout(() => this.setState({timestartErr:null}),10000)
         return false
       } else return true
     }
@@ -167,11 +203,11 @@ class Edit extends Component {
     timeendValidate = input => {
       if(input.lenght === 0){
         this.setState({timeendErr:"Pls select start end"})
-        setTimeout(() => this.setState({timeendErr:null}),10000)
+        this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
         return false
       } else if(input <= this.state.timeStart){
         this.setState({timeendErr:"Time start <= Time end"})
-        setTimeout(() => this.setState({timeendErr:null}),10000)
+        this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
         return false
       } else return true
     }
@@ -180,7 +216,7 @@ class Edit extends Component {
     productimageValidate = input => {
       if(input === ''){
         this.setState({imageErr:"Pls upload image"})
-        setTimeout(() => this.setState({imageErr:null}),10000)
+        this.timerHandle_image = setTimeout(() => this.setState({imageErr:null}),10000)
         return false
       } else return true
     }
@@ -190,55 +226,55 @@ class Edit extends Component {
         case 1:
           if(pic1 === ''){
             this.setState({imageErr:"Pls upload image"})
-            setTimeout(() => this.setState({imageErr:null}),10000)
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
             return false
           } else return true
         case 2:
           if(pic1 === ''){
             this.setState({imageErr:"Pls upload image"})
-            setTimeout(() => this.setState({imageErr:null}),10000)
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
             return false
           } else if(pic2 === null || pic2 === undefined){
             this.setState({imageErr:"Pls upload image"})
-            setTimeout(() => this.setState({imageErr:null}),10000)
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
             return false
           } else return true
         case 3:
           if(pic1 === ''){
             this.setState({imageErr:"Pls upload image"})
-            setTimeout(() => this.setState({imageErr:null}),10000)
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
             return false
           } else if(pic2 === null || pic2 === undefined){
             this.setState({imageErr:"Pls upload image"})
-            setTimeout(() => this.setState({imageErr:null}),10000)
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
             return false
           } else if(pic3 === null || pic3 === undefined){
             this.setState({imageErr:"Pls upload image"})
-            setTimeout(() => this.setState({imageErr:null}),10000)
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
             return false
           } else  return true
         case 4:
           if(pic1 === ''){
             this.setState({imageErr:"Pls upload image"})
-            setTimeout(() => this.setState({imageErr:null}),10000)
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
             return false
           } else if(pic2 === null || pic2 === undefined){
             this.setState({imageErr:"Pls upload image"})
-            setTimeout(() => this.setState({imageErr:null}),10000)
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
             return false
           } else if(pic3 === null || pic3 === undefined){
             this.setState({imageErr:"Pls upload image"})
-            setTimeout(() => this.setState({imageErr:null}),10000)
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
             return false
           } else if(pic4 === null || pic4 === undefined){
             this.setState({imageErr:"Pls upload image"})
-            setTimeout(() => this.setState({imageErr:null}),10000)
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
             return false
           } else  return true
         default :
           if(pic1 === ''){
             this.setState({imageErr:"Pls upload image"})
-            setTimeout(() => this.setState({imageErr:null}),10000)
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
             return false
           } else return true
       }
@@ -247,7 +283,7 @@ class Edit extends Component {
     catagoriesValidate = input => {
       if(!input){
         this.setState({catagoriesErr:"Pls select catagoriey"})
-        setTimeout(() => this.setState({catagoriesErr:null}),10000)
+        this.timerHandle_catagories = setTimeout(() => this.setState({catagoriesErr:null}),10000)
         return false
       } else return true
     }
@@ -255,11 +291,11 @@ class Edit extends Component {
     nameValidate = input => {
       if(input.trim().length === 0){
         this.setState({productnameErr:"Productname was empty"})
-        setTimeout(() => this.setState({productnameErr:null}),10000)
+        this.timerHandle_name = setTimeout(() => this.setState({productnameErr:null}),10000)
         return false
       } else if(this.regCharacter(input.trim()) === false) {
         this.setState({productnameErr:"Productname must be Character"})
-        setTimeout(() => this.setState({productnameErr:null}),10000)
+        this.timerHandle_name = setTimeout(() => this.setState({productnameErr:null}),10000)
         return false
       } else return true
     }
@@ -267,7 +303,7 @@ class Edit extends Component {
     descValidate = input => {
       if(input.trim().length === 0){
         this.setState({descErr:"Description was empty"})
-        setTimeout(() => this.setState({descErr:null}),10000)
+        this.timerHandle_desc = setTimeout(() => this.setState({descErr:null}),10000)
         return false
       } else return true
     }
@@ -275,19 +311,19 @@ class Edit extends Component {
     firstbitValidate = input => {
       if(String(input).trim().length === 0){
         this.setState({firstbitErr:"Firstbit was empty"})
-        setTimeout(() => this.setState({firstbitErr:null}),10000)
+        this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
         return false
       } else if(String(input).trim().length >= 10) {
         this.setState({firstbitErr:"length >= 10"})
-        setTimeout(() => this.setState({firstbitErr:null}),10000)
+        this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
         return false
       } else if(input < 1) {
         this.setState({firstbitErr:"Firstbit must be at least 1฿"})
-        setTimeout(() => this.setState({firstbitErr:null}),10000)
+        this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
         return false
       } else if(input%Math.floor(input) !== 0) {
         this.setState({firstbitErr:"Firstbit must be Integer"})
-        setTimeout(() => this.setState({firstbitErr:null}),10000)
+        this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
         return false
       } else return true
     }

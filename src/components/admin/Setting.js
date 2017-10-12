@@ -124,15 +124,15 @@ export default class Setting extends Component {
 	emailValidate = input => {
 		if(input.trim().length === 0){
 			this.setState({emailErr:"Email was empty"})
-			setTimeout(() => this.setState({emailErr:null}),5000)
+			this.timerHandle_email = setTimeout(() => this.setState({emailErr:null}),5000)
 			return false
 		} else if(input.trim().length >= 70) {
 			this.setState({emailErr:"length >= 70"})
-			setTimeout(() => this.setState({emailErr:null}),5000)
+			this.timerHandle_email = setTimeout(() => this.setState({emailErr:null}),5000)
 			return false
 		} else if(this.validateEmail(input.trim()) === false) {
 			this.setState({emailErr:"Wasn't email format",isAuthen:false})
-			setTimeout(() => this.setState({emailErr:null}),5000)
+			this.timerHandle_email = setTimeout(() => this.setState({emailErr:null}),5000)
 			return false
 		} else return true
 	}
@@ -140,15 +140,15 @@ export default class Setting extends Component {
 	userValidate = input => {
 		if(input.trim().length === 0){
 			this.setState({usernameErr:"Username was empty"})
-			setTimeout(() => this.setState({usernameErr:null}),5000)
+			this.timerHandle_username = setTimeout(() => this.setState({usernameErr:null}),5000)
 			return false
 		} else if(input.trim().length >= 40) {
 			this.setState({usernameErr:"Username so long"})
-			setTimeout(() => this.setState({usernameErr:null}),5000)
+			this.timerHandle_username = setTimeout(() => this.setState({usernameErr:null}),5000)
 			return false
 		} else if(this.regCharacter(input.trim()) === false) {
 			this.setState({usernameErr:"Username must be Character"})
-			setTimeout(() => this.setState({usernameErr:null}),5000)
+			this.timerHandle_username = setTimeout(() => this.setState({usernameErr:null}),5000)
 			return false
 		} else return true
 	}
@@ -156,13 +156,28 @@ export default class Setting extends Component {
 	addressValidate = input => {
 		if(input.trim().length === 0){
 			this.setState({addressErr:"Address was empty"})
-			setTimeout(() => this.setState({addressErr:null}),5000)
+			this.timerHandle_address = setTimeout(() => this.setState({addressErr:null}),5000)
 			return false
 		} else if(input.trim().length >= 400) {
 			this.setState({addressErr:"Address so long"})
-			setTimeout(() => this.setState({addressErr:null}),5000)
+			this.timerHandle_address = setTimeout(() => this.setState({addressErr:null}),5000)
 			return false
 		} else return true
+	}
+
+	componentWillUnmount() {
+		if (this.timerHandle_email) {               
+			clearTimeout(this.timerHandle_email);     
+			this.timerHandle_email = 0;                
+		}
+		if (this.timerHandle_username) {               
+			clearTimeout(this.timerHandle_username);     
+			this.timerHandle_username = 0;                
+		}
+		if (this.timerHandle_address) {               
+			clearTimeout(this.timerHandle_address);     
+			this.timerHandle_address = 0;                
+		}
 	}
 
   render(){

@@ -29,7 +29,7 @@ class Sellingarea extends Component {
                                 
                             <ul className="post-box-step">
                                 <li>{item.bid.bidStep}<span className="info">Increment</span></li>
-                                <li>{item.bid.count}<span className="info">Bidding</span></li>
+                                <li>{item.bid.count || 0}<span className="info">Bidding</span></li>
                             </ul>
                             </div>
                         </div>

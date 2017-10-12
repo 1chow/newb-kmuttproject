@@ -187,6 +187,16 @@ export default class Item extends Component {
 		        this.setState({isMsg : 0})
 		      	},6000)
 			break
+			default :
+				this.setState({
+					bidIcon:'gavel',
+					bidColor_bg:'#f0f0f0',
+					bidColor_icon:'#126195',
+					bidColor:'#126195',
+					bidResult:'Really want to win?',
+					bidResult_:'Try Place Your high bid amount.'
+				})
+			break
 		}
 
 	}

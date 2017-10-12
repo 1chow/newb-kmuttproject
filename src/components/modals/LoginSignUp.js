@@ -95,15 +95,15 @@ export default class LoginSignUp extends Component {
 	userValidate = input => {
 		if(input.trim().length === 0){
 			this.setState({user:"Username was empty",isAuthen:false})
-			setTimeout(() => this.setState({user:null}),5000)
+			this.timerHandle4 = setTimeout(() => {this.setState({user:null});this.timerHandle4 = 0;},5000)
 			return false
 		} else if(input.trim().length >= 50) {
 			this.setState({user:"length >= 50",isAuthen:false})
-			setTimeout(() => this.setState({user:null}),5000)
+			this.timerHandle4 = setTimeout(() => {this.setState({user:null});this.timerHandle4 = 0;},5000)
 			return false
 		} else if(this.regCharacter(input.trim()) === false) {
 			this.setState({user:"Username must be Character",isAuthen:false})
-			setTimeout(() => this.setState({user:null}),5000)
+			this.timerHandle4 = setTimeout(() => {this.setState({user:null});this.timerHandle4 = 0;},5000)
 			return false
 		} else return true
 	}
@@ -111,15 +111,15 @@ export default class LoginSignUp extends Component {
 	emailValidate = input => {
 		if(input.trim().length === 0){
 			this.setState({email:"Email was empty",isAuthen:false})
-			setTimeout(() => this.setState({email:null}),5000)
+			this.timerHandle = setTimeout(() => {this.setState({email:null});this.timerHandle = 0;},5000)
 			return false
 		} else if(input.trim().length >= 70) {
 			this.setState({email:"length >= 70",isAuthen:false})
-			setTimeout(() => this.setState({email:null}),5000)
+			this.timerHandle = setTimeout(() => {this.setState({email:null});this.timerHandle = 0;},5000)
 			return false
 		} else if(this.regEmail(input.trim()) === false) {
 			this.setState({email:"Wasn't email format",isAuthen:false})
-			setTimeout(() => this.setState({email:null}),5000)
+			this.timerHandle = setTimeout(() => {this.setState({email:null});this.timerHandle = 0;},5000)
 			return false
 		} else return true
 	}
@@ -127,19 +127,19 @@ export default class LoginSignUp extends Component {
 	pwValidate = input => {
 		if(input.trim().length === 0){
 			this.setState({pw:"Password was empty",isAuthen:false})
-			setTimeout(() => this.setState({pw:null}),5000)
+			this.timerHandle2 = setTimeout(() => {this.setState({pw:null});this.timerHandle2 = 0;},5000)
 			return false
 		} else if(input.trim().length <= 5) {
 			this.setState({pw:"Password must contain at least six characters",isAuthen:false})
-			setTimeout(() => this.setState({pw:null}),5000)
+			this.timerHandle2 = setTimeout(() => {this.setState({pw:null});this.timerHandle2 = 0;},5000)
 			return false
 		} else if(input.trim().length >= 30) {
 			this.setState({pw:"Password so long",isAuthen:false})
-			setTimeout(() => this.setState({pw:null}),5000)
+			this.timerHandle2 = setTimeout(() => {this.setState({pw:null});this.timerHandle2 = 0;},5000)
 			return false
 		} else if(this.regCharacter(input.trim()) === false) {
 			this.setState({pw:"Password must be Character",isAuthen:false})
-			setTimeout(() => this.setState({pw:null}),5000)
+			this.timerHandle2 = setTimeout(() => {this.setState({pw:null});this.timerHandle2 = 0;},5000)
 			return false
 		} else return true
 	}
@@ -147,23 +147,23 @@ export default class LoginSignUp extends Component {
 	_pwValidate = input => {
 		if(input.trim().length === 0){
 			this.setState({_pw:"Password was empty",isAuthen:false})
-			setTimeout(() => this.setState({_pw:null}),5000)
+			this.timerHandle3 = setTimeout(() => {this.setState({_pw:null});this.timerHandle3 = 0;},5000)
 			return false
 		} else if(input.trim().length <= 5) {
 			this.setState({_pw:"Password must contain at least six characters",isAuthen:false})
-			setTimeout(() => this.setState({_pw:null}),5000)
+			this.timerHandle3 = setTimeout(() => {this.setState({_pw:null});this.timerHandle3 = 0;},5000)
 			return false
 		} else if(input.trim().length >= 30) {
 			this.setState({_pw:"Password so long",isAuthen:false})
-			setTimeout(() => this.setState({_pw:null}),5000)
+			this.timerHandle3 = setTimeout(() => {this.setState({_pw:null});this.timerHandle3 = 0;},5000)
 			return false
 		} else if(this.regCharacter(input.trim()) === false) {
 			this.setState({_pw:"Password must be Character",isAuthen:false})
-			setTimeout(() => this.setState({_pw:null}),5000)
+			this.timerHandle3 = setTimeout(() => {this.setState({_pw:null});this.timerHandle3 = 0;},5000)
 			return false
 		} else if(this.pw.value !== input) {
 			this.setState({_pw:"Must match the previous entry",isAuthen:false})
-			setTimeout(() => this.setState({_pw:null}),5000)
+			this.timerHandle3 = setTimeout(() => {this.setState({_pw:null});this.timerHandle3 = 0;},5000)
 			return false
 		} else return true
 	}
@@ -176,6 +176,25 @@ export default class LoginSignUp extends Component {
 	regCharacter = pw => {
 		let re = /^[-_a-zA-Z0-9.]+$/
 		return re.test(pw);
+	}
+
+	componentWillUnmount() {
+		if (this.timerHandle) {               
+			clearTimeout(this.timerHandle);     
+			this.timerHandle = 0;                
+		}
+		if (this.timerHandle2) {               
+			clearTimeout(this.timerHandle2);     
+			this.timerHandle2 = 0;                
+		}
+		if (this.timerHandle3) {               
+			clearTimeout(this.timerHandle3);     
+			this.timerHandle3 = 0;                
+		}  
+		if (this.timerHandle4) {               
+			clearTimeout(this.timerHandle4);     
+			this.timerHandle4 = 0;                
+		}                            
 	}
 
 	render() {
