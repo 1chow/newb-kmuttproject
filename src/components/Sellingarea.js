@@ -23,7 +23,7 @@ class Sellingarea extends Component {
                             <p className="price"><span className="curentcy">฿</span>{priceFormat(current)}<span className="curentcy dot">.00</span></p>
                             </div>
                             <div className="post-box-scontent">
-                            <Clock secondsToHms={secondsToHms} timeNows={timeNows}  />
+                                <Clock secondsToHms={secondsToHms} timeNows={timeNows}  />
                             </div>
                             <div className="post-box-scontent">
                                 
