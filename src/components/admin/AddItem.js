@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import * as firebase from 'firebase'
 import ImageUploader from 'react-firebase-image-uploader'
 import moment from 'moment';
-import {DatetimePickerTrigger} from 'rc-datetime-picker';
+import {DatetimePickerTrigger} from 'rc-datetime-picker'
+import RichTextEditor from 'react-rte'
 
 class Category extends Component {
   render(){
@@ -40,7 +41,9 @@ class Edit extends Component {
       timestartErr:null,
       timeendErr:null,
       bidstepErr:null,
+      descPicErr:null,
       imageStack:1,
+      editorValue: RichTextEditor.createEmptyValue()
     }
   }
 
@@ -134,6 +137,7 @@ class Edit extends Component {
       timestartErr:null,
       timeendErr:null,
       bidstepErr:null,
+      descPicErr:null,
     })
     let test_name = this.nameValidate(this.state.productname)
     let test_desc = this.descValidate(this.state.desc)
@@ -341,7 +345,7 @@ class Edit extends Component {
         desc:{
               short: this.state.desc.slice(0,350),
               fullHeader: this.state.productname,
-              fullDesc : this.state.desc
+              fullDesc : this.state.editorValue.toString('html')
         },
         bid:{
             current : parseInt(this.state.firstbit,10),
@@ -397,7 +401,9 @@ class Edit extends Component {
                   timestartErr:null,
                   timeendErr:null,
                   bidstepErr:null,
+                  descPicErr:null,
                   imageStack:1,
+                  editorValue: RichTextEditor.createEmptyValue()
                 })
             )
         })
@@ -410,7 +416,7 @@ class Edit extends Component {
         desc:{
               short: this.state.desc.slice(0,350),
               fullHeader: this.state.productname,
-              fullDesc : this.state.desc
+              fullDesc : this.state.editorValue.toString('html'),
         },
         img: this.state.productimageURL,
         img_:{
@@ -506,6 +512,13 @@ class Edit extends Component {
       setTimeout(() => this.setState({imageErr:null}),10000)
   }
 
+  handleUploadDescError = (error) => {
+      this.setState({
+        descPicErr: error,
+      })
+      setTimeout(() => this.setState({descPicErr:null}),10000)
+  }
+
   handleUploadSuccess = (filename) => {
       this.setState({productimage: filename});
       firebase.storage().ref('images').child(filename).getDownloadURL().then(url => this.setState({productimageURL: url,isUploading: false}))
@@ -524,6 +537,21 @@ class Edit extends Component {
   handleUploadSuccess4 = (filename) => {
       this.setState({productimage: filename});
       firebase.storage().ref('images').child(filename).getDownloadURL().then(url => this.setState({productimageURL4: url,isUploading4: false}))
+  }
+
+  handleUploadSuccess5 = (filename) => {
+      this.setState({productimage: filename});
+      firebase.storage().ref('images').child(filename).getDownloadURL().then(url => this.addPicture(url))
+  }
+
+  addPicture = url => {
+    let markup = this.state.editorValue.toString('html')
+    let picture = '<img src="'+url+'"></img>'
+    let index = markup.length - 4
+    let newEditorValue = markup.substr(0, index) + picture + markup.substr(index)
+    this.setState((prevState, props) => {
+      return {editorValue: RichTextEditor.createValueFromString(newEditorValue, 'html')};
+    })
   }
 
   handleChange = (timeStart) => {
@@ -604,6 +632,10 @@ class Edit extends Component {
     }));
   }
 
+  onChange = (editorValue) => {
+    this.setState({editorValue})
+  }
+
 
   render() {
     let {name,isBided} = this.props
@@ -639,11 +671,30 @@ class Edit extends Component {
                   <label>Product Description
                     <textarea  type="text" placeholder="Product Description Here" aria-describedby="help-signup" id="" rows="5" required pattern="text"
                     onChange={ this.onNewItemChange } value={ this.state.desc } name="desc" ></textarea>
-                    <span className="form-error">Yo, Product Description required!!</span>
                   </label>
                   { this.state.descErr &&
 										<div className="alert-error">
 											<p><i className="fa fa-times"></i> {this.state.descErr}</p>
+										</div>
+									}
+                </div>
+                <div className="small-12 columns">
+                  <label>Product Full Description</label>
+                    <RichTextEditor
+                      value={this.state.editorValue}
+                      onChange={this.onChange}
+                      toolbarConfig={this.props.toolbarConfig}
+                    />
+                    + ADD Photo
+                    <ImageUploader
+                        name="avatar"
+                        storageRef={firebase.storage().ref('images')}
+                        onUploadError={this.handleUploadDescError}
+                        onUploadSuccess={this.handleUploadSuccess5}
+                    />
+                  { this.state.descPicErr &&
+										<div className="alert-error">
+											<p><i className="fa fa-times"></i> {this.state.descPicErr}</p>
 										</div>
 									}
                 </div>
@@ -859,3 +910,26 @@ class Edit extends Component {
 
 
 export default Edit 
+
+Edit.defaultProps = {
+  toolbarConfig : {
+    display: ['INLINE_STYLE_BUTTONS', 'BLOCK_TYPE_BUTTONS', 'LINK_BUTTONS', 'BLOCK_TYPE_DROPDOWN', 'HISTORY_BUTTONS'],
+    INLINE_STYLE_BUTTONS: [
+      {label: 'Bold', style: 'BOLD', className: 'custom-css-class'},
+      {label: 'Italic', style: 'ITALIC'},
+      {label: 'Underline', style: 'UNDERLINE'},
+      {label: 'Strikethrough', style: 'STRIKETHROUGH'},
+    ],
+    BLOCK_TYPE_DROPDOWN: [
+      {label: 'Normal', style: 'unstyled'},
+      {label: 'Heading Large', style: 'header-one'},
+      {label: 'Heading Medium', style: 'header-two'},
+      {label: 'Heading Small', style: 'header-three'}
+    ],
+    BLOCK_TYPE_BUTTONS: [
+      {label: 'UL', style: 'unordered-list-item'},
+      {label: 'OL', style: 'ordered-list-item'},
+      {label: "Blockquote", style: "blockquote"}
+    ]
+  }
+}

@@ -307,7 +307,7 @@ export default class Item extends Component {
 							<div className="row auct-from-markdown">
 								<div className="small-12 medium-12 columns">
 									<h3>{this.state.item[0].desc.fullHeader}</h3>
-									<p>{this.state.item[0].desc.fullDesc}</p>
+									<div dangerouslySetInnerHTML= {{__html: this.state.item[0].desc.fullDesc.toString('html').replace(/ /g, "\u00a0")}} />
 								</div>
 							</div>
 						</div>
