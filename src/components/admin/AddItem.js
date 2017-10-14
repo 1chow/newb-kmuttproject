@@ -83,6 +83,42 @@ class Edit extends Component {
   componentWillUnmount() {
     firebase.database().ref().child('catagories').off()
     firebase.database().ref().child('items').off()
+    if (this.timerHandle_name) {               
+			clearTimeout(this.timerHandle_name);     
+			this.timerHandle_name = 0;                
+    }
+    if (this.timerHandle_desc) {               
+			clearTimeout(this.timerHandle_desc);     
+			this.timerHandle_desc = 0;                
+    }
+    if (this.timerHandle_firstbit) {               
+			clearTimeout(this.timerHandle_firstbit);     
+			this.timerHandle_firstbit = 0;                
+    }
+    if (this.timerHandle_catagories) {               
+			clearTimeout(this.timerHandle_catagories);     
+			this.timerHandle_catagories = 0;                
+    }
+    if (this.timerHandle_image) {               
+			clearTimeout(this.timerHandle_image);     
+			this.timerHandle_image = 0;                
+    }
+    if (this.timerHandle_timestart) {               
+			clearTimeout(this.timerHandle_timestart);     
+			this.timerHandle_timestart = 0;                
+    }
+    if (this.timerHandle_timeend) {               
+			clearTimeout(this.timerHandle_timeend);     
+			this.timerHandle_timeend = 0;                
+    }
+    if (this.timerHandle_bidstep) {               
+			clearTimeout(this.timerHandle_bidstep);     
+			this.timerHandle_bidstep = 0;                
+    }
+    if (this.timerHandle_images) {               
+			clearTimeout(this.timerHandle_images);     
+			this.timerHandle_images = 0;                
+    }
   }
 
   
@@ -98,13 +134,19 @@ class Edit extends Component {
       timestartErr:null,
       timeendErr:null,
       bidstepErr:null,
-      imageStack:1,
     })
     let test_name = this.nameValidate(this.state.productname)
     let test_desc = this.descValidate(this.state.desc)
     let test_firstbit = this.firstbitValidate(this.state.firstbit)
     let test_catagories = this.catagoriesValidate(this.state.catagoriesselect)
     let test_image = this.productimageValidate(this.state.productimageURL)
+    let test_images = this.productimagesValidate( 
+                                                  this.state.imageStack,
+                                                  this.state.productimageURL,
+                                                  this.state.productimageURL2,
+                                                  this.state.productimageURL3,
+                                                  this.state.productimageURL4
+                                                )
     let test_timestart = this.timestartValidate(this.state.timeStart)
     let test_timeend = this.timeendValidate(this.state.timeEnd)
     let test_bidstep = this.bidstepValidate(this.state.bidStep)
@@ -115,7 +157,8 @@ class Edit extends Component {
                   test_image       &&
                   test_timestart   &&
                   test_timeend     &&
-                  test_bidstep
+                  test_bidstep     &&
+                  test_images
     if (isValid === true) {
         if(this.props.name){
           if (window.confirm("Do you want to edit this item?") === true) {
@@ -132,19 +175,19 @@ class Edit extends Component {
   bidstepValidate = input => {
     if(String(input).trim().length === 0){
 			this.setState({bidstepErr:"bid increments was empty"})
-			setTimeout(() => this.setState({bidstepErr:null}),10000)
+			this.timerHandle_bidstep = setTimeout(() => this.setState({bidstepErr:null}),10000)
 			return false
 		} else if(String(input).trim().length >= 10) {
 			this.setState({bidstepErr:"it's over Bid increments"})
-			setTimeout(() => this.setState({bidstepErr:null}),10000)
+			this.timerHandle_bidstep = setTimeout(() => this.setState({bidstepErr:null}),10000)
 			return false
 		} else if(input < 1) {
 			this.setState({bidstepErr:"bid increments must be at least 1 THB"})
-			setTimeout(() => this.setState({bidstepErr:null}),10000)
+			this.timerHandle_bidstep = setTimeout(() => this.setState({bidstepErr:null}),10000)
 			return false
 		} else if(input%Math.floor(input) !== 0) {
 			this.setState({bidstepErr:"bid increments must be amount of money"})
-			setTimeout(() => this.setState({bidstepErr:null}),10000)
+			this.timerHandle_bidstep = setTimeout(() => this.setState({bidstepErr:null}),10000)
 			return false
 		} else return true
   }
@@ -152,7 +195,7 @@ class Edit extends Component {
   timestartValidate = input => {
       if(input.lenght === 0){
         this.setState({timestartErr:"Pls select start time"})
-        setTimeout(() => this.setState({timestartErr:null}),10000)
+        this.timerHandle_timestart = setTimeout(() => this.setState({timestartErr:null}),10000)
         return false
       } else return true
     }
@@ -160,11 +203,11 @@ class Edit extends Component {
     timeendValidate = input => {
       if(input.lenght === 0){
         this.setState({timeendErr:"Pls select start end"})
-        setTimeout(() => this.setState({timeendErr:null}),10000)
+        this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
         return false
       } else if(input <= this.state.timeStart){
         this.setState({timeendErr:"Time start <= Time end"})
-        setTimeout(() => this.setState({timeendErr:null}),5000)
+        this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
         return false
       } else return true
     }
@@ -173,15 +216,74 @@ class Edit extends Component {
     productimageValidate = input => {
       if(input === ''){
         this.setState({imageErr:"Pls upload image"})
-        setTimeout(() => this.setState({imageErr:null}),10000)
+        this.timerHandle_image = setTimeout(() => this.setState({imageErr:null}),10000)
         return false
       } else return true
+    }
+
+    productimagesValidate = (stack,pic1,pic2,pic3,pic4) => {
+      switch (stack) {
+        case 1:
+          if(pic1 === ''){
+            this.setState({imageErr:"Pls upload image"})
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+            return false
+          } else return true
+        case 2:
+          if(pic1 === ''){
+            this.setState({imageErr:"Pls upload image"})
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+            return false
+          } else if(pic2 === null || pic2 === undefined){
+            this.setState({imageErr:"Pls upload image"})
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+            return false
+          } else return true
+        case 3:
+          if(pic1 === ''){
+            this.setState({imageErr:"Pls upload image"})
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+            return false
+          } else if(pic2 === null || pic2 === undefined){
+            this.setState({imageErr:"Pls upload image"})
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+            return false
+          } else if(pic3 === null || pic3 === undefined){
+            this.setState({imageErr:"Pls upload image"})
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+            return false
+          } else  return true
+        case 4:
+          if(pic1 === ''){
+            this.setState({imageErr:"Pls upload image"})
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+            return false
+          } else if(pic2 === null || pic2 === undefined){
+            this.setState({imageErr:"Pls upload image"})
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+            return false
+          } else if(pic3 === null || pic3 === undefined){
+            this.setState({imageErr:"Pls upload image"})
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+            return false
+          } else if(pic4 === null || pic4 === undefined){
+            this.setState({imageErr:"Pls upload image"})
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+            return false
+          } else  return true
+        default :
+          if(pic1 === ''){
+            this.setState({imageErr:"Pls upload image"})
+            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+            return false
+          } else return true
+      }
     }
 
     catagoriesValidate = input => {
       if(!input){
         this.setState({catagoriesErr:"Pls select catagoriey"})
-        setTimeout(() => this.setState({catagoriesErr:null}),10000)
+        this.timerHandle_catagories = setTimeout(() => this.setState({catagoriesErr:null}),10000)
         return false
       } else return true
     }
@@ -189,11 +291,11 @@ class Edit extends Component {
     nameValidate = input => {
       if(input.trim().length === 0){
         this.setState({productnameErr:"Productname was empty"})
-        setTimeout(() => this.setState({productnameErr:null}),10000)
+        this.timerHandle_name = setTimeout(() => this.setState({productnameErr:null}),10000)
         return false
       } else if(this.regCharacter(input.trim()) === false) {
         this.setState({productnameErr:"Productname must be Character"})
-        setTimeout(() => this.setState({productnameErr:null}),10000)
+        this.timerHandle_name = setTimeout(() => this.setState({productnameErr:null}),10000)
         return false
       } else return true
     }
@@ -201,7 +303,7 @@ class Edit extends Component {
     descValidate = input => {
       if(input.trim().length === 0){
         this.setState({descErr:"Description was empty"})
-        setTimeout(() => this.setState({descErr:null}),10000)
+        this.timerHandle_desc = setTimeout(() => this.setState({descErr:null}),10000)
         return false
       } else return true
     }
@@ -209,19 +311,19 @@ class Edit extends Component {
     firstbitValidate = input => {
       if(String(input).trim().length === 0){
         this.setState({firstbitErr:"Firstbit was empty"})
-        setTimeout(() => this.setState({firstbitErr:null}),10000)
+        this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
         return false
       } else if(String(input).trim().length >= 10) {
         this.setState({firstbitErr:"length >= 10"})
-        setTimeout(() => this.setState({firstbitErr:null}),10000)
+        this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
         return false
       } else if(input < 1) {
         this.setState({firstbitErr:"Firstbit must be at least 1฿"})
-        setTimeout(() => this.setState({firstbitErr:null}),10000)
+        this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
         return false
       } else if(input%Math.floor(input) !== 0) {
         this.setState({firstbitErr:"Firstbit must be Integer"})
-        setTimeout(() => this.setState({firstbitErr:null}),10000)
+        this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
         return false
       } else return true
     }
@@ -436,11 +538,69 @@ class Edit extends Component {
     });
   }
 
-  moreImage = e => {
+  increaseImage = e => {
     e.preventDefault()
     this.state.imageStack < 4 &&
     this.setState((prevState) => ({
       imageStack: prevState.imageStack + 1
+    }));
+  }
+
+  decreaseImage2 = e => {
+    e.preventDefault()
+    if(this.state.productimageURL3 !== null || this.state.productimageURL4 !== null){
+      if(this.state.productimageURL3 !== null && this.state.productimageURL4 !== null){
+        this.setState((prevState) => ({
+          imageStack: prevState.imageStack - 1,
+          productimageURL2: prevState.productimageURL3,
+          productimageURL3: prevState.productimageURL4,
+          productimageURL4: null,
+        }))
+      } else {
+        if(this.state.productimageURL3 !== null){
+          this.setState((prevState) => ({
+            imageStack: prevState.imageStack - 1,
+            productimageURL2: prevState.productimageURL3,
+            productimageURL3: null,
+          }))
+        }
+        if(this.state.productimageURL4 !== null){
+          this.setState((prevState) => ({
+            imageStack: prevState.imageStack - 1,
+            productimageURL2: prevState.productimageURL4,
+            productimageURL4: null,
+          }))
+        }
+      }
+    } else {
+      this.setState((prevState) => ({
+        imageStack: prevState.imageStack - 1,
+        productimageURL2: null,
+      }));
+    }
+  }
+
+  decreaseImage3 = e => {
+    e.preventDefault()
+    if(this.state.productimageURL4 !== null){
+      this.setState((prevState) => ({
+        imageStack: prevState.imageStack - 1,
+        productimageURL3: prevState.productimageURL4,
+        productimageURL4: null,
+      }))
+    } else {
+      this.setState((prevState) => ({
+        imageStack: prevState.imageStack - 1,
+        productimageURL3: null,
+      }))
+    }
+  }
+
+  decreaseImage4 = e => {
+    e.preventDefault()
+    this.setState((prevState) => ({
+      imageStack: prevState.imageStack - 1,
+      productimageURL4: null,
     }));
   }
 
@@ -597,6 +757,7 @@ class Edit extends Component {
                                     onProgress={this.handleProgress2}
                                 />
                             </label>
+                            <button className="admin-from-removeimg" onClick={this.decreaseImage2}><i className="fa fa-times"> </i></button>
                             {this.state.isUploading2  === true ?
                                 <img className="load-small" src={require("../../images/Rolling.gif")} alt="PreviewPic" />
                               : <img className="load-small none" src={require("../../images/Rolling.gif")} alt="PreviewPic" />
@@ -619,6 +780,7 @@ class Edit extends Component {
                                     onProgress={this.handleProgress3}
                                 />
                             </label>
+                            <button className="admin-from-removeimg" onClick={this.decreaseImage3}><i className="fa fa-times"> </i></button>
                             {this.state.isUploading3  === true ?
                                 <img className="load-small" src={require("../../images/Rolling.gif")} alt="PreviewPic" />
                               : <img className="load-small none" src={require("../../images/Rolling.gif")} alt="PreviewPic" />
@@ -641,6 +803,7 @@ class Edit extends Component {
                                     onProgress={this.handleProgress4}
                                 />
                             </label>
+                            <button className="admin-from-removeimg" onClick={this.decreaseImage4}><i className="fa fa-times"> </i></button>
                             {this.state.isUploading4  === true ?
                                 <img className="load-small" src={require("../../images/Rolling.gif")} alt="PreviewPic" />
                               : <img className="load-small none" src={require("../../images/Rolling.gif")} alt="PreviewPic" />
@@ -657,7 +820,7 @@ class Edit extends Component {
                       </div>
                     }
                     {this.state.imageStack < 4 &&
-                    <button className="admin-from-addimg" onClick={this.moreImage}><i className="fa fa-plus"> </i> Add More Photo</button>
+                    <button className="admin-from-addimg" onClick={this.increaseImage}><i className="fa fa-plus"> </i> Add More Photo</button>
                     }
                 </div>
                 <div className="small-12 columns">

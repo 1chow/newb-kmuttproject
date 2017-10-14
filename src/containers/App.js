@@ -132,7 +132,6 @@ export default class App extends Component {
 	          }
 	          current_a.push(obj);
 			})
-			console.log('execute')
 			this.setState({current:current_a},() => fetch("https://us-central1-auctkmutt.cloudfunctions.net/getItems")
 			.then(response => {
 				return response.json();
