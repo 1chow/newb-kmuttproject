@@ -32,6 +32,7 @@ class bidForm extends Component {
 		if (user) {
 			let userId = user.uid
 			let postBid = "https://us-central1-auctkmutt.cloudfunctions.net/bidOrder?itemId="+itemId+"&bid="+current+"&uId="+userId
+			console.log(postBid)
 			fetch(postBid)
 			.then( response => {
 				return response.json();
@@ -67,7 +68,7 @@ class bidForm extends Component {
 						break
 				}
 			  })
-			.catch( err => err && open('alert','bad','Unfortunately <br> Bad Request please try agin','fa-thumbs-down'))
+			.catch( err => err && open('alert','bad','Unfortunately Bad Request please try agin','fa-thumbs-down'))
 		} else open('alert','bad','Please Log In','fa-thumbs-down')
 	}
 

@@ -113,6 +113,7 @@ class ItemsL extends Component {
                             triggler={this.props.triggler}
                             name={item.name}
                             desc={item.desc.fullDesc}
+                            shortDesc={item.desc.short}
                             firstBid={item.bid.openBid}
                             bidStep={item.bid.bidStep}
                             timeStart={item.bid.startTime}
