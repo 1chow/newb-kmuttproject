@@ -374,11 +374,7 @@ const mailTransport = nodemailer.createTransport(
 
 									  		} else {
 									  			//alrady win
-									  			if (newBid <= bidLast.current + bidLast.bidStep) {
-							  						res.status(200).send(['loser']);
-							  					} else if(newBid >= bidLast.current + bidLast.bidStep){
 							  						res.status(200).send(['alreadywin']);
-							  					}
 									  		}
 
 						  				}
@@ -390,7 +386,7 @@ const mailTransport = nodemailer.createTransport(
 					  				if ( active === 0 || tOut_ <= 1000 ) {
 						  				//time up
 						  				res.status(200).send(['timeup']);
-						  			} else if( newBid <= bidLast.current ){
+						  			} else if( newBid < bidLast.current ){
 						  				//already win
 					  					res.status(200).send(['loser']);
 					  				} else{
@@ -421,7 +417,7 @@ const mailTransport = nodemailer.createTransport(
 	//https://us-central1-auctkmutt.cloudfunctions.net/addMockup
 	exports.getCatagories = functions.https.onRequest((req, res) => {
 
-		res.set('Cache-Control', 'public, max-age=0, s-maxage=0');
+		res.set('Cache-Control', 'public, max-age=20, s-maxage=20');
 		res.set('Access-Control-Allow-Origin', '*');
 		res.header("Access-Control-Allow-Origin", "*");
 	  	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
