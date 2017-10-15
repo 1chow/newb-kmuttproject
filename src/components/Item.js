@@ -35,7 +35,7 @@ export default class Item extends Component {
 					data['name'] = data.userName
 					table_.push(data)
 				})
-			if(this.state) {				
+			if(this.state) {
 				this.setState({bidLists:table_.reverse()})
 			}
 		})
@@ -59,6 +59,23 @@ export default class Item extends Component {
 		if (this.props.timeNows !== nextProps.timeNows) {
 			this._filtertimeNows(this.props.timeNows,nextProps.timeNows,nextProps.isLogin)
 		}
+		if(this.props.userUID !== nextProps.userUID && nextProps.userUID.lenght !== 0){
+			this._filtercurrent(this.props.current,nextProps.current)
+		}
+	}
+
+	updateStatus = (tableUser,own,maxBid,current) => {
+		let length = tableUser.length
+		if(length === 0){
+			this.handleMsg('default','','','')
+		} else {
+			if(this.props.userUID === own){
+				this.handleMsg('maxBid',maxBid,'','')
+			} else {
+				let lowerBid = current + this.state.bidStep_
+				this.handleMsg('lostBid',tableUser[0].bid,lowerBid,'')
+			}
+		}
 	}
 
 	_filterItems = (items,currents) => {
@@ -81,8 +98,15 @@ export default class Item extends Component {
 		})
 
 		if (newcurrent[0] !== null){
-
-			this.setState({newcurrent: newcurrent[0].current,own:newcurrent[0].own})
+			
+			this.setState({newcurrent: newcurrent[0].current,own:newcurrent[0].own},() => {
+				if(this.state.bidLists && this.props.userUID){
+					let tableUser = this.state.bidLists.filter( table => {
+						return this.props.userUID === table.userId && table.userId !== ''
+					})
+					this.updateStatus(tableUser,this.state.own,newcurrent[0].maxBid,newcurrent[0].current)
+				}
+			})
 			
 
 			if (newcurrent[0].maxBid !== null) {
@@ -169,8 +193,11 @@ export default class Item extends Component {
 					isMsg : 1
 				})
 				this.timeout = setTimeout( () => {
-		        this.handleMsg('default','','','')
-		        this.setState({isMsg : 0})
+				let tableUser = this.state.bidLists.filter( table => {
+					return this.props.userUID === table.userId && table.userId !== ''
+				})
+				let lowerbid = this.state.newcurrent + this.state.bidStep_
+				this.handleMsg('lostBid',tableUser[0].bid,lowerbid,'')
 		      	},10000)
 			break
 			case'win' :
@@ -180,6 +207,26 @@ export default class Item extends Component {
 					bidColor:'#1B5E20',
 					bidResult: a,
 					bidResult_: b,
+					isMsg : 1
+				})
+			break
+			case'maxBid' :
+				this.setState({bidIcon:'trophy',
+					bidColor_bg:'#B9F6CA',
+					bidColor_icon:'#ffae00',
+					bidColor:'#1B5E20',
+					bidResult: 'Max bid at ' + a + ' ฿',
+					bidResult_: 'You are currently the highest bidder.',
+					isMsg : 1
+				})
+			break
+			case'lostBid' :
+				this.setState({bidIcon:'exclamation',
+					bidColor_bg:'#ffdad5',
+					bidColor_icon:'#cc4b37',
+					bidColor:'#cc4b37',
+					bidResult: 'You lost bid at ' + a + ' ฿',
+					bidResult_: 'Try Place Your high bid than '+ b,
 					isMsg : 1
 				})
 			break
@@ -207,6 +254,19 @@ export default class Item extends Component {
 		firebase.database().ref('/items/'+this.props.match.params.id+'/bidList').orderByChild('bid').off();
 		if (this.timeout) {
 			clearTimeout(this.timeout)
+		}
+	}
+
+	conditionDetail = type => {
+		switch(type){
+			case'New' :
+			    return "A brand-new, unused, unopened, undamaged item in its original packaging (where packaging is applicable). Packaging should be the same as what is found in a retail store, unless the item is handmade or was packaged by the manufacturer in non-retail packaging, such as an unprinted box or plastic bag. See the seller's listing for full details."
+			case'Used' : 
+				return "An item that has been used previously. The item may have some signs of cosmetic wear, but is fully operational and functions as intended. This item may be a floor model or store return that has been used. See the seller's listing for full details and description of any imperfections."
+			case'Manufacturer refurbished' : 
+				return "An item that has been professionally restored to working order by a manufacturer or manufacturer-approved vendor. This means the product has been inspected, cleaned, and repaired to meet manufacturer specifications and is in excellent condition. This item may or may not be in the original packaging. See the seller's listing for full details."
+			default :
+				return "No condition"
 		}
 	}
 
@@ -247,11 +307,14 @@ export default class Item extends Component {
 							<div className="small-12 medium-12 columns auct-spec-container">
 								<h3>Item specifics</h3>
 								<ul className="auct-spec" >
-								{ this.state.item[0].spec.map((spec,i) => {
-								return 	<li key={i} ><p className="auct-spec-name">{spec.name}</p> : <p className="auct-spec-detail">{spec.detail}</p></li>
-								})}
+									{ this.state.item[0].spec.map((spec,i) => {
+										if(spec.name === 'Condition') {
+											return	<li key={i} ><p className="auct-spec-name">{spec.name}</p> : <p className="auct-spec-detail">{this.conditionDetail(spec.detail)}</p></li>
+										} else {
+											return	<li key={i} ><p className="auct-spec-name">{spec.name}</p> : <p className="auct-spec-detail">{spec.detail}</p></li>
+										}
+									})}
 								</ul>
-
 							</div>
 						</div>
 					</div>
@@ -342,7 +405,7 @@ export default class Item extends Component {
 					<div className="auct-from-markdown">
 						<div className="small-12 medium-12 columns">
 							<h3>{this.state.item[0].desc.fullHeader}</h3>
-							<p>{this.state.item[0].desc.fullDesc}</p>
+							<div dangerouslySetInnerHTML= {{__html: this.state.item[0].desc.fullDesc.toString('html').replace(/ /g, "\u00a0")}} />
 						</div>
 					</div>
 				</div>

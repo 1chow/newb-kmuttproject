@@ -121,6 +121,7 @@ class ItemsL extends Component {
                             image={item.img_}
                             id={item._id}
                             isBided={item.bidList}
+                            specific={item.spec}
                           />
                         }
                         </td>
