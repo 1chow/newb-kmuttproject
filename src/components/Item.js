@@ -315,6 +315,7 @@ export default class Item extends Component {
 						<div className="row auct-from-warp">
 							<div className="small-12 medium-12 columns">
 								<p className="time">Bidding List</p>
+								<p className="time bids">{'[ '+this.state.item[0].bid.count +' bids ]'}</p>
 								<div className="tableWarp">
 								<table className="hover unstriped">
 									<tbody>

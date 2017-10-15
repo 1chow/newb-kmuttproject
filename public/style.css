@@ -266,7 +266,7 @@ i.alert{color: #ffae00;}
     .auct-from-warp .tableWarp{overflow-x: hidden;height: 44.25vh;background: #fff;}
     .auct-from-warp .toggleAutoBid{cursor: pointer;font-family: 'sukhumvit_normal';color: #5c5c5c;float: right;margin: 10px 15px 5px;transition: all 0.25s ease;}
     .auct-from-warp .toggleAutoBid:hover{color: #3b3b3b;}
-    .auct-from-warp .auct-form-container{}
+    .auct-from-warp p.bids{display: inline-block;position: absolute;top: 1.5px;right: 20px;color: #5c5c5c;font-size: 0.9em;}
 .auct-from-time{font-size: 1em;}
 .auct-bids-value{text-align: center;}
 .auct-bids-value button{width: 3em;height: 3em;border-radius: 50%;background: #2179ba;color: #fff;margin-right: 5px;font-family: 'sukhumvit_bold';text-align: center;}
