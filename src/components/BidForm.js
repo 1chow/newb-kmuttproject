@@ -10,9 +10,7 @@ class bidForm extends Component {
 	}
 
 	componentDidMount() {
-
-			this.bid.value = this.props.newcurrent + this.props.bidStep_
-
+		this.bid.value = this.props.newcurrent + this.props.bidStep_
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -129,6 +127,7 @@ class bidForm extends Component {
 
     render() {
         return  (
+	        	
 			<form className="auct-form" onSubmit={this.handleSubmit} autoComplete="off">
 				<label>
 					<input ref={ bid => this.bid = bid } type="number" onBlur={this.handleBlur} className="auct-form-input" id="NumberInput"/>
@@ -149,6 +148,7 @@ class bidForm extends Component {
 					)
 				}
 			</form>
+
         )
     }
 }	

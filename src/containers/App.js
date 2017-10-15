@@ -203,7 +203,7 @@ export default class App extends Component {
 			min = ('0' + d.getMinutes()).slice(-2),
 			sec = ('0' + d.getSeconds()).slice(-2),
 			msec = ('0' + d.getMilliseconds()).slice(-2),
-			time = yy + '-' + mm + '-' + dd + ', ' + h + ':' + min + ':' + sec +  ':' + msec + ' (UTC+7)';
+			time = dd + '-' + mm + '-' + yy + ', ' + h + ':' + min + ':' + sec +  ':' + msec + ' (UTC+7)';
 	
 		return time;
 
@@ -217,10 +217,30 @@ export default class App extends Component {
 			hh = d.getHours(), h = hh,
 			min = ('0' + d.getMinutes()).slice(-2),
 			sec = ('0' + d.getSeconds()).slice(-2),
-			time = yy + '-' + mm + '-' + dd + ', ' + h + ':' + min + ':' + sec;
+			time = dd + '-' + mm + '-' + yy + ', ' + h + ':' + min + ':' + sec;
 	
 		return time;
 
+	}
+
+	convertDuration = (start,end) =>{
+		var d = (end - start)/1000;
+		var day = Math.floor(d / 3600 / 24)
+		var h = Math.floor(d / 3600 % 24)
+		var dayDisplay = day > 0 ? (day > 9 ? day : '0'+day ) : "00"
+		var hDisplay = h > 0 ? (h > 9 ? h : '0'+h ) : "00"
+
+		var s = new Date(parseInt(start,10)),
+			syy = s.getFullYear(),
+			smm = ('0' + (s.getMonth() + 1)).slice(-2),
+			sdd = ('0' + s.getDate()).slice(-2)
+
+		var e = new Date(parseInt(end,10)),
+			eyy = e.getFullYear(),
+			emm = ('0' + (e.getMonth() + 1)).slice(-2),
+			edd = ('0' + e.getDate()).slice(-2)
+	
+		return dayDisplay + ' day ' + hDisplay +' hr (' + sdd + '-' + smm + '-' + syy + ' to ' + edd + '-' + emm + '-' + eyy + ')'
 	}
 
 	tick() {
@@ -397,6 +417,8 @@ export default class App extends Component {
 													{...props} 
 													items={this.state.items}
 													userUID={this.state.userUID}
+													priceFormat={this.priceFormat}
+													convertDuration={this.convertDuration}
 												/>
 											)}
 										/>
@@ -477,6 +499,6 @@ export default class App extends Component {
 					chartNow={this.state.chartNow}		
 				/>
 			</div>
-		) : <div className='preload'><img src={require("../images/Rolling.gif")} alt="Loading"></img></div>
+		) : <div className='preload-gavel'><img src={require("../images/loading.png")} alt="Loading"></img></div>
 	}
 }

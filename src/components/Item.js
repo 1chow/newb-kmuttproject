@@ -35,7 +35,7 @@ export default class Item extends Component {
 					data['name'] = data.userName
 					table_.push(data)
 				})
-			if(this.state) {				
+			if(this.state) {
 				this.setState({bidLists:table_.reverse()})
 			}
 		})
@@ -59,6 +59,23 @@ export default class Item extends Component {
 		if (this.props.timeNows !== nextProps.timeNows) {
 			this._filtertimeNows(this.props.timeNows,nextProps.timeNows,nextProps.isLogin)
 		}
+		if(this.props.userUID !== nextProps.userUID && nextProps.userUID.lenght !== 0){
+			this._filtercurrent(this.props.current,nextProps.current)
+		}
+	}
+
+	updateStatus = (tableUser,own,maxBid,current) => {
+		let length = tableUser.length
+		if(length === 0){
+			this.handleMsg('default','','','')
+		} else {
+			if(this.props.userUID === own){
+				this.handleMsg('maxBid',maxBid,'','')
+			} else {
+				let lowerBid = current + this.state.bidStep_
+				this.handleMsg('lostBid',tableUser[0].bid,lowerBid,'')
+			}
+		}
 	}
 
 	_filterItems = (items,currents) => {
@@ -81,8 +98,15 @@ export default class Item extends Component {
 		})
 
 		if (newcurrent[0] !== null){
-
-			this.setState({newcurrent: newcurrent[0].current,own:newcurrent[0].own})
+			
+			this.setState({newcurrent: newcurrent[0].current,own:newcurrent[0].own},() => {
+				if(this.state.bidLists && this.props.userUID){
+					let tableUser = this.state.bidLists.filter( table => {
+						return this.props.userUID === table.userId && table.userId !== ''
+					})
+					this.updateStatus(tableUser,this.state.own,newcurrent[0].maxBid,newcurrent[0].current)
+				}
+			})
 			
 
 			if (newcurrent[0].maxBid !== null) {
@@ -169,9 +193,12 @@ export default class Item extends Component {
 					isMsg : 1
 				})
 				this.timeout = setTimeout( () => {
-		        this.handleMsg('default','','','')
-		        this.setState({isMsg : 0})
-		      	},6000)
+				let tableUser = this.state.bidLists.filter( table => {
+					return this.props.userUID === table.userId && table.userId !== ''
+				})
+				let lowerbid = this.state.newcurrent + this.state.bidStep_
+				this.handleMsg('lostBid',tableUser[0].bid,lowerbid,'')
+		      	},10000)
 			break
 			case'win' :
 				this.setState({bidIcon:c,
@@ -182,10 +209,26 @@ export default class Item extends Component {
 					bidResult_: b,
 					isMsg : 1
 				})
-				this.timeout = setTimeout( () => {
-		        this.handleMsg('default','','','')
-		        this.setState({isMsg : 0})
-		      	},6000)
+			break
+			case'maxBid' :
+				this.setState({bidIcon:'trophy',
+					bidColor_bg:'#B9F6CA',
+					bidColor_icon:'#ffae00',
+					bidColor:'#1B5E20',
+					bidResult: 'Max bid at ' + a + ' ฿',
+					bidResult_: 'You are currently the highest bidder.',
+					isMsg : 1
+				})
+			break
+			case'lostBid' :
+				this.setState({bidIcon:'exclamation',
+					bidColor_bg:'#ffdad5',
+					bidColor_icon:'#cc4b37',
+					bidColor:'#cc4b37',
+					bidResult: 'You lost bid at ' + a + ' ฿',
+					bidResult_: 'Try Place Your high bid than '+ b,
+					isMsg : 1
+				})
 			break
 			default :
 				this.setState({
@@ -214,11 +257,25 @@ export default class Item extends Component {
 		}
 	}
 
+	conditionDetail = type => {
+		switch(type){
+			case'New' :
+			    return "A brand-new, unused, unopened, undamaged item in its original packaging (where packaging is applicable). Packaging should be the same as what is found in a retail store, unless the item is handmade or was packaged by the manufacturer in non-retail packaging, such as an unprinted box or plastic bag. See the seller's listing for full details."
+			case'Used' : 
+				return "An item that has been used previously. The item may have some signs of cosmetic wear, but is fully operational and functions as intended. This item may be a floor model or store return that has been used. See the seller's listing for full details and description of any imperfections."
+			case'Manufacturer refurbished' : 
+				return "An item that has been professionally restored to working order by a manufacturer or manufacturer-approved vendor. This means the product has been inspected, cleaned, and repaired to meet manufacturer specifications and is in excellent condition. This item may or may not be in the original packaging. See the seller's listing for full details."
+			default :
+				return "No condition"
+		}
+	}
+
 	render() {
 
 		return this.state.isActive !== null ? (
 
 			<div>
+
 				<div className="row auct-content">
 					<div className="small-9 columns">
 						<h1>{this.state.item[0].name}</h1>
@@ -226,93 +283,132 @@ export default class Item extends Component {
 					</div>
 					<div className="small-3 columns">
 						{ this.state.newcurrent !== 0 &&
-							<p className="price">{this.state.newcurrent}<span className="curentcy">Bath</span></p>
+							<p className="price"><span className="curentcy">฿</span>{this.props.priceFormat(this.state.newcurrent)}<span className="curentcy dot">.00</span></p>
 						}
+						<p className="helper auct-text-current text-right show-for-medium">Current Bids</p>
 					</div>
 				</div>
-				<div>
-					<div className="small-12 medium-5 large-6 columns auct-l-container">
-						<div className="item-warper">
-							<div className="item">
-								<img src={this.state.item[0].img_[this.state.itemImage]} alt=""/>
-							</div>
-							<div className="item-box-list">
+
+				<div className="small-12 medium-7 large-6 columns auct-l-container">
+					<div className="item-warper">
+						<div className="item">
+							<img src={this.state.item[0].img_[this.state.itemImage]} alt=""/>
+						</div>
+						<div className="item-box-list">
 
 							{ this.state.item[0].img_.map( (img,i) => {
 								return <img key={i} className={this.state.itemImage === i ? 'active' : ''} src={img} onClick={() => this.ImgToggle(i)} alt=""/>
 							})}
 
-							</div>
 						</div>
 					</div>
-					<div className="small-12 medium-7 large-6 columns auct-r-container">
-						<div className="auct-content">
-							{ this.state.isActive !== 0 &&
-								<div className="row auct-from-warp">
-									<div className="small-5 medium-5 columns">
-										<p className="time">Time Remaining<br></br>
-										{this.state.timeNow !== null &&
-											<Clock secondsToHms={this.props.secondsToHms} timeNow={this.state.timeNow-1}/>
+					<div className="small-12 columns">
+						<div className="auct-from-markdown">
+							<div className="small-12 medium-12 columns auct-spec-container">
+								<h3>Item specifics</h3>
+								<ul className="auct-spec" >
+									{ this.state.item[0].spec.map((spec,i) => {
+										if(spec.name === 'Condition') {
+											return	<li key={i} ><p className="auct-spec-name">{spec.name}</p> : <p className="auct-spec-detail">{this.conditionDetail(spec.detail)}</p></li>
+										} else {
+											return	<li key={i} ><p className="auct-spec-name">{spec.name}</p> : <p className="auct-spec-detail">{spec.detail}</p></li>
 										}
-										</p>
-									</div>
-								{this.props.isLogin ?
-									<div className="small-7 medium-7 columns auct-from-bit">
-										<p className="time">Place Your Bid</p>
-										<BidForm recieve={this.recieve} msg={this.handleMsg} waiting={this.waiting} wait={this.state.wait} newcurrent={this.state.newcurrent} mfkCurrent={this.props.current} open={this.props.triggler} item={this.state.item[0]} params={this.props.match.params.id} bidStep_={this.state.bidStep_} />
-										{ this.props.userUID !== this.state.own ?
-											<p className="helper">Enter THB {this.state.newcurrent + this.state.bidStep_ } ฿ or more</p>
-											:
-											<p className="helper">Your Max Bids {this.state.maxBid} ฿</p>
-										}
-									</div> 
-									: 
-									<div className="small-7 medium-7 columns auct-from-bit">
-										
-									</div> 
-								}
-							</div>
-							}
-							<div className="row auct-from-warp auct-msg" style={{background : this.state.bidColor_bg}}>
-								<div className="small-12 medium-12 columns auct-msg-col"  >
-									<div className="auct-msg-l" style={{color : this.state.bidColor_icon}} >
-										<i className={"fa fa-" + this.state.bidIcon} ></i>
-									</div>
-									<div className="auct-msg-r" style={{color : this.state.bidColor}} >
-										<p className="auct-msg-p">{this.state.bidResult}<span>{this.state.bidResult_}</span></p>
-									</div>
-								</div>
-							</div>
-							<div className="row auct-from-warp">
-								<div className="small-12 medium-12 columns">
-									<p className="time">Bidding List</p>
-									<div className="tableWarp">
-									<table className="hover unstriped">
-										<tbody>
-											{ this.state.bidLists.map( (bidList,i) => {
-												let bidLenght = this.state.bidLists.length - 1
-											return	<tr key={i} className={"bidList " + (bidList.auto === 2 ? 'bidList-none ' : '') + ((this.state.seeAutoBid && bidList.auto >= 2) ? 'bidList-show' : '')} >
-													<td width="25">{i === 0 && <i className="fa fa-trophy"></i>}</td>
-													<td width="125" style={{textAlign:"left"}}>{i !== bidLenght  ? (bidList.name).slice(0,-2) + ' ⁎⁎⁎' : bidList.name}<span className='bidList-auto'>{bidList.auto === 1 || bidList.auto === 2 ? '(auto)' : ''}{(this.state.seeAutoBid && bidList.auto === 3) ? '(auto)' : ''}</span></td>
-													<td width="50" title={(bidList.auto === 3 ? 'max bid is lost.' : '')+ (bidList.auto === 2 ? ' auto bid.' : '')} style={{textAlign:"right"}}>{bidList.bid}.00<span>฿</span></td>
-													<td width="150" title={this.props.convertTimeM(bidList.bidTimestamp)} style={{fontSize:"0.66em"}}>{this.props.convertTime(bidList.bidTimestamp)}</td>
-												</tr>
-											})}
-										</tbody>
-									</table> 
-									</div>
-									<button className="toggleAutoBid" onClick={this.toggleAutoBid}><i className={"fa " +(this.state.seeAutoBid ? 'fa-eye-slash' : 'fa-eye')} aria-hidden="true"></i> auto bids</button>
-								</div>
-							</div>
-							<div className="row auct-from-markdown">
-								<div className="small-12 medium-12 columns">
-									<h3>{this.state.item[0].desc.fullHeader}</h3>
-									<div dangerouslySetInnerHTML= {{__html: this.state.item[0].desc.fullDesc.toString('html').replace(/ /g, "\u00a0")}} />
-								</div>
+									})}
+								</ul>
 							</div>
 						</div>
 					</div>
 				</div>
+
+				<div className="small-12 medium-5 large-6 columns auct-r-container">
+					<div className="auct-content">
+						{ this.state.isActive !== 0 &&
+							<div className="row auct-from-warp">
+								<div className="medium-12 large-6 columns">
+									<p className="time">Time Left</p>
+									<div className="auct-from-time">
+										{this.state.timeNow !== null &&
+											<div> 
+												<Clock secondsToHms={this.props.secondsToHms} timeNow={this.state.timeNow-1}/>
+												<p className="helper">Time Current : Bangkok (UTC + 7)</p>
+											</div> 
+										}
+									</div>
+								</div>
+								{this.props.isLogin ?
+								<div className="medium-12 large-6 columns auct-from-bit">
+									<p className="time">Place Your Bid</p>
+									<BidForm recieve={this.recieve} msg={this.handleMsg} waiting={this.waiting} wait={this.state.wait} newcurrent={this.state.newcurrent} mfkCurrent={this.props.current} open={this.props.triggler} item={this.state.item[0]} params={this.props.match.params.id} bidStep_={this.state.bidStep_} />
+									{ this.props.userUID !== this.state.own ?
+										<p className="helper">Minimum Incress Bidding ฿{this.state.bidStep_ }.<br/>Please Enter ฿ {this.state.newcurrent + this.state.bidStep_ } or more.</p>
+										:
+										<p className="helper">Your Max Bids ฿ {this.state.maxBid}.00</p>
+									}
+								</div> 
+								: 
+								<div className="small-6 medium-6 columns auct-from-bit">
+									
+								</div> 
+								}
+						</div>
+						}
+
+						<div className="row auct-from-warp">
+							<div className="medium-12 large-6 columns auct-from-text">
+								<p className="auct-text"><i className="fa fa-calendar"></i> Duration</p>
+								<p className="auct-text-sub">{this.props.convertDuration(this.state.item[0].bid.startTime,this.state.item[0].bid.endTime)}</p>
+							</div>
+							<div className="medium-12 large-6 columns auct-from-text">
+								<p className="auct-text"><i className="fa fa-clock-o"></i> Ending Time</p>
+								<p className="auct-text-sub">{this.props.convertTime(this.state.item[0].bid.endTime)} (UTC+7)</p>
+							</div>
+						</div>
+
+						<div className="row auct-from-warp auct-msg" style={{background : this.state.bidColor_bg}}>
+							<div className="small-12 medium-12 columns auct-msg-col"  >
+								<div className="auct-msg-l" style={{color : this.state.bidColor_icon}} >
+									<i className={"fa fa-" + this.state.bidIcon} ></i>
+								</div>
+								<div className="auct-msg-r" style={{color : this.state.bidColor}} >
+									<p className="auct-msg-p">{this.state.bidResult}<span>{this.state.bidResult_}</span></p>
+								</div>
+							</div>
+						</div>
+
+						<div className="row auct-from-warp">
+							<div className="small-12 medium-12 columns">
+								<p className="time">Bidding List</p>
+								<div className="tableWarp">
+								<table className="hover unstriped">
+									<tbody>
+										{ this.state.bidLists.map( (bidList,i) => {
+											let bidLenght = this.state.bidLists.length - 1
+										return	<tr key={i} className={"bidList " + (bidList.auto === 2 ? 'bidList-none ' : '') + ((this.state.seeAutoBid && bidList.auto >= 2) ? 'bidList-show' : '')} >
+												<td width="25">{i === 0 && <i className="fa fa-trophy"></i>}</td>
+												<td width="125" style={{textAlign:"left"}}>{i !== bidLenght  ? '⁎ ' + (bidList.name).slice(1,-1) + ' ⁎' : bidList.name}<span className='bidList-auto'>{bidList.auto === 1 || bidList.auto === 2 ? '(auto)' : ''}{(this.state.seeAutoBid && bidList.auto === 3) ? '(auto)' : ''}</span></td>
+												<td width="50" title={(bidList.auto === 3 ? 'max bid is lost.' : '')+ (bidList.auto === 2 ? ' auto bid.' : '')} style={{textAlign:"right"}}>{bidList.bid}.00<span>฿</span></td>
+												<td width="150" title={this.props.convertTimeM(bidList.bidTimestamp)} style={{fontSize:"0.66em"}}>{this.props.convertTime(bidList.bidTimestamp)}</td>
+											</tr>
+										})}
+									</tbody>
+								</table> 
+								</div>
+								<button className="toggleAutoBid" onClick={this.toggleAutoBid}><i className={"fa " +(this.state.seeAutoBid ? 'fa-eye-slash' : 'fa-eye')} aria-hidden="true"></i> auto bids</button>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<div className="small-12 columns">
+					<div className="auct-from-markdown">
+						<div className="small-12 medium-12 columns">
+							<h3>{this.state.item[0].desc.fullHeader}</h3>
+							<div dangerouslySetInnerHTML= {{__html: this.state.item[0].desc.fullDesc.toString('html').replace(/ /g, "\u00a0")}} />
+						</div>
+					</div>
+				</div>
+
 			</div>
 		) : <Loading />
 	}

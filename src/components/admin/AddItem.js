@@ -29,6 +29,13 @@ class Edit extends Component {
       bidStep:'',
       catagoriesselect:'', 
       desc: '',
+      spec_select1:'',
+      spec_select2:'',
+      spec_select3:'',
+      spec_detail1:'',
+      spec_detail2:'',
+      spec_detail3:'',
+      spec_conditon:'',
       timeStart: moment(),
       timeEnd: moment().add(1, 'days'),
       boundedTime:'',
@@ -42,13 +49,15 @@ class Edit extends Component {
       timeendErr:null,
       bidstepErr:null,
       descPicErr:null,
+      specErr:null,
+      conditionErr:null,
       imageStack:1,
       editorValue: RichTextEditor.createEmptyValue()
     }
   }
 
   componentDidMount() {
-    let {name,  desc, firstBid,  bidStep,  timeStart, timeEnd, catagory, image} = this.props
+    let {name,  desc, firstBid,  bidStep,  timeStart, timeEnd, catagory, image , specific} = this.props
      let user = firebase.auth().currentUser;
         if (user) {
         this.setState({
@@ -79,6 +88,7 @@ class Edit extends Component {
         productimageURL3:image[2],
         productimageURL4:image[3],
         imageStack:Object.keys(image).length,
+        specific: specific
       })
     }
   }
@@ -122,6 +132,18 @@ class Edit extends Component {
 			clearTimeout(this.timerHandle_images);     
 			this.timerHandle_images = 0;                
     }
+    if (this.timerHandle_fulldesc) {               
+			clearTimeout(this.timerHandle_fulldesc);     
+			this.timerHandle_fulldesc = 0;                
+    }
+    if (this.timerHandle_condition) {               
+			clearTimeout(this.timerHandle_condition);     
+			this.timerHandle_condition = 0;                
+    }
+    if (this.timerHandle_spec) {               
+			clearTimeout(this.timerHandle_spec);     
+			this.timerHandle_spec = 0;                
+    }
   }
 
   
@@ -138,9 +160,12 @@ class Edit extends Component {
       timeendErr:null,
       bidstepErr:null,
       descPicErr:null,
+      specErr:null,
+      conditionErr:null,
     })
     let test_name = this.nameValidate(this.state.productname)
     let test_desc = this.descValidate(this.state.desc)
+    let test_fulldesc = this.fulldescValidate(this.state.editorValue.toString('html'))
     let test_firstbit = this.firstbitValidate(this.state.firstbit)
     let test_catagories = this.catagoriesValidate(this.state.catagoriesselect)
     let test_image = this.productimageValidate(this.state.productimageURL)
@@ -154,6 +179,10 @@ class Edit extends Component {
     let test_timestart = this.timestartValidate(this.state.timeStart)
     let test_timeend = this.timeendValidate(this.state.timeEnd)
     let test_bidstep = this.bidstepValidate(this.state.bidStep)
+    let test_spec1 = this.specValidate(this.state.spec_select1 !== 'More...' ? this.state.spec_select1 : this.state.spec_select_add1,this.state.spec_detail1)
+    let test_spec2 = this.specValidate(this.state.spec_select2 !== 'More...' ? this.state.spec_select2 : this.state.spec_select_add2,this.state.spec_detail2)
+    let test_spec3 = this.specValidate(this.state.spec_select3 !== 'More...' ? this.state.spec_select3 : this.state.spec_select_add3,this.state.spec_detail3)
+    let test_condition = this.conditionstepValidate(this.state.spec_conditon)
     let isValid = test_name        &&
                   test_desc        &&
                   test_firstbit    &&
@@ -162,7 +191,12 @@ class Edit extends Component {
                   test_timestart   &&
                   test_timeend     &&
                   test_bidstep     &&
-                  test_images
+                  test_images      &&
+                  test_fulldesc    &&
+                  test_spec1       &&
+                  test_spec2       &&
+                  test_spec3       &&
+                  test_condition
     if (isValid === true) {
         if(this.props.name){
           if (window.confirm("Do you want to edit this item?") === true) {
@@ -175,6 +209,36 @@ class Edit extends Component {
         }
     }
   }
+
+  specValidate = (select,detail) => {
+    if(detail.trim().length === 0){
+      this.setState({specErr:"Specification detail was empty"})
+      this.timerHandle_spec = setTimeout(() => this.setState({specErr:null}),10000)
+      return false
+    } else if(this.regCharacter(detail.trim()) === false) {
+      this.setState({productnameErr:"Specification must be Character"})
+      this.timerHandle_spec = setTimeout(() => this.setState({specErr:null}),10000)
+      return false
+    } else if(!select){
+      this.setState({specErr:"Specification was empty"})
+      this.timerHandle_spec = setTimeout(() => this.setState({specErr:null}),10000)
+      return false
+    } else if(select.trim().length === 0){
+      this.setState({specErr:"Specification was empty"})
+      this.timerHandle_spec = setTimeout(() => this.setState({specErr:null}),10000)
+      return false
+    } else return true
+  }
+
+  conditionstepValidate = input => {
+    if(!input){
+      this.setState({conditionErr:"Pls select condition"})
+      this.timerHandle_condition = setTimeout(() => this.setState({conditionErr:null}),10000)
+      return false
+    } else return true
+  }
+
+
 
   bidstepValidate = input => {
     if(String(input).trim().length === 0){
@@ -303,6 +367,16 @@ class Edit extends Component {
         return false
       } else return true
     }
+
+    fulldescValidate = input => {
+      let a = input.trim().replace(/<\/?[^>]+(>|$)/g, "")
+      let b = a.replace(/&nbsp;/g, '')
+      if(b === ''){
+        this.setState({descPicErr:"Full Description was empty"})
+        this.timerHandle_fulldesc = setTimeout(() => this.setState({descPicErr:null}),10000)
+        return false
+      } else return true
+    }
     
     descValidate = input => {
       if(input.trim().length === 0){
@@ -366,8 +440,25 @@ class Edit extends Component {
           2 : this.state.productimageURL3,
           3 : this.state.productimageURL4,
         },
-        own : this.state.User
-        
+        own : this.state.User,
+        spec:{
+          0 : {
+            detail : this.state.spec_conditon,
+            name : 'Condition',
+          },
+          1 : {
+            detail : this.state.spec_detail1,
+            name : this.state.spec_select1 !== 'More...' ? this.state.spec_select1 : this.state.spec_select_add1,
+          },
+          2 : {
+            detail : this.state.spec_detail2,
+            name : this.state.spec_select2 !== 'More...' ? this.state.spec_select2 : this.state.spec_select_add2,
+          },
+          3 : {
+            detail : this.state.spec_detail3,
+            name : this.state.spec_select3 !== 'More...' ? this.state.spec_select3 : this.state.spec_select_add3,
+          },
+        }
       })
       .then(snapshot => {
             firebase.database().ref('/items/' + snapshot.key + '/bidList').push({
@@ -390,6 +481,13 @@ class Edit extends Component {
                   bidStep:'',
                   catagoriesselect:'', 
                   desc: '',
+                  spec_detail1:'',
+                  spec_detail2:'',
+                  spec_detail3:'',
+                  spec_select1:'',
+                  spec_select2:'',
+                  spec_select3:'',
+                  spec_conditon:'',
                   timeStart: moment(),
                   timeEnd: moment().add(1, 'days'),
                   boundedTime:'',
@@ -402,6 +500,8 @@ class Edit extends Component {
                   timeendErr:null,
                   bidstepErr:null,
                   descPicErr:null,
+                  specErr:null,
+                  conditionErr:null,
                   imageStack:1,
                   editorValue: RichTextEditor.createEmptyValue()
                 })
@@ -669,7 +769,8 @@ class Edit extends Component {
                 </div>
                 <div className="small-12 columns">
                   <label>Product Description
-                    <textarea  type="text" placeholder="Product Description Here" aria-describedby="help-signup" id="" rows="5" required pattern="text"
+                    {this.state.desc.length+'/250'}
+                    <textarea maxLength="250" type="text" placeholder="Product Description Here" aria-describedby="help-signup" id="" rows="5" required pattern="text"
                     onChange={ this.onNewItemChange } value={ this.state.desc } name="desc" ></textarea>
                   </label>
                   { this.state.descErr &&
@@ -697,6 +798,92 @@ class Edit extends Component {
 											<p><i className="fa fa-times"></i> {this.state.descPicErr}</p>
 										</div>
 									}
+                </div>
+                <div className="small-12 columns">
+                    <label>Specification</label>
+                      <div className="small-12 columns">
+                        <select id="select" required onChange={ this.onNewItemChange } 
+                          value={ this.state.spec_conditon} name="spec_conditon">
+                          <option value=''>Plese Select Condition</option>
+                          {this.props.spec_conditon.map( (condition,i) => {
+                              return ( 
+                                <option key={i} value={condition}>{condition}</option>
+                              );
+                            })}
+                        </select>
+                        { this.state.conditionErr &&
+                          <div className="alert-error">
+                            <p><i className="fa fa-times"></i> {this.state.conditionErr}</p>
+                          </div>
+                        }
+                      </div>
+                      <div className="small-12 columns">
+                        <div className="small-6 columns">
+                          { this.state.spec_select1 !== 'More...' ?
+                            <select id="select" required onChange={ this.onNewItemChange } 
+                              value={ this.state.spec_select1} name="spec_select1">
+                              <option value=''>Select Specification</option>
+                              {this.props.select.map( (select,i) => {
+                                  return ( 
+                                    <option key={i} value={select}>{select}</option>
+                                  )
+                                })}
+                            </select> :
+                            <div style={{position:'relative'}}>
+                              <input type="text" placeholder="Specification" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={ this.onNewItemChange } value={ this.state.spec_select_add1 } name="spec_select_add1"/>
+                              <i onClick={() => this.setState({spec_select1:''})} style={{position:'absolute',top:'30%',right:'10px',color:'gray'}} className="fa fa-times"></i>
+                            </div>    
+                          }
+                        </div>
+                        <div className="small-6 columns">
+                          <input type="text" placeholder="Specification Detail" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={ this.onNewItemChange } value={ this.state.spec_detail1 } name="spec_detail1"/>
+                        </div>
+                        <div className="small-6 columns">
+                          { this.state.spec_select2 !== 'More...' ?
+                            <select id="select" required onChange={ this.onNewItemChange } 
+                              value={this.state.spec_select2} name="spec_select2">
+                              <option value=''>Select Specification</option>
+                              {this.props.select.map( (select,i) => {
+                                  return ( 
+                                    <option key={i} value={select}>{select}</option>
+                                  );
+                                })}
+                            </select> :
+                            <div style={{position:'relative'}}>
+                              <input type="text" placeholder="Specification" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={ this.onNewItemChange } value={ this.state.spec_select_add2 } name="spec_select_add2"/>
+                              <i onClick={() => this.setState({spec_select2:''})} style={{position:'absolute',top:'30%',right:'10px',color:'gray'}} className="fa fa-times"></i>
+                            </div>      
+                          }
+                        </div>
+                        <div className="small-6 columns">
+                          <input type="text" placeholder="Specification Detail" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={ this.onNewItemChange } value={ this.state.spec_detail2 } name="spec_detail2"/>
+                        </div>
+                        <div className="small-6 columns">
+                          { this.state.spec_select3 !== 'More...' ?
+                            <select id="select" required onChange={ this.onNewItemChange } 
+                              value={ this.state.spec_select3} name="spec_select3">
+                              <option value=''>Select Specification</option>
+                              {this.props.select.map( (select,i) => {
+                                  return ( 
+                                    <option key={i} value={select}>{select}</option>
+                                  );
+                                })}
+                            </select> :
+                            <div style={{position:'relative'}}>
+                              <input type="text" placeholder="Specification" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={ this.onNewItemChange } value={ this.state.spec_select_add3 } name="spec_select_add3"/>
+                              <i onClick={() => this.setState({spec_select3:''})} style={{position:'absolute',top:'30%',right:'10px',color:'gray'}} className="fa fa-times"></i>
+                            </div>  
+                          }
+                        </div>
+                        <div className="small-6 columns">
+                          <input type="text" placeholder="Specification Detail" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={ this.onNewItemChange } value={ this.state.spec_detail3 } name="spec_detail3"/>
+                        </div>
+                      </div>
+                      { this.state.specErr &&
+                        <div className="alert-error">
+                          <p><i className="fa fa-times"></i> {this.state.specErr}</p>
+                        </div>
+                      }
                 </div>
                 <div className="small-12 columns">
                   <label>First Bit
@@ -931,5 +1118,17 @@ Edit.defaultProps = {
       {label: 'OL', style: 'ordered-list-item'},
       {label: "Blockquote", style: "blockquote"}
     ]
-  }
+  },
+  spec_conditon:[
+    'New',
+    'Used',
+    'Manufacturer refurbished',
+  ],
+  select: [
+    'Brand',
+    'Color',
+    'Height',
+    'Weight',
+    'More...',
+  ]
 }
