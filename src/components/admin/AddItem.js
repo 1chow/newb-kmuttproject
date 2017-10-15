@@ -29,6 +29,28 @@ class Edit extends Component {
       bidStep:'',
       catagoriesselect:'', 
       desc: '',
+      specific: [
+        {
+          detail : '',
+          name : 'Condition',
+          more : ''
+        },
+        {
+          detail : '',
+          name : '',
+          more : ''
+        },
+        {
+          detail : '',
+          name : '',
+          more : ''
+        },
+        {
+          detail : '',
+          name : '',
+          more : ''
+        },
+      ],
       spec_select1:'',
       spec_select2:'',
       spec_select3:'',
@@ -50,14 +72,13 @@ class Edit extends Component {
       bidstepErr:null,
       descPicErr:null,
       specErr:null,
-      conditionErr:null,
       imageStack:1,
       editorValue: RichTextEditor.createEmptyValue()
     }
   }
 
   componentDidMount() {
-    let {name,  desc, firstBid,  bidStep,  timeStart, timeEnd, catagory, image , specific} = this.props
+    let {name,  desc, firstBid,  bidStep,  timeStart, timeEnd, catagory, image , specific, shortDesc} = this.props
      let user = firebase.auth().currentUser;
         if (user) {
         this.setState({
@@ -79,8 +100,9 @@ class Edit extends Component {
         productname : name,
         firstbit : firstBid,
         bidStep : bidStep,
-        catagoriesselect : catagory, 
-        desc : desc,
+        catagoriesselect : catagory,
+        desc: shortDesc, 
+        editorValue : RichTextEditor.createValueFromString(desc, 'html'),
         timeStart:moment(timeStart),
         timeEnd:moment(timeEnd),
         productimageURL:image[0],
@@ -136,10 +158,6 @@ class Edit extends Component {
 			clearTimeout(this.timerHandle_fulldesc);     
 			this.timerHandle_fulldesc = 0;                
     }
-    if (this.timerHandle_condition) {               
-			clearTimeout(this.timerHandle_condition);     
-			this.timerHandle_condition = 0;                
-    }
     if (this.timerHandle_spec) {               
 			clearTimeout(this.timerHandle_spec);     
 			this.timerHandle_spec = 0;                
@@ -161,7 +179,6 @@ class Edit extends Component {
       bidstepErr:null,
       descPicErr:null,
       specErr:null,
-      conditionErr:null,
     })
     let test_name = this.nameValidate(this.state.productname)
     let test_desc = this.descValidate(this.state.desc)
@@ -179,10 +196,7 @@ class Edit extends Component {
     let test_timestart = this.timestartValidate(this.state.timeStart)
     let test_timeend = this.timeendValidate(this.state.timeEnd)
     let test_bidstep = this.bidstepValidate(this.state.bidStep)
-    let test_spec1 = this.specValidate(this.state.spec_select1 !== 'More...' ? this.state.spec_select1 : this.state.spec_select_add1,this.state.spec_detail1)
-    let test_spec2 = this.specValidate(this.state.spec_select2 !== 'More...' ? this.state.spec_select2 : this.state.spec_select_add2,this.state.spec_detail2)
-    let test_spec3 = this.specValidate(this.state.spec_select3 !== 'More...' ? this.state.spec_select3 : this.state.spec_select_add3,this.state.spec_detail3)
-    let test_condition = this.conditionstepValidate(this.state.spec_conditon)
+    let test_spec = this.specValidate(this.state.specific)
     let isValid = test_name        &&
                   test_desc        &&
                   test_firstbit    &&
@@ -193,10 +207,7 @@ class Edit extends Component {
                   test_bidstep     &&
                   test_images      &&
                   test_fulldesc    &&
-                  test_spec1       &&
-                  test_spec2       &&
-                  test_spec3       &&
-                  test_condition
+                  test_spec       
     if (isValid === true) {
         if(this.props.name){
           if (window.confirm("Do you want to edit this item?") === true) {
@@ -210,35 +221,29 @@ class Edit extends Component {
     }
   }
 
-  specValidate = (select,detail) => {
-    if(detail.trim().length === 0){
-      this.setState({specErr:"Specification detail was empty"})
+  specValidate = spec => {
+    let detailTest = spec.filter( a => a.detail.trim().length !== 0)
+    let nameTest = spec.filter( a => a.name.trim().length !== 0)
+    let hasMore = spec.filter( a => a.name === 'More...')
+    let moreTest = spec.filter( a => a.more.trim().length !== 0) || null
+    if(spec[0].detail.length === 0){
+      this.setState({specErr:"Specification condition was empty"})
       this.timerHandle_spec = setTimeout(() => this.setState({specErr:null}),10000)
       return false
-    } else if(this.regCharacter(detail.trim()) === false) {
-      this.setState({productnameErr:"Specification must be Character"})
+    } else if(detailTest.length !== spec.length){
+      this.setState({specErr:"Some specification detail was empty"})
       this.timerHandle_spec = setTimeout(() => this.setState({specErr:null}),10000)
       return false
-    } else if(!select){
-      this.setState({specErr:"Specification was empty"})
+    } else if(nameTest.length !== spec.length){
+      this.setState({specErr:"Some specification name was empty"})
       this.timerHandle_spec = setTimeout(() => this.setState({specErr:null}),10000)
       return false
-    } else if(select.trim().length === 0){
-      this.setState({specErr:"Specification was empty"})
+    } else if(hasMore.length > 0 && moreTest.length !== hasMore.length){
+      this.setState({specErr:"Some specification name was empty"})
       this.timerHandle_spec = setTimeout(() => this.setState({specErr:null}),10000)
       return false
     } else return true
   }
-
-  conditionstepValidate = input => {
-    if(!input){
-      this.setState({conditionErr:"Pls select condition"})
-      this.timerHandle_condition = setTimeout(() => this.setState({conditionErr:null}),10000)
-      return false
-    } else return true
-  }
-
-
 
   bidstepValidate = input => {
     if(String(input).trim().length === 0){
@@ -261,350 +266,340 @@ class Edit extends Component {
   }
 
   timestartValidate = input => {
-      if(input.lenght === 0){
+      if(input.length === 0){
         this.setState({timestartErr:"Pls select start time"})
         this.timerHandle_timestart = setTimeout(() => this.setState({timestartErr:null}),10000)
         return false
       } else return true
-    }
+  }
 
-    timeendValidate = input => {
-      if(input.lenght === 0){
-        this.setState({timeendErr:"Pls select start end"})
-        this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
-        return false
-      } else if(input <= this.state.timeStart){
-        this.setState({timeendErr:"Time start <= Time end"})
-        this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
-        return false
-      } else return true
-    }
+  timeendValidate = input => {
+    if(input.length === 0){
+      this.setState({timeendErr:"Pls select start end"})
+      this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
+      return false
+    } else if(input <= this.state.timeStart){
+      this.setState({timeendErr:"Time start <= Time end"})
+      this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
+      return false
+    } else return true
+  }
 
 
-    productimageValidate = input => {
-      if(input === ''){
-        this.setState({imageErr:"Pls upload image"})
-        this.timerHandle_image = setTimeout(() => this.setState({imageErr:null}),10000)
-        return false
-      } else return true
-    }
+  productimageValidate = input => {
+    if(input === ''){
+      this.setState({imageErr:"Pls upload image"})
+      this.timerHandle_image = setTimeout(() => this.setState({imageErr:null}),10000)
+      return false
+    } else return true
+  }
 
-    productimagesValidate = (stack,pic1,pic2,pic3,pic4) => {
-      switch (stack) {
-        case 1:
-          if(pic1 === ''){
-            this.setState({imageErr:"Pls upload image"})
-            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
-            return false
-          } else return true
-        case 2:
-          if(pic1 === ''){
-            this.setState({imageErr:"Pls upload image"})
-            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
-            return false
-          } else if(pic2 === null || pic2 === undefined){
-            this.setState({imageErr:"Pls upload image"})
-            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
-            return false
-          } else return true
-        case 3:
-          if(pic1 === ''){
-            this.setState({imageErr:"Pls upload image"})
-            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
-            return false
-          } else if(pic2 === null || pic2 === undefined){
-            this.setState({imageErr:"Pls upload image"})
-            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
-            return false
-          } else if(pic3 === null || pic3 === undefined){
-            this.setState({imageErr:"Pls upload image"})
-            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
-            return false
-          } else  return true
-        case 4:
-          if(pic1 === ''){
-            this.setState({imageErr:"Pls upload image"})
-            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
-            return false
-          } else if(pic2 === null || pic2 === undefined){
-            this.setState({imageErr:"Pls upload image"})
-            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
-            return false
-          } else if(pic3 === null || pic3 === undefined){
-            this.setState({imageErr:"Pls upload image"})
-            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
-            return false
-          } else if(pic4 === null || pic4 === undefined){
-            this.setState({imageErr:"Pls upload image"})
-            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
-            return false
-          } else  return true
-        default :
-          if(pic1 === ''){
-            this.setState({imageErr:"Pls upload image"})
-            this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
-            return false
-          } else return true
-      }
+  productimagesValidate = (stack,pic1,pic2,pic3,pic4) => {
+    switch (stack) {
+      case 1:
+        if(pic1 === ''){
+          this.setState({imageErr:"Pls upload image"})
+          this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+          return false
+        } else return true
+      case 2:
+        if(pic1 === ''){
+          this.setState({imageErr:"Pls upload image"})
+          this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+          return false
+        } else if(pic2 === null || pic2 === undefined){
+          this.setState({imageErr:"Pls upload image"})
+          this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+          return false
+        } else return true
+      case 3:
+        if(pic1 === ''){
+          this.setState({imageErr:"Pls upload image"})
+          this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+          return false
+        } else if(pic2 === null || pic2 === undefined){
+          this.setState({imageErr:"Pls upload image"})
+          this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+          return false
+        } else if(pic3 === null || pic3 === undefined){
+          this.setState({imageErr:"Pls upload image"})
+          this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+          return false
+        } else  return true
+      case 4:
+        if(pic1 === ''){
+          this.setState({imageErr:"Pls upload image"})
+          this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+          return false
+        } else if(pic2 === null || pic2 === undefined){
+          this.setState({imageErr:"Pls upload image"})
+          this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+          return false
+        } else if(pic3 === null || pic3 === undefined){
+          this.setState({imageErr:"Pls upload image"})
+          this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+          return false
+        } else if(pic4 === null || pic4 === undefined){
+          this.setState({imageErr:"Pls upload image"})
+          this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+          return false
+        } else  return true
+      default :
+        if(pic1 === ''){
+          this.setState({imageErr:"Pls upload image"})
+          this.timerHandle_images = setTimeout(() => this.setState({imageErr:null}),10000)
+          return false
+        } else return true
     }
+  }
 
-    catagoriesValidate = input => {
-      if(!input){
-        this.setState({catagoriesErr:"Pls select catagoriey"})
-        this.timerHandle_catagories = setTimeout(() => this.setState({catagoriesErr:null}),10000)
-        return false
-      } else return true
-    }
+  catagoriesValidate = input => {
+    if(!input){
+      this.setState({catagoriesErr:"Pls select catagoriey"})
+      this.timerHandle_catagories = setTimeout(() => this.setState({catagoriesErr:null}),10000)
+      return false
+    } else return true
+  }
 
-    nameValidate = input => {
-      if(input.trim().length === 0){
-        this.setState({productnameErr:"Productname was empty"})
-        this.timerHandle_name = setTimeout(() => this.setState({productnameErr:null}),10000)
-        return false
-      } else if(this.regCharacter(input.trim()) === false) {
-        this.setState({productnameErr:"Productname must be Character"})
-        this.timerHandle_name = setTimeout(() => this.setState({productnameErr:null}),10000)
-        return false
-      } else return true
-    }
+  nameValidate = input => {
+    if(input.trim().length === 0){
+      this.setState({productnameErr:"Productname was empty"})
+      this.timerHandle_name = setTimeout(() => this.setState({productnameErr:null}),10000)
+      return false
+    } else if(this.regCharacter(input.trim()) === false) {
+      this.setState({productnameErr:"Productname must be Character"})
+      this.timerHandle_name = setTimeout(() => this.setState({productnameErr:null}),10000)
+      return false
+    } else return true
+  }
 
-    fulldescValidate = input => {
-      let a = input.trim().replace(/<\/?[^>]+(>|$)/g, "")
-      let b = a.replace(/&nbsp;/g, '')
-      if(b === ''){
-        this.setState({descPicErr:"Full Description was empty"})
-        this.timerHandle_fulldesc = setTimeout(() => this.setState({descPicErr:null}),10000)
-        return false
-      } else return true
-    }
-    
-    descValidate = input => {
-      if(input.trim().length === 0){
-        this.setState({descErr:"Description was empty"})
-        this.timerHandle_desc = setTimeout(() => this.setState({descErr:null}),10000)
-        return false
-      } else return true
-    }
-    
-    firstbitValidate = input => {
-      if(String(input).trim().length === 0){
-        this.setState({firstbitErr:"Firstbit was empty"})
-        this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
-        return false
-      } else if(String(input).trim().length >= 10) {
-        this.setState({firstbitErr:"length >= 10"})
-        this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
-        return false
-      } else if(input < 1) {
-        this.setState({firstbitErr:"Firstbit must be at least 1฿"})
-        this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
-        return false
-      } else if(input%Math.floor(input) !== 0) {
-        this.setState({firstbitErr:"Firstbit must be Integer"})
-        this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
-        return false
-      } else return true
-    }
+  fulldescValidate = input => {
+    let a = input.trim().replace(/<\/?[^>]+(>|$)/g, "")
+    let b = a.replace(/&nbsp;/g, '')
+    if(b === ''){
+      this.setState({descPicErr:"Full Description was empty"})
+      this.timerHandle_fulldesc = setTimeout(() => this.setState({descPicErr:null}),10000)
+      return false
+    } else return true
+  }
+  
+  descValidate = input => {
+    if(input.trim().length === 0){
+      this.setState({descErr:"Description was empty"})
+      this.timerHandle_desc = setTimeout(() => this.setState({descErr:null}),10000)
+      return false
+    } else return true
+  }
+  
+  firstbitValidate = input => {
+    if(String(input).trim().length === 0){
+      this.setState({firstbitErr:"Firstbit was empty"})
+      this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
+      return false
+    } else if(String(input).trim().length >= 10) {
+      this.setState({firstbitErr:"length >= 10"})
+      this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
+      return false
+    } else if(input < 1) {
+      this.setState({firstbitErr:"Firstbit must be at least 1฿"})
+      this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
+      return false
+    } else if(input%Math.floor(input) !== 0) {
+      this.setState({firstbitErr:"Firstbit must be Integer"})
+      this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
+      return false
+    } else return true
+  }
 
-    regCharacter = pw => {
-      let re = /^[ a-zA-Z0-9_ .'"ก-ฮะ-์ -+*%]+$/
-      return re.test(pw);
-    }
+  regCharacter = pw => {
+    let re = /^[ a-zA-Z0-9_ .'"ก-ฮะ-์ -+*%]+$/
+    return re.test(pw);
+  }
 
-    addItem = () => {
-      this.dbItems.push({
-        name: this.state.productname.slice(0,50),
-        catagory: this.state.catagoriesselect,
-        isActive: 1,
-        desc:{
-              short: this.state.desc.slice(0,350),
-              fullHeader: this.state.productname,
-              fullDesc : this.state.editorValue.toString('html')
-        },
-        bid:{
-            current : parseInt(this.state.firstbit,10),
-            maxBid : parseInt((this.state.firstbit - this.state.bidStep),10),
-            maxBidTime : parseInt(this.state.timeStart.format('x'),10),
-            openBid : parseInt(this.state.firstbit,10),
-            bidStep: parseInt(this.state.bidStep,10),
-            endTime: parseInt(this.state.timeEnd.format('x'),10),
-            startTime: parseInt(this.state.timeStart.format('x'),10),
-            count: 0,
-            userName : '',
-            userId : ''
-        },
-        img: this.state.productimageURL,
-        img_:{
-          0 : this.state.productimageURL,
-          1 : this.state.productimageURL2,
-          2 : this.state.productimageURL3,
-          3 : this.state.productimageURL4,
-        },
-        own : this.state.User,
-        spec:{
-          0 : {
-            detail : this.state.spec_conditon,
-            name : 'Condition',
-          },
-          1 : {
-            detail : this.state.spec_detail1,
-            name : this.state.spec_select1 !== 'More...' ? this.state.spec_select1 : this.state.spec_select_add1,
-          },
-          2 : {
-            detail : this.state.spec_detail2,
-            name : this.state.spec_select2 !== 'More...' ? this.state.spec_select2 : this.state.spec_select_add2,
-          },
-          3 : {
-            detail : this.state.spec_detail3,
-            name : this.state.spec_select3 !== 'More...' ? this.state.spec_select3 : this.state.spec_select_add3,
-          },
-        }
-      })
-      .then(snapshot => {
-            firebase.database().ref('/items/' + snapshot.key + '/bidList').push({
-              userId : '',
-              userName : '',
-              bid : parseInt(this.state.firstbit,10),
-              bidTimestamp : this.state.timeStart.format('x'),
-              auto : 0
-            })
-            .then(   
-              this.setState({
-                  User:'',
-                  productname : '',
-                  productimage:'',
-                  productimageURL:'',
-                  productimageURL2:'',
-                  productimageURL3:'',
-                  productimageURL4:'',
-                  firstbit:'',
-                  bidStep:'',
-                  catagoriesselect:'', 
-                  desc: '',
-                  spec_detail1:'',
-                  spec_detail2:'',
-                  spec_detail3:'',
-                  spec_select1:'',
-                  spec_select2:'',
-                  spec_select3:'',
-                  spec_conditon:'',
-                  timeStart: moment(),
-                  timeEnd: moment().add(1, 'days'),
-                  boundedTime:'',
-                  productnameErr: null,
-                  descErr:null,
-                  firstbitErr:null,
-                  catagoriesErr:null,
-                  imageErr:null,
-                  timestartErr:null,
-                  timeendErr:null,
-                  bidstepErr:null,
-                  descPicErr:null,
-                  specErr:null,
-                  conditionErr:null,
-                  imageStack:1,
-                  editorValue: RichTextEditor.createEmptyValue()
-                })
-            )
-        })
-    }
-
-    editItem = () => {
-      firebase.database().ref('items').child(this.props.id).update({
-        name: this.state.productname.slice(0,50),
-        catagory: this.state.catagoriesselect,
-        desc:{
-              short: this.state.desc.slice(0,350),
-              fullHeader: this.state.productname,
-              fullDesc : this.state.editorValue.toString('html'),
-        },
-        img: this.state.productimageURL,
-        img_:{
-          0 : this.state.productimageURL,
-          1 : this.state.productimageURL2 || null,
-          2 : this.state.productimageURL3 || null,
-          3 : this.state.productimageURL4 || null,
-        }
-      })
-      .then( snapshot => {
-        firebase.database().ref('/items/' + this.props.id + '/bid').update({
+  addItem = () => {
+    this.dbItems.push({
+      name: this.state.productname.slice(0,50),
+      catagory: this.state.catagoriesselect,
+      isActive: 1,
+      desc:{
+            short: this.state.desc.slice(0,350),
+            fullHeader: this.state.productname,
+            fullDesc : this.state.editorValue.toString('html')
+      },
+      bid:{
           current : parseInt(this.state.firstbit,10),
+          maxBid : parseInt((this.state.firstbit - this.state.bidStep),10),
+          maxBidTime : parseInt(this.state.timeStart.format('x'),10),
+          openBid : parseInt(this.state.firstbit,10),
           bidStep: parseInt(this.state.bidStep,10),
           endTime: parseInt(this.state.timeEnd.format('x'),10),
           startTime: parseInt(this.state.timeStart.format('x'),10),
-        })
+          count: 0,
+          userName : '',
+          userId : ''
+      },
+      img: this.state.productimageURL,
+      img_:{
+        0 : this.state.productimageURL,
+        1 : this.state.productimageURL2,
+        2 : this.state.productimageURL3,
+        3 : this.state.productimageURL4,
+      },
+      own : this.state.User,
+      spec: this.state.specific
+    })
+    .then(snapshot => {
+          firebase.database().ref('/items/' + snapshot.key + '/bidList').push({
+            userId : '',
+            userName : '',
+            bid : parseInt(this.state.firstbit,10),
+            bidTimestamp : this.state.timeStart.format('x'),
+            auto : 0
+          })
+          .then(   
+            this.setState({
+                User:'',
+                productname : '',
+                productimage:'',
+                productimageURL:'',
+                productimageURL2:'',
+                productimageURL3:'',
+                productimageURL4:'',
+                firstbit:'',
+                bidStep:'',
+                catagoriesselect:'', 
+                desc: '',
+                specific: [
+                  {
+                    detail : '',
+                    name : 'Condition',
+                    more : ''
+                  },
+                  {
+                    detail : '',
+                    name : '',
+                    more : ''
+                  },
+                  {
+                    detail : '',
+                    name : '',
+                    more : ''
+                  },
+                  {
+                    detail : '',
+                    name : '',
+                    more : ''
+                  },
+                ],
+                timeStart: moment(),
+                timeEnd: moment().add(1, 'days'),
+                boundedTime:'',
+                productnameErr: null,
+                descErr:null,
+                firstbitErr:null,
+                catagoriesErr:null,
+                imageErr:null,
+                timestartErr:null,
+                timeendErr:null,
+                bidstepErr:null,
+                descPicErr:null,
+                specErr:null,
+                imageStack:1,
+                editorValue: RichTextEditor.createEmptyValue()
+              })
+          )
       })
-    }
+  }
 
-    onNewItemChange = (e) => {
-      this.setState({ [e.target.name]: e.target.value })
-    }
+  editItem = () => {
+    firebase.database().ref('items').child(this.props.id).update({
+      name: this.state.productname.slice(0,50),
+      catagory: this.state.catagoriesselect,
+      desc:{
+            short: this.state.desc.slice(0,350),
+            fullHeader: this.state.productname,
+            fullDesc : this.state.editorValue.toString('html'),
+      },
+      img: this.state.productimageURL,
+      img_:{
+        0 : this.state.productimageURL,
+        1 : this.state.productimageURL2 || null,
+        2 : this.state.productimageURL3 || null,
+        3 : this.state.productimageURL4 || null,
+      },
+      spec: this.state.specific
+    })
+  }
 
-    handleUploadStart = () => {
-      this.setState({productimageURL: null})
-      this.setState({isUploading: true})
-    }
+  onNewItemChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value })
+  }
 
-    handleUploadStart2 = () => {
-      this.setState({productimageURL2: null})
-      this.setState({isUploading2: true})
-    }
+  handleUploadStart = () => {
+    this.setState({productimageURL: null})
+    this.setState({isUploading: true})
+  }
 
-    handleUploadStart3 = () => {
-      this.setState({productimageURL3: null})
-      this.setState({isUploading3: true})
-    }
+  handleUploadStart2 = () => {
+    this.setState({productimageURL2: null})
+    this.setState({isUploading2: true})
+  }
 
-    handleUploadStart4 = () => {
-      this.setState({productimageURL4: null})
-      this.setState({isUploading4: true})
-    }
+  handleUploadStart3 = () => {
+    this.setState({productimageURL3: null})
+    this.setState({isUploading3: true})
+  }
 
-    handleProgress = () => {
-      this.state.productimageURL !== null && 
-      this.setState({isUploading: false})
-    }
+  handleUploadStart4 = () => {
+    this.setState({productimageURL4: null})
+    this.setState({isUploading4: true})
+  }
 
-    handleProgress2 = () => {
-      this.state.productimageURL2 !== null && 
-      this.setState({isUploading2: false})
-    }
+  handleProgress = () => {
+    this.state.productimageURL !== null && 
+    this.setState({isUploading: false})
+  }
 
-    handleProgress3 = () => {
-      this.state.productimageURL3 !== null && 
-      this.setState({isUploading3: false})
-    }
+  handleProgress2 = () => {
+    this.state.productimageURL2 !== null && 
+    this.setState({isUploading2: false})
+  }
 
-    handleProgress4 = () => {
-      this.state.productimageURL4 !== null && 
-      this.setState({isUploading4: false})
-    }
+  handleProgress3 = () => {
+    this.state.productimageURL3 !== null && 
+    this.setState({isUploading3: false})
+  }
 
-    handleUploadError = (error) => {
-        this.setState({
-          isUploading: false,
-          imageErr: error,
-        })
-        setTimeout(() => this.setState({imageErr:null}),10000)
-    }
+  handleProgress4 = () => {
+    this.state.productimageURL4 !== null && 
+    this.setState({isUploading4: false})
+  }
 
-    handleUploadError2 = (error) => {
-        this.setState({
-          isUploading2: false,
-          imageErr: error,
-        })
-        setTimeout(() => this.setState({imageErr:null}),10000)
-    }
+  handleUploadError = (error) => {
+      this.setState({
+        isUploading: false,
+        imageErr: error,
+      })
+      setTimeout(() => this.setState({imageErr:null}),10000)
+  }
 
-    handleUploadError3 = (error) => {
-        this.setState({
-          isUploading3: false,
-          imageErr: error,
-        })
-        setTimeout(() => this.setState({imageErr:null}),10000)
-    }
+  handleUploadError2 = (error) => {
+      this.setState({
+        isUploading2: false,
+        imageErr: error,
+      })
+      setTimeout(() => this.setState({imageErr:null}),10000)
+  }
 
-    handleUploadError4 = (error) => {
+  handleUploadError3 = (error) => {
+      this.setState({
+        isUploading3: false,
+        imageErr: error,
+      })
+      setTimeout(() => this.setState({imageErr:null}),10000)
+  }
+
+  handleUploadError4 = (error) => {
       this.setState({
         isUploading4: false,
         imageErr: error,
@@ -736,6 +731,39 @@ class Edit extends Component {
     this.setState({editorValue})
   }
 
+  onChangeSpec = (e,i) => {
+    let {specific} = this.state
+    let specific_ = Object.assign({},specific[i],{[e.target.name]: e.target.value})
+    specific[i] = specific_
+    this.setState({specific})
+  }
+
+  toggleSpecName = (e,i) => {
+    let {specific} = this.state
+    let specific_ = Object.assign({},specific[i],{name:''})
+    specific[i] = specific_
+    this.setState({specific})
+  }
+
+  increaseSpec = e => {
+    e.preventDefault()
+    if(this.state.specific.length <= 5){
+      this.setState( previousState => ({
+        specific: [...previousState.specific,{
+          detail : '',
+          name : '',
+          more : ''
+        }]
+    }))
+    }
+  }
+
+  decreaseSpecific = index => {
+    this.setState( previousState => ({
+      specific: previousState.specific.filter( (_,i) => i !== index )
+  }))
+  }
+
 
   render() {
     let {name,isBided} = this.props
@@ -743,7 +771,7 @@ class Edit extends Component {
       'Today': moment(),
       'Yesterday': moment().subtract(1, 'days'),
       'Clear': ''
-    };
+    }
     return (
         <div className="row">
           { !name &&
@@ -802,83 +830,54 @@ class Edit extends Component {
                 <div className="small-12 columns">
                     <label>Specification</label>
                       <div className="small-12 columns">
-                        <select id="select" required onChange={ this.onNewItemChange } 
-                          value={ this.state.spec_conditon} name="spec_conditon">
-                          <option value=''>Plese Select Condition</option>
-                          {this.props.spec_conditon.map( (condition,i) => {
-                              return ( 
-                                <option key={i} value={condition}>{condition}</option>
-                              );
-                            })}
-                        </select>
-                        { this.state.conditionErr &&
-                          <div className="alert-error">
-                            <p><i className="fa fa-times"></i> {this.state.conditionErr}</p>
-                          </div>
+                        {
+                          this.state.specific.map( (spec,index) => {
+                            return spec.name === 'Condition' ? (
+                              <select key={index} id="select" required onChange={e => this.onChangeSpec(e,index)} 
+                                value={spec.detail} name="detail">
+                                <option value=''>Plese Select Condition</option>
+                                {this.props.spec_conditon.map( (condition,i) => {
+                                    return ( 
+                                      <option key={i} value={condition}>{condition}</option>
+                                    );
+                                  })}
+                              </select>
+                            ) : (
+                              <div key={index} className="small-12 columns">
+                                <div className="small-6 columns">
+                                { spec.name !== 'More...' ?
+                                  <select id="select" required onChange={e => this.onChangeSpec(e,index)} 
+                                    value={spec.name} name="name">
+                                    <option value=''>Select Specification</option>
+                                    {
+                                      this.props.select.map( (select,i) => {
+                                        return ( 
+                                          <option key={i} value={select}>{select}</option>
+                                        )
+                                      })
+                                    }
+                                  </select> :
+                                  <div style={{position:'relative'}}>
+                                    <input type="text" placeholder="Specification" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={e => this.onChangeSpec(e,index)} value={spec.more} name="more"/>
+                                    <i onClick={(e) => this.toggleSpecName(e,index)} style={{position:'absolute',top:'30%',right:'10px',color:'gray'}} className="fa fa-times"></i>
+                                  </div>    
+                                }
+                                </div> 
+                                <div style={{position:'relative'}} className="small-6 columns">
+                                  <input type="text" placeholder="Specification" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={e => this.onChangeSpec(e,index)} value={spec.detail} name="detail"/>
+                                </div>
+                                { index > 3 &&
+                                  <button style={{top:'-57.5px'}} className="admin-from-removeimg" onClick={() => this.decreaseSpecific(index)}><i className="fa fa-times"></i></button>
+                                }
+                              </div>
+                            )
+                          })
                         }
                       </div>
-                      <div className="small-12 columns">
-                        <div className="small-6 columns">
-                          { this.state.spec_select1 !== 'More...' ?
-                            <select id="select" required onChange={ this.onNewItemChange } 
-                              value={ this.state.spec_select1} name="spec_select1">
-                              <option value=''>Select Specification</option>
-                              {this.props.select.map( (select,i) => {
-                                  return ( 
-                                    <option key={i} value={select}>{select}</option>
-                                  )
-                                })}
-                            </select> :
-                            <div style={{position:'relative'}}>
-                              <input type="text" placeholder="Specification" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={ this.onNewItemChange } value={ this.state.spec_select_add1 } name="spec_select_add1"/>
-                              <i onClick={() => this.setState({spec_select1:''})} style={{position:'absolute',top:'30%',right:'10px',color:'gray'}} className="fa fa-times"></i>
-                            </div>    
-                          }
-                        </div>
-                        <div className="small-6 columns">
-                          <input type="text" placeholder="Specification Detail" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={ this.onNewItemChange } value={ this.state.spec_detail1 } name="spec_detail1"/>
-                        </div>
-                        <div className="small-6 columns">
-                          { this.state.spec_select2 !== 'More...' ?
-                            <select id="select" required onChange={ this.onNewItemChange } 
-                              value={this.state.spec_select2} name="spec_select2">
-                              <option value=''>Select Specification</option>
-                              {this.props.select.map( (select,i) => {
-                                  return ( 
-                                    <option key={i} value={select}>{select}</option>
-                                  );
-                                })}
-                            </select> :
-                            <div style={{position:'relative'}}>
-                              <input type="text" placeholder="Specification" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={ this.onNewItemChange } value={ this.state.spec_select_add2 } name="spec_select_add2"/>
-                              <i onClick={() => this.setState({spec_select2:''})} style={{position:'absolute',top:'30%',right:'10px',color:'gray'}} className="fa fa-times"></i>
-                            </div>      
-                          }
-                        </div>
-                        <div className="small-6 columns">
-                          <input type="text" placeholder="Specification Detail" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={ this.onNewItemChange } value={ this.state.spec_detail2 } name="spec_detail2"/>
-                        </div>
-                        <div className="small-6 columns">
-                          { this.state.spec_select3 !== 'More...' ?
-                            <select id="select" required onChange={ this.onNewItemChange } 
-                              value={ this.state.spec_select3} name="spec_select3">
-                              <option value=''>Select Specification</option>
-                              {this.props.select.map( (select,i) => {
-                                  return ( 
-                                    <option key={i} value={select}>{select}</option>
-                                  );
-                                })}
-                            </select> :
-                            <div style={{position:'relative'}}>
-                              <input type="text" placeholder="Specification" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={ this.onNewItemChange } value={ this.state.spec_select_add3 } name="spec_select_add3"/>
-                              <i onClick={() => this.setState({spec_select3:''})} style={{position:'absolute',top:'30%',right:'10px',color:'gray'}} className="fa fa-times"></i>
-                            </div>  
-                          }
-                        </div>
-                        <div className="small-6 columns">
-                          <input type="text" placeholder="Specification Detail" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={ this.onNewItemChange } value={ this.state.spec_detail3 } name="spec_detail3"/>
-                        </div>
-                      </div>
+                      {
+                        this.state.specific.length <= 5 &&
+                        <button className="admin-from-addimg" onClick={this.increaseSpec}><i className="fa fa-plus"> </i> Add More Specification</button>
+                      }
                       { this.state.specErr &&
                         <div className="alert-error">
                           <p><i className="fa fa-times"></i> {this.state.specErr}</p>
@@ -887,7 +886,7 @@ class Edit extends Component {
                 </div>
                 <div className="small-12 columns">
                   <label>First Bit
-                  { (isBided && Object.keys(isBided).length > 1) ? 
+                  {isBided ? 
                     <div className="input-group">
                       <p>{ this.state.firstbit }</p>
                     </div>
@@ -906,7 +905,7 @@ class Edit extends Component {
                 </div>
                 <div className="small-12 columns">
                   <label>Bid Increments
-                  {(isBided && Object.keys(isBided).length > 1) ? 
+                  {isBided ? 
                     <div className="input-group">
                       <p>{ this.state.bidStep }</p>
                     </div>

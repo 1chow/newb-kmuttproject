@@ -310,6 +310,8 @@ export default class Item extends Component {
 									{ this.state.item[0].spec.map((spec,i) => {
 										if(spec.name === 'Condition') {
 											return	<li key={i} ><p className="auct-spec-name">{spec.name}</p> : <p className="auct-spec-detail">{this.conditionDetail(spec.detail)}</p></li>
+										} else if(spec.name === 'More...') {
+											return	<li key={i} ><p className="auct-spec-name">{spec.more}</p> : <p className="auct-spec-detail">{spec.detail}</p></li>
 										} else {
 											return	<li key={i} ><p className="auct-spec-name">{spec.name}</p> : <p className="auct-spec-detail">{spec.detail}</p></li>
 										}
