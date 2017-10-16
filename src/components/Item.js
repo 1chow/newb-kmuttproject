@@ -193,11 +193,15 @@ export default class Item extends Component {
 					isMsg : 1
 				})
 				this.timeout = setTimeout( () => {
-				let tableUser = this.state.bidLists.filter( table => {
-					return this.props.userUID === table.userId && table.userId !== ''
-				})
-				let lowerbid = this.state.newcurrent + this.state.bidStep_
-				this.handleMsg('lostBid',tableUser[0].bid,lowerbid,'')
+					let tableUser = this.state.bidLists.filter( table => {
+						return this.props.userUID === table.userId && table.userId !== ''
+					})
+					let lowerbid = this.state.newcurrent + this.state.bidStep_
+					if(this.props.userUID === this.state.own){
+						this.handleMsg('maxBid',this.state.maxBid,'','')
+					} else {
+						this.handleMsg('lostBid',tableUser[0].bid,lowerbid,'')
+					}
 		      	},10000)
 			break
 			case'win' :
@@ -229,6 +233,31 @@ export default class Item extends Component {
 					bidResult_: 'Try Place Your high bid than '+ b,
 					isMsg : 1
 				})
+			break
+			case'lowerThanCurrent' :
+				this.setState({bidIcon:'exclamation',
+					bidColor_bg:'#ffdad5',
+					bidColor_icon:'#cc4b37',
+					bidColor:'#cc4b37',
+					bidResult: a,
+					bidResult_: b,
+					isMsg : 1
+				})
+				this.timeout = setTimeout( () => {
+					let tableUser = this.state.bidLists.filter( table => {
+						return this.props.userUID === table.userId && table.userId !== ''
+					})
+					let lowerbid = this.state.newcurrent + this.state.bidStep_
+					if(tableUser.length === 0){
+							this.handleMsg('default','','','')
+					} else{
+						if(this.props.userUID === this.state.own){
+							this.handleMsg('maxBid',this.state.maxBid,'','')
+						} else {
+							this.handleMsg('lostBid',tableUser[0].bid,lowerbid,'')
+						}
+					}
+		      	},10000)
 			break
 			default :
 				this.setState({
@@ -406,7 +435,7 @@ export default class Item extends Component {
 					<div className="auct-from-markdown">
 						<div className="small-12 medium-12 columns">
 							<h3>{this.state.item[0].desc.fullHeader}</h3>
-							<div dangerouslySetInnerHTML= {{__html: this.state.item[0].desc.fullDesc.toString('html').replace(/ /g, "\u00a0")}} />
+							<div dangerouslySetInnerHTML= {{__html: this.state.item[0].desc.fullDesc.toString('html')}} />
 						</div>
 					</div>
 				</div>

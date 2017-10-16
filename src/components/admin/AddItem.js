@@ -642,6 +642,7 @@ class Edit extends Component {
   addPicture = url => {
     let markup = this.state.editorValue.toString('html')
     let picture = '<img src="'+url+'"></img>'
+    
     let index = markup.length - 4
     let newEditorValue = markup.substr(0, index) + picture + markup.substr(index)
     this.setState((prevState, props) => {
@@ -729,6 +730,7 @@ class Edit extends Component {
 
   onChange = (editorValue) => {
     this.setState({editorValue})
+
   }
 
   onChangeSpec = (e,i) => {
