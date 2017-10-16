@@ -44,7 +44,7 @@ table tbody tr:nth-child(even){background-color: #fff;border-bottom: 1px solid #
        animation-iteration-count: infinite;
 }
 
-
+.relative{position: relative;}
 .none{display: none;}
 .fade-animate{animation-name: fade-up;animation-duration: 0.5s;position: relative;}
 
@@ -287,12 +287,20 @@ i.alert{color: #ffae00;}
 .auct-spec-container{padding: 0;font-size: 0.9em;}
 .auct-spec-container h3{color: #196195;margin: 15px 0 0.5em !important;}
 .auct-spec-name{margin: 0;display: inline-block;width: 30%;}
-.auct-spec-detail{margin: 0;display: inline-block;width: 61.5%;margin-left: 0.75em;}
+.auct-spec-detail{margin: 0;display: inline-block;width: 61.5%;margin-left: 0.75em !important;}
 .auct-from-bit{position: relative;}
 .auct-from-markdown{margin: 15px 0 0;}
 .auct-from-markdown h3{font-size: 1.33em;line-height: 1;font-family: 'sukhumvit_semi_bold';margin: 15px 0;color: #196195;}
-.auct-from-markdown img{}
-.auct-from-markdown p{color: #5c5c5c;line-height: 1.25em;display: inline-table;}
+.auct-from-markdown p img{
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    display: block;
+}
+.auct-from-markdown p{color: #5c5c5c;line-height: 1.25em;margin: 0;position: relative;vertical-align: text-top;}
+.auct-from-markdown-c{margin-bottom: 50px; }
 .auct-msg{padding: 15px 0;font-size: 1.1em;}
 .auct-msg i{font-size: 1.75em;padding: 7px 0;border-radius: 50%;text-align: center;}
 .auct-msg-l{text-align: center;display: inline-block;background: #fff;border-radius: 50%;width: 2.75em;height: 2.75em;}
@@ -387,10 +395,10 @@ footer .footer-r{line-height: 1em;}
 .admin-cat-table{ font-size: 0.85em;}
 .admin-iteml-editable{font-size: 0.9em !important;}
 .admin-iteml-editable td{background: #f1f1f1;text-align: left !important;border-top: 1px solid #cacaca;border-bottom: 1px solid #cacaca;padding: 1em 1.75em !important;}
-.admin-from-addimg{float: right;position:relative;top:-3px;cursor: pointer;color: #0a0a0a;font-size: 0.966em;transition: all 0.2s ease;}
+.admin-from-addimg{float: right;position:relative;top:-3px;cursor: pointer;color: #0a0a0a;font-size: 0.966em;transition: all 0.2s ease;z-index: 100;}
 .admin-from-addimg:hover{color: #126195;}
 .admin-from-addimg i{margin-right:3px}
-.admin-from-removeimg{margin: 15px;float: right;position:relative;top:-3px;cursor: pointer;color: #0a0a0a;font-size: 0.966em;transition: all 0.2s ease;}
+.admin-from-removeimg{margin: 15px;float: right;position: absolute;z-index: 1000;top:-3px;cursor: pointer;color: #0a0a0a;font-size: 0.966em;transition: all 0.2s ease;right: 15px;}
 
 .alert-error{}
 .alert-error p{font-size: 1em;position: relative;top: -8px;left: 1px;margin-bottom: 5px;color: #ff2200;}
@@ -440,9 +448,15 @@ button.user-edit{position: absolute;right: 15px;bottom: 35px;color: #777;font-si
 .datetime-picker .handle {background: #fefefe;width: 15px;height: 15px;top: -7px;border-radius: 50%;box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);}
 
 .load-small{width: 80px !important;height: 80px !important;top: 33%;}
-
-
-
+.md-img-btn{width: 30px;height: 30px;border: 1px solid #777;border-radius: 2px;position: absolute;top: calc(2em + 11px);right: 20px;cursor: pointer;}
+.md-img-btn input{height: 30px;width: 30px;overflow: hidden;opacity: 0;border: 1px solid #000;z-index: 10;position: relative;cursor: pointer;}
+.md-img-btn i{position: absolute;top: 5px;left: 5px;color: #000;z-index: 0;}
+.md-rich{position: relative;margin-bottom: 1em;color: #000;line-height: 1.125em;font-family: 'sukhumvit_normal';}
+.public-DraftEditor-content{min-height: 200px;}
+.Dropdown__root___3ALmx select{width: 150px !important;}
+.DraftEditor-editorContainer{font-family: 'sukhumvit_normal'}
+.DraftEditor-editorContainer h1{color: #14679e;}
+.h-close{position: absolute;top: 35%;right: 7.5px;z-index: 100;color: gray;font-size: 0.8em !important;cursor: pointer;}
 @media screen and (min-width: 380px) {
 .post-box-content span.timecount{font-size: 5.5vw}
 }

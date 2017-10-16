@@ -403,11 +403,11 @@ export default class Item extends Component {
 					</div>
 				</div>
 
-				<div className="small-12 columns">
+				<div className="small-12 columns auct-from-markdown-c">
 					<div className="auct-from-markdown">
 						<div className="small-12 medium-12 columns">
 							<h3>Description of {this.state.item[0].desc.fullHeader}</h3>
-							<div dangerouslySetInnerHTML= {{__html: this.state.item[0].desc.fullDesc.toString('html').replace(/ /g, "\u00a0")}} />
+							<div dangerouslySetInnerHTML= {{__html: this.state.item[0].desc.fullDesc.toString('html')}} />
 						</div>
 					</div>
 				</div>

@@ -641,9 +641,10 @@ class Edit extends Component {
 
   addPicture = url => {
     let markup = this.state.editorValue.toString('html')
-    let picture = '<img src="'+url+'"></img>'
+    let picture = '<div class="text-center md-img"><img src="'+ url +'"/></div>'
+    let length = picture.length
     let index = markup.length - 4
-    let newEditorValue = markup.substr(0, index) + picture + markup.substr(index)
+    let newEditorValue = markup.substr(0, index) + picture + markup.substr(index + length)
     this.setState((prevState, props) => {
       return {editorValue: RichTextEditor.createValueFromString(newEditorValue, 'html')};
     })
@@ -807,20 +808,22 @@ class Edit extends Component {
 										</div>
 									}
                 </div>
-                <div className="small-12 columns">
+                <div className="small-12 columns md-rich">
                   <label>Product Full Description</label>
                     <RichTextEditor
                       value={this.state.editorValue}
                       onChange={this.onChange}
                       toolbarConfig={this.props.toolbarConfig}
                     />
-                    + ADD Photo
-                    <ImageUploader
-                        name="avatar"
-                        storageRef={firebase.storage().ref('images')}
-                        onUploadError={this.handleUploadDescError}
-                        onUploadSuccess={this.handleUploadSuccess5}
-                    />
+                    <div className="md-img-btn">
+                      <ImageUploader
+                          name="avatar"
+                          storageRef={firebase.storage().ref('images')}
+                          onUploadError={this.handleUploadDescError}
+                          onUploadSuccess={this.handleUploadSuccess5}
+                      />
+                      <i className="fa fa-picture-o"></i>
+                    </div>
                   { this.state.descPicErr &&
 										<div className="alert-error">
 											<p><i className="fa fa-times"></i> {this.state.descPicErr}</p>
@@ -829,23 +832,28 @@ class Edit extends Component {
                 </div>
                 <div className="small-12 columns">
                     <label>Specification</label>
-                      <div className="small-12 columns">
+                      <div className="row">
                         {
                           this.state.specific.map( (spec,index) => {
                             return spec.name === 'Condition' ? (
-                              <select key={index} id="select" required onChange={e => this.onChangeSpec(e,index)} 
-                                value={spec.detail} name="detail">
-                                <option value=''>Plese Select Condition</option>
-                                {this.props.spec_conditon.map( (condition,i) => {
-                                    return ( 
-                                      <option key={i} value={condition}>{condition}</option>
-                                    );
-                                  })}
-                              </select>
+                              <div className="small-12 columns">
+                                <div className="small-12 columns">
+                                <select key={index} id="select" required onChange={e => this.onChangeSpec(e,index)} 
+                                  value={spec.detail} name="detail">
+                                  <option value=''>Plese Select Condition</option>
+                                  {this.props.spec_conditon.map( (condition,i) => {
+                                      return ( 
+                                        <option key={i} value={condition}>{condition}</option>
+                                      );
+                                    })}
+                                </select>
+                                <label>Specification</label>
+                                </div>
+                              </div>
                             ) : (
-                              <div key={index} className="small-12 columns">
-                                <div className="small-6 columns">
-                                { spec.name !== 'More...' ?
+                              <div key={index} className="small-12 columns relative">
+                                <div className="small-4 columns">
+                                 { spec.name !== 'More...' ?
                                   <select id="select" required onChange={e => this.onChangeSpec(e,index)} 
                                     value={spec.name} name="name">
                                     <option value=''>Select Specification</option>
@@ -857,17 +865,17 @@ class Edit extends Component {
                                       })
                                     }
                                   </select> :
-                                  <div style={{position:'relative'}}>
+                                  <div className="relative">
                                     <input type="text" placeholder="Specification" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={e => this.onChangeSpec(e,index)} value={spec.more} name="more"/>
-                                    <i onClick={(e) => this.toggleSpecName(e,index)} style={{position:'absolute',top:'30%',right:'10px',color:'gray'}} className="fa fa-times"></i>
+                                    <i onClick={(e) => this.toggleSpecName(e,index)} className="fa fa-times h-close"></i>
                                   </div>    
                                 }
                                 </div> 
-                                <div style={{position:'relative'}} className="small-6 columns">
+                                <div className="small-8 columns relative">
                                   <input type="text" placeholder="Specification" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={e => this.onChangeSpec(e,index)} value={spec.detail} name="detail"/>
                                 </div>
                                 { index > 3 &&
-                                  <button style={{top:'-57.5px'}} className="admin-from-removeimg" onClick={() => this.decreaseSpecific(index)}><i className="fa fa-times"></i></button>
+                                  <button className="admin-from-removeimg" onClick={() => this.decreaseSpecific(index)}><i className="fa fa-times"></i></button>
                                 }
                               </div>
                             )
