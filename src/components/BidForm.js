@@ -32,7 +32,6 @@ class bidForm extends Component {
 		if (user) {
 			let userId = user.uid
 			let postBid = "https://us-central1-auctkmutt.cloudfunctions.net/bidOrder?itemId="+itemId+"&bid="+current+"&uId="+userId
-			console.log(postBid)
 			fetch(postBid)
 			.then( response => {
 				return response.json();
@@ -40,33 +39,38 @@ class bidForm extends Component {
 			.then( data => {
 				this.props.recieve()
 				this.setState({bidStep_:this.state.bidStep})
-				this.bid.value = this.props.newcurrent + this.state.bidStep
-				switch(data[0]) {
-					case 'win':
-						//open('alert','good','Win','fa-check-circle')
-						msg('win','Your bid has been registered','You are currently the highest bidder.','trophy','trophy')
-						break
-					case 'loser':
-						//open('alert','bad','Lost','fa-thumbs-down')
-						msg('lost','Your bid Lost !','Next minimum bid is ' + (this.props.newcurrent + this.state.bidStep) + '฿','times')
-						break
-					case 'autoBid':
-						//open('alert','bad','Less Than Open Bid','fa-thumbs-down')
-						msg('lost','Please Try Agin !','Auto­bid from another was higher than yours.','times')
-						break
-					case 'alreadywin':
-						//open('alert','bad','Less Than Open Bid','fa-thumbs-down')
-						msg('lost','Now you already win !','You are currently the highest bidder.','exclamation')
-						break	
-					case 'increase':
-						//open('alert','bad',data[0],'fa-thumbs-down')
-						msg('win','You inscress bid !','Now you add acceptable maximum bid','arrow-up')
-						break
-					default :
-						open('alert','bad',data[0],'fa-exclamation-triangle')
-						msg('default','','','')
-						break
+				this.bid.value = this.props.newcurrent + this.props.bidStep_
+				if(this.state.current < this.state.validates.current){
+					msg('lowerThanCurrent','Please Try Agin !','Your bid was lower than '+(this.state.validates.current)+' .','times')
+				} else {
+					switch(data[0]) {
+						case 'win':
+							//open('alert','good','Win','fa-check-circle')
+							msg('win','Your bid has been registered','You are currently the highest bidder.','trophy','trophy')
+							break
+						case 'loser':
+							//open('alert','bad','Lost','fa-thumbs-down')
+							msg('lost','Your bid Lost !','Next minimum bid is ' + (this.props.newcurrent + this.state.bidStep) + '฿','times')
+							break
+						case 'autoBid':
+							//open('alert','bad','Less Than Open Bid','fa-thumbs-down')
+							msg('lost','Please Try Agin !','Auto­bid from another was higher than yours.','times')
+							break
+						case 'alreadywin':
+							//open('alert','bad','Less Than Open Bid','fa-thumbs-down')
+							msg('lost','Now you already win !','You are currently the highest bidder.','exclamation')
+							break	
+						case 'increase':
+							//open('alert','bad',data[0],'fa-thumbs-down')
+							msg('win','You inscress bid !','Now you add acceptable maximum bid','arrow-up')
+							break
+						default :
+							open('alert','bad',data[0],'fa-exclamation-triangle')
+							msg('default','','','')
+							break
+					}
 				}
+				
 			  })
 			.catch( err => err && open('alert','bad','Unfortunately Bad Request please try agin','fa-thumbs-down'))
 		} else open('alert','bad','Please Log In','fa-thumbs-down')
