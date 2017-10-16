@@ -19,7 +19,7 @@ class bidForm extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-
+		
 		if (this.props.mfkCurrent !== nextProps.mfkCurrent) {
 			this.bid.value = this.props.newcurrent + this.props.bidStep_
 		}
@@ -39,9 +39,9 @@ class bidForm extends Component {
 			.then( data => {
 				this.props.recieve()
 				this.setState({bidStep_:this.state.bidStep})
-				this.bid.value = this.props.newcurrent + this.state.bidStep
-				if(this.state.current <= this.state.validates.current){
-					msg('lowerThanCurrent','Please Try Agin !','Your bid was lower than '+(this.state.validates.current)+' .','times')
+				this.bid.value = this.props.newcurrent + this.props.bidStep_
+				if(this.state.current < this.state.validates.current){
+					msg('lowerThanCurrent','Please Try Agin !','Your bid was lower than '+(this.props.newcurrent + this.props.bidStep_)+' .','times')
 				} else {
 					switch(data[0]) {
 						case 'win':
