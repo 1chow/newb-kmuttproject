@@ -116,6 +116,7 @@ export default class App extends Component {
 			  let current_ = data.bid.current;
 			  let catagory_ = data.catagory;
 			  let isActive_ = data.isActive;
+			  let isDelete_ = data.isDelete;
 			  let endTime_ = data.bid.endTime;
 			  let maxBid_ = data.bid.maxBid;
 			  let bidStep_ = data.bid.bidStep;
@@ -125,6 +126,7 @@ export default class App extends Component {
 				itemId : key,
 				catagory: catagory_,
 				isActive: isActive_,
+				isDelete: isDelete_,
 				endTime: endTime_,
 				maxBid: maxBid_,
 				bidStep: bidStep_,
@@ -143,12 +145,14 @@ export default class App extends Component {
 					let id_ = object._id
 					let catagory_ = object.catagory
 					let isActive_ = object.isActive
+					let isDelete_ = object.isDelete
 					let endTime_ = object.bid.endTime
 					let timeNows_ = {
 						timeNow  : timeNow_,
 						_id  	 : id_,
 						catagory : catagory_,
 						isActive : isActive_,
+						isDelete: isDelete_,
 						endTime : endTime_
 					}
 					timeNows.push(timeNows_);
@@ -260,6 +264,7 @@ export default class App extends Component {
 				_id : timeNow._id,
 				catagory : timeNow.catagory,
 				isActive : timeNow.isActive,
+				isDelete : timeNow.isDelete,
 				endTime : timeNow.endTime,
 			}
 			timeNows.push(timeNows_);

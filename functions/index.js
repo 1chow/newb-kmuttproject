@@ -12,6 +12,12 @@ admin.initializeApp(functions.config().firebase);
 const db = admin.database();
 const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 
+const nodemailer = require('./node_modules/nodemailer');
+const gmailEmail = encodeURIComponent(functions.config().gmail.email);
+const gmailPassword = encodeURIComponent(functions.config().gmail.password);
+const mailTransport = nodemailer.createTransport(
+    `smtps://${gmailEmail}:${gmailPassword}@smtp.gmail.com`);
+
 /////// Item Service ///////
 
 	//https://us-central1-auctkmutt.cloudfunctions.net/getItem >> all Items
@@ -368,11 +374,7 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 
 									  		} else {
 									  			//alrady win
-									  			if (newBid <= bidLast.current + bidLast.bidStep) {
-							  						res.status(200).send(['loser']);
-							  					} else if(newBid >= bidLast.current + bidLast.bidStep){
 							  						res.status(200).send(['alreadywin']);
-							  					}
 									  		}
 
 						  				}
@@ -384,7 +386,7 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 					  				if ( active === 0 || tOut_ <= 1000 ) {
 						  				//time up
 						  				res.status(200).send(['timeup']);
-						  			} else if( newBid <= bidLast.current ){
+						  			} else if( newBid < bidLast.current ){
 						  				//already win
 					  					res.status(200).send(['loser']);
 					  				} else{
@@ -415,7 +417,7 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 	//https://us-central1-auctkmutt.cloudfunctions.net/addMockup
 	exports.getCatagories = functions.https.onRequest((req, res) => {
 
-		res.set('Cache-Control', 'public, max-age=0, s-maxage=0');
+		res.set('Cache-Control', 'public, max-age=20, s-maxage=20');
 		res.set('Access-Control-Allow-Origin', '*');
 		res.header("Access-Control-Allow-Origin", "*");
 	  	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -553,6 +555,33 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 		  				itemPic : data_.img
 					})
 
+					//send mail
+
+					db.ref('/users/'+ userId ).once('value',function(snapshot){
+					  var user_ = snapshot.val();
+					  var key = snapshot.key;
+					  var uid = key;
+					  var user = user_.info;
+					  var displayName = user_.info.displayName;
+
+					  const mailOptions = {
+					    from: `AUCT-KMUTT <oateerapat@gmail.com>`,
+					    to: user.email,
+					    subject : 'You Win Auction !! ' + data_.name +'.',
+					    text : 'Thanks you for join auction in auct-kmutt. You can check your win order.',
+					    html: '<h1 style="text-align:center;color:#1779ba;">Congratulation</h1><h4 style="text-align:center" >Hi!! '+ displayName +'. ,Now you win auction '+ data_.name + ' @ '+ data_.bid.current + ' BHT</h4><table style="min-width: 100%;border-collapse: collapse;table-layout: fixed!important;text-align:center;"><img style="width:50%;max-width:300px;" src="'+ data_.img + '"></table><br><br><table style="min-width: 100%;border-collapse: collapse;table-layout: fixed!important;text-align:center;"><a href="https://auctkmutt.firebaseapp.com/" style="padding:10px 20px;font-size:28px;background:#1779ba;color:#fff;border-radius:5px;text-decoration:none;font-weight: bold;max-width:250px;">Go Now !!</a></table><br><br><table style="min-width: 100%;border-collapse: collapse;table-layout: fixed!important;text-align:center;"><img style="max-width:150px;margin:30px 0 0;" src="https://firebasestorage.googleapis.com/v0/b/auctkmutt.appspot.com/o/images%2F69cc3138-ef71-424c-8179-8356032c11c8.JPG?alt=media&token=14cb5c9b-170a-4781-98ca-e750ec6b25a1"><p style="text-align:center;margin-top:5px;">Auctions Kmutt Project</p></table><br><br><br>'
+					    
+					  };
+
+					  	return mailTransport.sendMail(mailOptions).then(() => {
+					      console.log('winOrder email sent to:', user.email);
+					    }).catch(error => {
+					      console.error('winOrder was an error send email:', error); 
+					      console.log(user.email);
+					    });
+
+					})
+
 				})//ref order by uid data
 
 
@@ -614,14 +643,53 @@ const timeCurrent = admin.database.ServerValue.TIMESTAMP;
 	   	}
 	});
 
-	exports.sendEmail = functions.auth.user().onCreate(function(event) {
-	  // Get the uid and display name of the newly created user.
-	  var uid = event.data.uid;
-	  var displayName = event.data.displayName;
+	exports.sendEmail = functions.database.ref('/test/test')
+	  .onUpdate(event => {
 
-	  // Send a welcome email to the newly created user.
-	  // The sendEmail() method is left as an exercise to the reader.
-	  return sendEmail(uid, displayName);
-	});
+		var nodemailer = require('./node_modules/nodemailer');
+		const gmailEmail = encodeURIComponent(functions.config().gmail.email);
+		const gmailPassword = encodeURIComponent(functions.config().gmail.password);
+		const mailTransport = nodemailer.createTransport(
+		    `smtps://${gmailEmail}:${gmailPassword}@smtp.gmail.com`);
+
+
+		db.ref('users/mEVupcmWzWNhnYYyTfTKd6qFVJJ3').once('value',function(snapshot){
+		  var user_ = snapshot.val();
+		  var key = snapshot.key;
+		  var uid = key;
+		  var user = user_.info;
+		  var displayName = user_.info.displayName;
+
+
+		  db.ref('items/-KwGANsw7KAy8X2DA3Vg').once('value',function(dsnapshot){
+
+		  	var data_ = dsnapshot.val();
+
+					  const mailOptions = {
+					    from: `AUCT-KMUTT <oateerapat@gmail.com>`,
+					    to: user.email,
+					    subject : 'You Win Auction !! ' + data_.name ,
+					    text : 'Thanks you for join auction in auct-kmutt. You can check your win order.',
+					    html: '<h1 style="text-align:center;color:#1779ba;">Congratulation !!</h1><h4 style="text-align:center" >Hi!! '+ displayName +'., Now you win auction '+ data_.name + ' @ '+ data_.bid.current + ' BHT</h4><table style="min-width: 100%;border-collapse: collapse;table-layout: fixed!important;text-align:center;"><img style="width:50%;max-width:300px;" src="'+ data_.img + '"></table><br><br><table style="min-width: 100%;border-collapse: collapse;table-layout: fixed!important;text-align:center;"><a href="https://auctkmutt.firebaseapp.com/" style="padding:10px 20px;font-size:28px;background:#1779ba;color:#fff;border-radius:5px;text-decoration:none;font-weight: bold;max-width:250px;">Go Now !!</a></table><br><br><table style="min-width: 100%;border-collapse: collapse;table-layout: fixed!important;text-align:center;"><img style="max-width:150px;margin:30px 0 0;" src="https://firebasestorage.googleapis.com/v0/b/auctkmutt.appspot.com/o/images%2F69cc3138-ef71-424c-8179-8356032c11c8.JPG?alt=media&token=14cb5c9b-170a-4781-98ca-e750ec6b25a1"><p style="text-align:center;margin-top:5px;">Auctions Kmutt Project</p></table><br><br><br>'
+					    
+					  };
+
+					return mailTransport.sendMail(mailOptions).then(() => {
+				      console.log('New subscription confirmation email sent to:', user.email);
+				    }).catch(error => {
+				      console.error('There was an error while sending the email:', error); 
+				      console.log(user.email);
+				    });
+
+			});
+
+		  // The user just subscribed to our newsletter.
+
+
+	   
+
+
+	}); });
+
 
 

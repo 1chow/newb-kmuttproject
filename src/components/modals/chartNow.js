@@ -47,7 +47,7 @@ class chartNow extends Component {
 			return a.bid.endTime-b.bid.endTime
 		})
 		let filterItems = sortItems.filter( item => {
-			return item.isActive !== 0
+			return item.isActive !== 0 && item.isDelete === 1
 		})
 		let newitems = filterItems.filter( a => {
 			return chartNow.indexOf(a._id) !== -1
@@ -64,7 +64,7 @@ class chartNow extends Component {
 			return a.bid.endTime-b.bid.endTime
 		})
 		let filterItems = sortItems.filter( item => {
-			return item.isActive !== 0
+			return item.isActive !== 0 && item.isDelete === 1
 		})
 		let newitems = filterItems.filter( a => {
 			return chartNow.indexOf(a._id) !== -1
@@ -92,7 +92,7 @@ class chartNow extends Component {
 			return a.endTime-b.endTime
 		})
 		let filterCurrents = sortCurrents.filter( current => {
-			return current.isActive !== 0
+			return current.isActive !== 0 && current.isDelete === 1
 		})
 		let newcurrents = filterCurrents.filter( a => {
 			return chartNow.indexOf(a.itemId) !== -1
@@ -106,7 +106,7 @@ class chartNow extends Component {
 			return a.endTime-b.endTime
 		})
 		let filterTimeNows = sortTimeNows.filter( timeNow => {
-			return timeNow.isActive !== 0
+			return timeNow.isActive !== 0 && timeNow.isDelete === 1
 		})
 		let newtimenows = filterTimeNows.filter( a => {
 			return chartNow.indexOf(a._id) !== -1
@@ -163,7 +163,7 @@ class chartNow extends Component {
 				</TransitionGroup>
 			</div>
 
-        ) : this.props.items.filter( item => item.isActive !== 0 && chartNow.indexOf(item._id) !== -1).length === 0 ?
+        ) : this.props.items.filter( item => (item.isActive !== 0 && chartNow.indexOf(item._id) !== -1).length === 0 && item.isDelete === 1) ?
 
 		<div className="row">
 			<div className="page-404-chart page-404-container fade-animate">

@@ -15,15 +15,19 @@ class ItemsL extends Component {
   }
 
   componentDidMount() {
+      let { items } = this.props
+      let items_ = items.filter( a => a.isDelete === 1)
       this.setState({
-        items:this.props.items
+        items:items_
       })
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.items !== null){
+    let { items } = nextProps
+    let items_ = items.filter( a => a.isDelete === 1)
+    if(items_ !== null){
       this.setState({
-        items:nextProps.items
+        items:items_
       })
     }
   }
@@ -31,7 +35,7 @@ class ItemsL extends Component {
   removeItem(key){
     if (window.confirm("Do you want to remove this?") === true) {
       this.dbItems.child(key).update({
-        isActive:0,
+        isDelete:0,
       })
       this.props.triggler('alert','good','Your item was deleted','fa-check-circle')
     } 

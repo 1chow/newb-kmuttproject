@@ -26,7 +26,6 @@ export default class Item extends Component {
 	componentDidMount() {
 		this._filterItems(this.props.items,this.props.current)
 		this._filtercurrent('',this.props.current)
-		this.handleMsg('default','','','')
 
 		firebase.database().ref('/items/'+this.props.match.params.id+'/bidList').orderByChild('bid').on('value', Snapshot => {
 			let table_ = []
@@ -409,6 +408,7 @@ export default class Item extends Component {
 						<div className="row auct-from-warp">
 							<div className="small-12 medium-12 columns">
 								<p className="time">Bidding List</p>
+								<p className="time bids">{'[ '+this.state.item[0].bid.count +' bids ]'}</p>
 								<div className="tableWarp">
 								<table className="hover unstriped">
 									<tbody>
@@ -431,10 +431,10 @@ export default class Item extends Component {
 					</div>
 				</div>
 
-				<div className="small-12 columns">
+				<div className="small-12 columns auct-from-markdown-c">
 					<div className="auct-from-markdown">
 						<div className="small-12 medium-12 columns">
-							<h3>{this.state.item[0].desc.fullHeader}</h3>
+							<h3>Description of {this.state.item[0].desc.fullHeader}</h3>
 							<div dangerouslySetInnerHTML= {{__html: this.state.item[0].desc.fullDesc.toString('html')}} />
 						</div>
 					</div>

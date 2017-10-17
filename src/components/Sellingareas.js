@@ -21,7 +21,7 @@ export default class Sellingareas extends Component {
 	//For First Render
 	componentWillReceiveProps(nextProps) {
 		if(nextProps.items) {
-			if(this.state.items.length !== nextProps.items.filter( item => item.isActive !== 0).length){
+			if(this.state.items.length !== nextProps.items.filter( item => item.isActive !== 0 && item.isDelete !== 0).length){
 				this._renderDelete(nextProps.items,nextProps.isActive)
 				this._filtertimeNows(nextProps.timeNows,this.props.isActive)
 				this._filtercurrent(nextProps.current,this.props.isActive)
@@ -44,7 +44,7 @@ export default class Sellingareas extends Component {
 			return a.bid.endTime-b.bid.endTime
 		})
 		let filterItems = sortItems.filter( item => {
-			return item.isActive !== 0
+			return item.isActive !== 0 && item.isDelete !== 0
 		})
 		if(isActive !== 'default') {
 		var newitems = filterItems.filter( item => {
@@ -71,7 +71,7 @@ export default class Sellingareas extends Component {
 			return a.bid.endTime-b.bid.endTime
 		})
 		let filterItems = sortItems.filter( item => {
-			return item.isActive !== 0
+			return item.isActive !== 0 && item.isDelete !== 0
 		})
 		if(isActive !== 'default') {
 		var newitems = filterItems.filter( item => {
@@ -90,7 +90,7 @@ export default class Sellingareas extends Component {
 			return a.endTime-b.endTime
 		})
 		let filterCurrents = sortCurrents.filter( current => {
-			return current.isActive !== 0
+			return current.isActive !== 0 && current.isDelete !== 0
 		})
 		if(currents.length !== 0) {
 			if(isActive !== 'default') {
@@ -106,7 +106,7 @@ export default class Sellingareas extends Component {
 			return a.endTime-b.endTime
 		})
 		let filterTimeNows = sortTimeNows.filter( timeNow => {
-			return timeNow.isActive !== 0
+			return timeNow.isActive !== 0 && timeNow.isDelete !== 0
 		})
 		if(timeNows.length !== 0) {
 			if(isActive !== 'default') {
