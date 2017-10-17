@@ -50,7 +50,7 @@ class bidForm extends Component {
 							break
 						case 'loser':
 							//open('alert','bad','Lost','fa-thumbs-down')
-							msg('lost','Your bid Lost !','Next minimum bid is ' + (this.props.newcurrent + this.state.bidStep) + '฿','times')
+							msg('lost','Your bid Lost !','Next minimum bid is ' + (this.props.newcurrent + this.props.bidStep_) + '฿','times')
 							break
 						case 'autoBid':
 							//open('alert','bad','Less Than Open Bid','fa-thumbs-down')

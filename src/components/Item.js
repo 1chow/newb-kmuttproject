@@ -228,8 +228,8 @@ export default class Item extends Component {
 					bidColor_bg:'#ffdad5',
 					bidColor_icon:'#cc4b37',
 					bidColor:'#cc4b37',
-					bidResult: 'You lost bid at ' + a + ' ฿',
-					bidResult_: 'Try Place Your high bid than '+ b,
+					bidResult: 'You bidding  ฿' + a + ' is lost',
+					bidResult_: 'Try Place Your New bid higher than '+ b,
 					isMsg : 1
 				})
 			break
@@ -414,10 +414,10 @@ export default class Item extends Component {
 									<tbody>
 										{ this.state.bidLists.map( (bidList,i) => {
 											let bidLenght = this.state.bidLists.length - 1
-										return	<tr key={i} className={"bidList " + (bidList.auto === 2 ? 'bidList-none ' : '') + ((this.state.seeAutoBid && bidList.auto >= 2) ? 'bidList-show' : '')} >
-												<td width="25">{i === 0 && <i className="fa fa-trophy"></i>}</td>
-												<td width="125" style={{textAlign:"left"}}>{i !== bidLenght  ? '⁎ ' + (bidList.name).slice(1,-1) + ' ⁎' : bidList.name}<span className='bidList-auto'>{bidList.auto === 1 || bidList.auto === 2 ? '(auto)' : ''}{(this.state.seeAutoBid && bidList.auto === 3) ? '(auto)' : ''}</span></td>
-												<td width="50" title={(bidList.auto === 3 ? 'max bid is lost.' : '')+ (bidList.auto === 2 ? ' auto bid.' : '')} style={{textAlign:"right"}}>{bidList.bid}.00<span>฿</span></td>
+										return	<tr key={i} className={"bidList " + (bidList.auto === 1 ? 'bidList-none ' : '') + ((this.state.seeAutoBid && bidList.auto !== 0) ? 'bidList-show' : '')} >
+												<td width="25">{(i === 0 && bidList.userId !== null) ? <i className="fa fa-trophy"></i> : null}</td>
+												<td width="125" style={{textAlign:"left"}}>{i !== bidLenght  ? '⁎ ' + (bidList.name).slice(1,-1) + ' ⁎' : bidList.name}<span className='bidList-auto'>{bidList.auto > 0 ? '(auto)' : ''}</span></td>
+												<td width="50"  style={{textAlign:"right"}}>{bidList.bid}.00<span>฿</span></td>
 												<td width="150" title={this.props.convertTimeM(bidList.bidTimestamp)} style={{fontSize:"0.66em"}}>{this.props.convertTime(bidList.bidTimestamp)}</td>
 											</tr>
 										})}

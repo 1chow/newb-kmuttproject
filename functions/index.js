@@ -261,11 +261,11 @@ const mailTransport = nodemailer.createTransport(
 						  							var a_data = findAutoSnapshot.val();
 						  							var a_key = findAutoSnapshot.key;
 						  							//console.log(a_key);
-						  							if (a_data.auto === 1){
+						  							/*if (a_data.auto === 2){
 						  								db.ref('/items/'+ itemKey + '/bidList/' + a_key).update({
-						  									auto : 3						  									
+						  									auto : 1						  									
 						  								})
-						  							}
+						  							}*/
 						  						}).then ( well => {
 
 									  				db.ref('/items/'+ itemKey + '/bid').update({
@@ -276,13 +276,37 @@ const mailTransport = nodemailer.createTransport(
 									  					maxBidTime : getTime,
 									  					count: bidLast.count+1
 										  			})
-										  			db.ref('/items/'+ itemKey + '/bidList').push({
-									  					bid : maxBid + bidLast.bidStep,
-									  					bidTimestamp : getTime,
-									  					userId : uid,
-									  					userName : _info.displayName,
-									  					auto : 1
-									  				})
+
+										  			if (bidLast.count > 0) {
+										  				
+										  				if (bidLast.current > maxBid) {
+										  					db.ref('/items/'+ itemKey + '/bidList').push({
+											  					bid : maxBid,
+											  					bidTimestamp : getTime,
+											  					userId : bidLast.userId,
+											  					userName : bidLast.userName,
+											  					auto : 1 
+									  						})
+										  				}
+
+									  					db.ref('/items/'+ itemKey + '/bidList').push({
+										  					bid : maxBid + bidLast.bidStep,
+										  					bidTimestamp : getTime,
+										  					userId : uid,
+										  					userName : _info.displayName,
+										  					auto : 2
+									  					})
+
+									  				} else {
+									  					db.ref('/items/'+ itemKey + '/bidList').push({
+										  					bid : maxBid + bidLast.bidStep,
+										  					bidTimestamp : getTime,
+										  					userId : uid,
+										  					userName : _info.displayName,
+										  					auto : 2
+									  					})
+									  				}
+
 
 									  				db.ref('/users/'+ uid + '/now/' + itemKey).set({
 									  					bidTimestamp: getTime,
@@ -313,9 +337,9 @@ const mailTransport = nodemailer.createTransport(
 						  							var a_data = findAutoSnapshot.val();
 						  							var a_key = findAutoSnapshot.key;
 						  							//console.log(a_key);
-						  							if (a_data.auto === 1){
+						  							if (a_data.auto === 2){
 						  								db.ref('/items/'+ itemKey + '/bidList/' + a_key).update({
-						  									auto : 2						  									
+						  									auto : 1						  									
 						  								})
 						  							}
 						  						}).then ( well => {
@@ -340,7 +364,7 @@ const mailTransport = nodemailer.createTransport(
 									  					bidTimestamp : bidLast.maxBidTime,
 									  					userId : bidLast.userId,
 									  					userName : bidLast.userName,
-									  					auto : 1
+									  					auto : 2
 								  					})
 
 									  			} else {
@@ -363,7 +387,7 @@ const mailTransport = nodemailer.createTransport(
 									  					bidTimestamp : bidLast.maxBidTime,
 									  					userId : bidLast.userId,
 									  					userName : bidLast.userName,
-									  					auto : 1
+									  					auto : 2
 								  					})
 
 									  			}
