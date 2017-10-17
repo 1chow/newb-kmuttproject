@@ -41,7 +41,7 @@ class bidForm extends Component {
 				this.setState({bidStep_:this.state.bidStep})
 				this.bid.value = this.props.newcurrent + this.props.bidStep_
 				if(this.state.current < this.state.validates.current){
-					msg('lowerThanCurrent','Please Try Agin !','Your bid was lower than '+(this.state.validates.current)+' .','times')
+					msg('lowerThanCurrent','Please Try Agin !','Your bid was lower than '+(this.props.newcurrent + this.props.bidStep_)+' .','times')
 				} else {
 					switch(data[0]) {
 						case 'win':
@@ -50,7 +50,7 @@ class bidForm extends Component {
 							break
 						case 'loser':
 							//open('alert','bad','Lost','fa-thumbs-down')
-							msg('lost','Your bid Lost !','Next minimum bid is ' + (this.props.newcurrent + this.state.bidStep) + '฿','times')
+							msg('lost','Your bid Lost !','Next minimum bid is ' + (this.props.newcurrent + this.props.bidStep_) + '฿','times')
 							break
 						case 'autoBid':
 							//open('alert','bad','Less Than Open Bid','fa-thumbs-down')
