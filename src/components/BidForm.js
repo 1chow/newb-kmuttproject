@@ -84,11 +84,18 @@ class bidForm extends Component {
 			open('alert','bad','Bad Request, Please try agin','fa-exclamation-triangle')
 		}
 		else {
+			let bid_ = bid.value
 			this.setState({current: this.bid.value})
 			let getCurrent = "https://us-central1-auctkmutt.cloudfunctions.net/getCurrent?itemId="+this.props.item._id
 			fetch(getCurrent)
 				.then( res => res.json())
-				.then( json => this.setState({validates: json}))
+				.then( json => {
+					if(bid_ < (json.current + this.state.bidStep)){
+						this.props.recieve()
+						this.bid.value = this.props.newcurrent + this.state.bidStep;
+						open('alert','bad','Your bid Lost ! Next minimum bid is ' + (this.props.newcurrent + this.props.bidStep_) + '฿','fa-thumbs-down')
+					} else this.setState({validates: json})
+				})
 		}
 	}
 

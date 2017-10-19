@@ -63,6 +63,7 @@ export default class ModalChartWin extends Component {
 	}
 
 	render() {
+		let { convertTimeM } = this.props
 		return this.props.orderLists.length !== 0 ?  (
 				<div className="row">
 					<div className="small-12 large-6 columns post-feed win-list">
@@ -86,7 +87,7 @@ export default class ModalChartWin extends Component {
 												</div>
 												<div className="post-list-r">
 													<h3>{orderList.itemName}</h3>
-													<p className="time">{orderList.itemId}<span>{orderList.itemWinTime}</span></p>
+													<p className="time">{orderList.itemId}<span>{convertTimeM(orderList.itemWinTime)}</span></p>
 													<p className="price">{orderList.itemPrice}<span className="curentcy">Bath</span></p>
 													<i className="fa fa-shopping-basket fa-2x"></i>
 												</div>
@@ -103,7 +104,7 @@ export default class ModalChartWin extends Component {
 							<p className="desc">Payment Pending</p><br/>
 							<Link onClick={this.handleLinktoCheckOut} to="/checkout" className="button success">Checkout</Link>
 							<ul>
-								<li>Your Order {this.state.orderLists.length} Item<span>{this.state.orderPrice} THB</span></li>
+								<li>Your Order {this.state.orderLists.length} Item<span>{this.props.priceFormat(this.state.orderPrice)} THB</span></li>
 								{ this.state.orderPrice ?
 								<li>Delivery Charge<span>39 THB</span></li> :
 								<li>Delivery Charge<span>0 THB</span></li>
@@ -112,7 +113,7 @@ export default class ModalChartWin extends Component {
 							<hr/>
 							<ul>
 								{ this.state.orderPrice ?
-								<li className="price">Total<span>{this.state.orderPrice + 39} THB</span><p>(VAT incl.)</p></li> :
+								<li className="price">Total<span>{this.props.priceFormat(this.state.orderPrice + 39)} THB</span><p>(VAT incl.)</p></li> :
 								<li className="price">Total<span>0 THB</span><p>(VAT incl.)</p></li>
 								}
 							</ul>

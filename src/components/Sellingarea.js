@@ -20,7 +20,7 @@ class Sellingarea extends Component {
                                 <p className="desc">{item.desc.short} ...</p>
                             </div>
                             <div className="post-box-scontent">
-                            <p className="price"><span className="curentcy">฿</span>{priceFormat(current)}<span className="curentcy dot">.00</span></p>
+                            <p className="price"><span className="curentcy">฿</span>{priceFormat(current)}</p>
                             </div>
                             <div className="post-box-scontent">
                                 <Clock secondsToHms={secondsToHms} timeNows={timeNows}  />

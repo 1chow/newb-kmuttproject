@@ -195,7 +195,7 @@ class Edit extends Component {
                                                 )
     let test_timestart = this.timestartValidate(this.state.timeStart)
     let test_timeend = this.timeendValidate(this.state.timeEnd)
-    let test_bidstep = this.bidstepValidate(this.state.bidStep)
+    let test_bidstep = this.bidstepValidate(this.state.bidStep,this.state.firstbit)
     let test_spec = this.specValidate(this.state.specific)
     let isValid = test_name        &&
                   test_desc        &&
@@ -245,13 +245,13 @@ class Edit extends Component {
     } else return true
   }
 
-  bidstepValidate = input => {
-    if(String(input).trim().length === 0){
-			this.setState({bidstepErr:"bid increments was empty"})
+  bidstepValidate = (input,firstbit) => {
+    if(String(firstbit).trim().length === 0){
+			this.setState({bidstepErr:"Bid increments was required firstbid"})
 			this.timerHandle_bidstep = setTimeout(() => this.setState({bidstepErr:null}),10000)
 			return false
-		} else if(String(input).trim().length >= 10) {
-			this.setState({bidstepErr:"it's over Bid increments"})
+		} else if(String(input).trim().length === 0){
+			this.setState({bidstepErr:"bid increments was empty"})
 			this.timerHandle_bidstep = setTimeout(() => this.setState({bidstepErr:null}),10000)
 			return false
 		} else if(input < 1) {
@@ -260,6 +260,10 @@ class Edit extends Component {
 			return false
 		} else if(input%Math.floor(input) !== 0) {
 			this.setState({bidstepErr:"bid increments must be amount of money"})
+			this.timerHandle_bidstep = setTimeout(() => this.setState({bidstepErr:null}),10000)
+			return false
+		} else if(input > Math.floor(firstbit/10)) {
+			this.setState({bidstepErr:"bid increments must be 10% of firstbit"})
 			this.timerHandle_bidstep = setTimeout(() => this.setState({bidstepErr:null}),10000)
 			return false
 		} else return true
@@ -770,7 +774,7 @@ class Edit extends Component {
 
 
   render() {
-    let {name,isBided} = this.props
+    let { name } = this.props
     const shortcuts = {
       'Today': moment(),
       'Yesterday': moment().subtract(1, 'days'),
@@ -897,7 +901,7 @@ class Edit extends Component {
                 </div>
                 <div className="small-12 columns">
                   <label>First Bit
-                  {isBided ? 
+                  {name ? 
                     <div className="input-group">
                       <p>{ this.state.firstbit }</p>
                     </div>
@@ -916,7 +920,7 @@ class Edit extends Component {
                 </div>
                 <div className="small-12 columns">
                   <label>Bid Increments
-                  {isBided ? 
+                  {name ? 
                     <div className="input-group">
                       <p>{ this.state.bidStep }</p>
                     </div>
@@ -936,6 +940,8 @@ class Edit extends Component {
 
                 <div className="small-12 medium-6 columns">
                   <label>Time Start
+                  {
+                    !name ? 
                     <DatetimePickerTrigger
                       shortcuts={shortcuts} 
                       moment={this.state.timeStart}
@@ -943,7 +949,11 @@ class Edit extends Component {
                       closeOnSelectDay="true"
                       >
                       <input name="timeStart" readOnly type="text" value={this.state.timeStart.format('YYYY-MM-DD HH:mm')} />
-                    </DatetimePickerTrigger>      
+                    </DatetimePickerTrigger> : 
+                    <div className="input-group">
+                      <p>{ this.state.timeStart.format('YYYY-MM-DD HH:mm') }</p>
+                    </div>
+                  }     
                   </label>
                   { this.state.timestartErr &&
                       <div className="alert-error">
@@ -953,6 +963,8 @@ class Edit extends Component {
                 </div>
                 <div className="small-12 medium-6 columns">
                   <label>Time End
+                  {
+                    !name ? 
                       <DatetimePickerTrigger
                       shortcuts={shortcuts} 
                       moment={this.state.timeEnd}
@@ -960,7 +972,11 @@ class Edit extends Component {
                       closeOnSelectDay="true"
                       >
                       <input name="timeEnd" readOnly type="text" value={this.state.timeEnd.format('YYYY-MM-DD HH:mm')} />
-                    </DatetimePickerTrigger>
+                    </DatetimePickerTrigger> : 
+                    <div className="input-group">
+                      <p>{ this.state.timeEnd.format('YYYY-MM-DD HH:mm') }</p>
+                    </div>
+                  }
                   </label>
                   { this.state.timeendErr &&
                       <div className="alert-error">

@@ -10,7 +10,7 @@ class CheckoutList extends Component {
 	    <tr>
 			<td>{this.props.itemName}</td>
 			<td className="text-center">1</td>
-			<td className="text-right">{this.props.itemPrice}.00 <span>THB</span></td>
+			<td className="text-right">{this.props.itemPrice} <span>THB</span></td>
 		</tr>      
     );
   }
@@ -118,7 +118,7 @@ export default class Checkout extends Component {
 										<tr>
 											<td>Delivery Charge</td>
 											<td className="text-center">-</td>
-											<td className="text-right">39.00 <span>THB</span></td>
+											<td className="text-right">39 <span>THB</span></td>
 										</tr>
 										:
 										<tr>
@@ -131,7 +131,7 @@ export default class Checkout extends Component {
 										<tr>
 											<th className="text-right">Total</th>
 											<th className="text-center">{Object.keys(this.state.orderDesc[1]).length}</th>
-											<th className="text-right">{this.state.orderDesc[2] + 39}.00 <span>THB</span></th>
+											<th className="text-right">{this.state.orderDesc[2] + 39} <span>THB</span></th>
 										</tr>
 									}
 									</tbody>

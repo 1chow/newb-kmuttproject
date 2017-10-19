@@ -311,7 +311,7 @@ export default class Item extends Component {
 					</div>
 					<div className="small-3 columns">
 						{ this.state.newcurrent !== 0 &&
-							<p className="price"><span className="curentcy">฿</span>{this.props.priceFormat(this.state.newcurrent)}<span className="curentcy dot">.00</span></p>
+							<p className="price"><span className="curentcy">฿</span>{this.props.priceFormat(this.state.newcurrent)}</p>
 						}
 						<p className="helper auct-text-current text-right show-for-medium">Current Bids</p>
 					</div>
@@ -372,7 +372,7 @@ export default class Item extends Component {
 									{ this.props.userUID !== this.state.own ?
 										<p className="helper">Minimum Incress Bidding ฿{this.state.bidStep_ }.<br/>Please Enter ฿ {this.state.newcurrent + this.state.bidStep_ } or more.</p>
 										:
-										<p className="helper">Your Max Bids ฿ {this.state.maxBid}.00</p>
+										<p className="helper">Your Max Bids ฿ {this.state.maxBid}</p>
 									}
 								</div> 
 								: 
@@ -417,7 +417,7 @@ export default class Item extends Component {
 										return	<tr key={i} className={"bidList " + (bidList.auto === 1 ? 'bidList-none ' : '') + ((this.state.seeAutoBid && bidList.auto !== 0) ? 'bidList-show' : '')} >
 												<td width="25">{(i === 0 && bidList.userId !== null) ? <i className="fa fa-trophy"></i> : null}</td>
 												<td width="125" style={{textAlign:"left"}}>{i !== bidLenght  ? '⁎ ' + (bidList.name).slice(1,-1) + ' ⁎' : bidList.name}<span className='bidList-auto'>{bidList.auto > 0 ? '(auto)' : ''}</span></td>
-												<td width="50"  style={{textAlign:"right"}}>{bidList.bid}.00<span>฿</span></td>
+												<td width="50"  style={{textAlign:"right"}}>{bidList.bid}<span>฿</span></td>
 												<td width="150" title={this.props.convertTimeM(bidList.bidTimestamp)} style={{fontSize:"0.66em"}}>{this.props.convertTime(bidList.bidTimestamp)}</td>
 											</tr>
 										})}

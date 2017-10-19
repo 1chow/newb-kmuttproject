@@ -10,8 +10,8 @@ export default class Chart extends Component {
 	render() {
 	    return (
 	            <div className="modal-core modal-fw modal-chart">
-					<div className="row modal-core-head">
-						<h3><i className="fa fa-shopping-basket"></i> Cart</h3>
+					<div className="row modal-core-head title-bar">
+						<h3><i className="fa fa-shopping-basket"></i>{'    '+this.props.Username+"'s Cart"}</h3>
 						<button onClick={this.props.close} className="close"><i className="fa fa-times"></i></button>
 					</div>
 					<div className="row">
@@ -43,7 +43,9 @@ export default class Chart extends Component {
 								chartNow={this.props.chartNow}	
 							/>
 							:
-							<ModalChartWin 
+							<ModalChartWin
+								priceFormat={this.props.priceFormat}
+								convertTimeM={this.props.convertTimeM} 
 								orderLists={this.props.orderLists} 
 								close={this.props.close} 
 								filter={this.props.filter}

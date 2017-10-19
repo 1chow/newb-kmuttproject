@@ -89,9 +89,9 @@ class ItemsL extends Component {
                               </Link>
                           </td>
                           <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.catagory}</Link></td>
-                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.bid.bidStep}.00 ฿</Link></td>
-                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.bid.openBid}.00 ฿</Link></td>
-                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.bid.current}.00 ฿</Link></td>
+                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.bid.bidStep} ฿</Link></td>
+                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.bid.openBid} ฿</Link></td>
+                          <td><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{item.bid.current} ฿</Link></td>
                           <td>
                   
                             { item.isActive !== 1 ?
