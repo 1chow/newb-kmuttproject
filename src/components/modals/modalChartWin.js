@@ -86,7 +86,7 @@ export default class ModalChartWin extends Component {
 												</div>
 												<div className="post-list-r">
 													<h3>{orderList.itemName}</h3>
-													<p className="time">{orderList.itemId}<span>{orderList.itemWinTime}</span></p>
+													<p className="time">Track ID :{orderList.itemId.slice(1,orderList.itemId.length)}<span>Complete : {orderList.itemWinTime}</span></p>
 													<p className="price">{orderList.itemPrice}<span className="curentcy">Bath</span></p>
 													<i className="fa fa-shopping-basket fa-2x"></i>
 												</div>
@@ -99,7 +99,7 @@ export default class ModalChartWin extends Component {
 					</div>
 					<div className="small-12 large-6 columns post-feed post-feed-checkout">
 						<div className="small-12 columns post-checkout">
-							<h3>Your Order</h3>
+							<h3>Your Order	</h3>
 							<p className="desc">Payment Pending</p><br/>
 							<Link onClick={this.handleLinktoCheckOut} to="/checkout" className="button success">Checkout</Link>
 							<ul>

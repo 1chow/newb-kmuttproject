@@ -410,12 +410,12 @@ export default class Item extends Component {
 								<p className="time">Bidding List</p>
 								<p className="time bids">{'[ '+this.state.item[0].bid.count +' bids ]'}</p>
 								<div className="tableWarp">
-								<table className="hover unstriped">
+								<table className={"hover unstriped" + (this.state.isActive === 0 && " isActive0") }>
 									<tbody>
 										{ this.state.bidLists.map( (bidList,i) => {
 											let bidLenght = this.state.bidLists.length - 1
 										return	<tr key={i} className={"bidList " + (bidList.auto === 1 ? 'bidList-none ' : '') + ((this.state.seeAutoBid && bidList.auto !== 0) ? 'bidList-show' : '')} >
-												<td width="25">{(i === 0 && bidList.userId !== null) ? <i className="fa fa-trophy"></i> : null}</td>
+												<td width="25">{(i === 0 && bidList.name !== 'Open Bids') ? <i className="fa fa-trophy"></i> : null}</td>
 												<td width="125" style={{textAlign:"left"}}>{i !== bidLenght  ? '⁎ ' + (bidList.name).slice(1,-1) + ' ⁎' : bidList.name}<span className='bidList-auto'>{bidList.auto > 0 ? '(auto)' : ''}</span></td>
 												<td width="50"  style={{textAlign:"right"}}>{bidList.bid}.00<span>฿</span></td>
 												<td width="150" title={this.props.convertTimeM(bidList.bidTimestamp)} style={{fontSize:"0.66em"}}>{this.props.convertTime(bidList.bidTimestamp)}</td>

@@ -501,7 +501,9 @@ export default class App extends Component {
 					icon={this.state.icon}
 					timeNows={this.state.timeNows}
 					secondsToHms={this.secondsToHms} 	
-					chartNow={this.state.chartNow}		
+					chartNow={this.state.chartNow}
+					userUID={this.state.userUID}
+					convertTime={this.state.convertTime}		
 				/>
 			</div>
 		) : <div className='preload-gavel'><img src={require("../images/loading.png")} alt="Loading"></img></div>

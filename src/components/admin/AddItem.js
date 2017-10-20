@@ -452,7 +452,7 @@ class Edit extends Component {
     .then(snapshot => {
           firebase.database().ref('/items/' + snapshot.key + '/bidList').push({
             userId : '',
-            userName : '',
+            userName : 'Open Bids',
             bid : parseInt(this.state.firstbit,10),
             bidTimestamp : this.state.timeStart.format('x'),
             auto : 0
@@ -828,8 +828,8 @@ class Edit extends Component {
                       <i className="fa fa-picture-o"></i>
                     </div>
                   { this.state.descPicErr &&
-										<div className="alert-error">
-											<p><i className="fa fa-times"></i> {this.state.descPicErr}</p>
+										<div className="alert-error top-0">
+											<p className="top-0"><i className="fa fa-times"></i> {this.state.descPicErr}</p>
 										</div>
 									}
                 </div>
@@ -891,7 +891,7 @@ class Edit extends Component {
                       }
                       { this.state.specErr &&
                         <div className="alert-error">
-                          <p><i className="fa fa-times"></i> {this.state.specErr}</p>
+                          <p className="top-5"><i className="fa fa-times"></i> {this.state.specErr}</p>
                         </div>
                       }
                 </div>
@@ -902,9 +902,10 @@ class Edit extends Component {
                       <p>{ this.state.firstbit }</p>
                     </div>
                       :
-                    <div className="input-group">
+                    <div className="input-group mb-45">
                        <span className="input-group-label">฿</span>
-                       <input className="input-group-field text-right" type="number" pattern="[0-9]*" onChange={ this.onNewItemChange } value={ this.state.firstbit } name="firstbit"/>
+                       <input className="input-group-field text-right" placeholder="0.00" type="number" pattern="[0-9]*" onChange={ this.onNewItemChange } value={ this.state.firstbit } name="firstbit"/>
+                       <p className="text-desc-input">Use non-negative value </p>
                     </div>
                   }
                   </label>
@@ -921,9 +922,10 @@ class Edit extends Component {
                       <p>{ this.state.bidStep }</p>
                     </div>
                       :
-                    <div className="input-group">
+                    <div className="input-group mb-45">
                         <span className="input-group-label">฿</span>
-                        <input className="input-group-field text-right" type="number" pattern="[0-9]*" onChange={ this.onNewItemChange } value={ this.state.bidStep } name="bidStep"/>
+                        <input className="input-group-field text-right" placeholder="0.00" type="number" pattern="[0-9]*" onChange={ this.onNewItemChange } value={ this.state.bidStep } name="bidStep"/>
+                        <p className="text-desc-input">Use non-negative value and maximum 10% of first bit</p>
                     </div>
                   }
                   </label>

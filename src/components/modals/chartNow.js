@@ -119,8 +119,8 @@ class chartNow extends Component {
 		let {chartNow} = this.props
 
         return (this.state.chartNow && this.state.items.length !== 0 ) ? (
-
-            <div className="page items post-feed">
+        	<div className="page items post-feed">
+        		<p className="modal-chart-now-desc">You currently active bid<span>enjoy your auction !!</span></p>
 				<TransitionGroup>
 					{this.state.items.map((item, i) => {
 							let style = {}
@@ -148,12 +148,15 @@ class chartNow extends Component {
                                     </div>
                                     <div className="post-box-content">
                                         <h3>{item.name}</h3>
-                                        <p className="desc">{item.desc.short.slice(0,20)}</p>
+                                        <p className="desc">{item.desc.short.slice(0,100)}..</p>
                                         <Clock secondsToHms={this.props.secondsToHms} timeNows={this.state.timeNows[i]}  />
                                         { this.state.newcurrent[i] && 
                                             <p className="price">{this.state.newcurrent[i].current}<span className="curentcy">Bath</span></p>
                                         }
-                                        <button><i className="fa fa2x "></i></button>
+                                        { this.state.newcurrent[i].own === this.props.userUID ?
+                                        <p className="modal-chart-now-status" style={{color : '#1B5E20',background : '#B9F6CA'}}><i className="fa fa-clock-o "></i> now you win</p>
+                                        : <p className="modal-chart-now-status" style={{color : '#cc4b37',background : '#ffdad5'}}><i className="fa fa-clock-o "></i> now you lost</p>
+                                   		 }
                                     </div>
                                 </Link>
                             </Animated.div>
