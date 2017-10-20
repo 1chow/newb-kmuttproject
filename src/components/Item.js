@@ -218,7 +218,7 @@ export default class Item extends Component {
 					bidColor_bg:'#B9F6CA',
 					bidColor_icon:'#ffae00',
 					bidColor:'#1B5E20',
-					bidResult: 'Max bid at ' + a + ' ฿',
+					bidResult: 'Max bid at ' + a + '.00 ฿',
 					bidResult_: 'You are currently the highest bidder.',
 					isMsg : 1
 				})
@@ -228,8 +228,8 @@ export default class Item extends Component {
 					bidColor_bg:'#ffdad5',
 					bidColor_icon:'#cc4b37',
 					bidColor:'#cc4b37',
-					bidResult: 'You bidding  ฿' + a + ' is lost',
-					bidResult_: 'Try Place Your New bid higher than '+ b,
+					bidResult: 'You bidding  ฿' + a + '.00 is lost',
+					bidResult_: 'Try Place Your New bid higher than '+ b + '.00',
 					isMsg : 1
 				})
 			break
@@ -311,7 +311,7 @@ export default class Item extends Component {
 					</div>
 					<div className="small-3 columns">
 						{ this.state.newcurrent !== 0 &&
-							<p className="price"><span className="curentcy">฿</span>{this.props.priceFormat(this.state.newcurrent)}</p>
+							<p className="price"><span className="curentcy">฿</span>{this.props.priceFormat(this.state.newcurrent)}<span className="curentcy dot">.00</span></p>
 						}
 						<p className="helper auct-text-current text-right show-for-medium">Current Bids</p>
 					</div>
@@ -370,9 +370,9 @@ export default class Item extends Component {
 									<p className="time">Place Your Bid</p>
 									<BidForm recieve={this.recieve} msg={this.handleMsg} waiting={this.waiting} wait={this.state.wait} newcurrent={this.state.newcurrent} mfkCurrent={this.props.current} open={this.props.triggler} item={this.state.item[0]} params={this.props.match.params.id} bidStep_={this.state.bidStep_} />
 									{ this.props.userUID !== this.state.own ?
-										<p className="helper">Minimum Incress Bidding ฿{this.state.bidStep_ }.<br/>Please Enter ฿ {this.state.newcurrent + this.state.bidStep_ } or more.</p>
+										<p className="helper">Minimum Incress Bidding ฿{this.state.bidStep_ }.00.<br/>Please Enter ฿ {this.state.newcurrent + this.state.bidStep_ }.00 or more.</p>
 										:
-										<p className="helper">Your Max Bids ฿ {this.state.maxBid}</p>
+										<p className="helper">Your Max Bids ฿ {this.state.maxBid}.00</p>
 									}
 								</div> 
 								: 
@@ -417,7 +417,7 @@ export default class Item extends Component {
 										return	<tr key={i} className={"bidList " + (bidList.auto === 1 ? 'bidList-none ' : '') + ((this.state.seeAutoBid && bidList.auto !== 0) ? 'bidList-show' : '')} >
 												<td width="25">{(i === 0 && bidList.name !== 'Open Bids') ? <i className="fa fa-trophy"></i> : null}</td>
 												<td width="125" style={{textAlign:"left"}}>{i !== bidLenght  ? '⁎ ' + (bidList.name).slice(1,-1) + ' ⁎' : bidList.name}<span className='bidList-auto'>{bidList.auto > 0 ? '(auto)' : ''}</span></td>
-												<td width="50"  style={{textAlign:"right"}}>{bidList.bid}<span>฿</span></td>
+												<td width="50"  style={{textAlign:"right"}}>{bidList.bid}<span>.00 ฿</span></td>
 												<td width="150" title={this.props.convertTimeM(bidList.bidTimestamp)} style={{fontSize:"0.66em"}}>{this.props.convertTime(bidList.bidTimestamp)}</td>
 											</tr>
 										})}

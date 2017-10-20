@@ -118,7 +118,7 @@ export default class Checkout extends Component {
 										<tr>
 											<td>Delivery Charge</td>
 											<td className="text-center">-</td>
-											<td className="text-right">39 <span>THB</span></td>
+											<td className="text-right">39.00 <span>THB</span></td>
 										</tr>
 										:
 										<tr>
@@ -131,7 +131,7 @@ export default class Checkout extends Component {
 										<tr>
 											<th className="text-right">Total</th>
 											<th className="text-center">{Object.keys(this.state.orderDesc[1]).length}</th>
-											<th className="text-right">{this.state.orderDesc[2] + 39} <span>THB</span></th>
+											<th className="text-right">{this.state.orderDesc[2] + 39}.00 <span>THB</span></th>
 										</tr>
 									}
 									</tbody>
@@ -145,7 +145,7 @@ export default class Checkout extends Component {
 									<p className="address"><span className="name"><i className="fa fa-gavel fa-1x"></i> Auct Call Center</span>Telphone : 1150 (9:00-16:00 GMT+7) <br></br>Email : Auct@Auct.Auct</p>
 								</div>
 								<div className="small-12 medium-6 columns ">
-									<p className="address"><span className="name">Payment On Delevery</span>Amount : {this.state.orderDesc[2] && this.state.orderDesc[2] + 39} THB<br></br>Transaction Id: 1234489875445</p>
+									<p className="address"><span className="name">Payment On Delevery</span>Amount : {this.state.orderDesc[2] && this.state.orderDesc[2] + 39}.00 THB<br></br>Transaction Id: 1234489875445</p>
 								</div>
 								<div className="small-12 medium-6 columns none">
 									<p className="address"><span className="name">Payment By Omise</span>Card Info. : Undified <br></br>Amount : Undified <br></br>Transaction Id: 1234489875445</p>

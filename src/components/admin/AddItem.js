@@ -405,7 +405,7 @@ class Edit extends Component {
       this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
       return false
     } else if(input < 1) {
-      this.setState({firstbitErr:"Firstbit must be at least 1฿"})
+      this.setState({firstbitErr:"Firstbit must be at least 1.00 ฿"})
       this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
       return false
     } else if(input%Math.floor(input) !== 0) {
@@ -903,7 +903,7 @@ class Edit extends Component {
                   <label>First Bit
                   {name ? 
                     <div className="input-group">
-                      <p>{ this.state.firstbit }</p>
+                      <p>{ this.state.firstbit }.00 ฿</p>
                     </div>
                       :
                     <div className="input-group mb-45">
@@ -923,7 +923,7 @@ class Edit extends Component {
                   <label>Bid Increments
                   {name ? 
                     <div className="input-group">
-                      <p>{ this.state.bidStep }</p>
+                      <p>{ this.state.bidStep }.00 ฿</p>
                     </div>
                       :
                     <div className="input-group mb-45">

@@ -88,7 +88,7 @@ export default class ModalChartWin extends Component {
 												<div className="post-list-r">
 													<h3>{orderList.itemName}</h3>
 													<p className="time">Track ID :{orderList.itemId.slice(1,orderList.itemId.length)}<span>Complete : {convertTimeM(orderList.itemWinTime)}</span></p>
-													<p className="price">{orderList.itemPrice}<span className="curentcy">Bath</span></p>
+													<p className="price">{orderList.itemPrice}<span style={{display: 'inline'}} className="curentcy dot">.00</span><span className="curentcy">Bath</span></p>
 													<i className="fa fa-shopping-basket fa-2x"></i>
 												</div>
 											</Link>
@@ -104,17 +104,17 @@ export default class ModalChartWin extends Component {
 							<p className="desc">Payment Pending</p><br/>
 							<Link onClick={this.handleLinktoCheckOut} to="/checkout" className="button success">Checkout</Link>
 							<ul>
-								<li>Your Order {this.state.orderLists.length} Item<span>{this.props.priceFormat(this.state.orderPrice)} THB</span></li>
+								<li>Your Order {this.state.orderLists.length} Item<span>{this.props.priceFormat(this.state.orderPrice)}.00 THB</span></li>
 								{ this.state.orderPrice ?
-								<li>Delivery Charge<span>39 THB</span></li> :
-								<li>Delivery Charge<span>0 THB</span></li>
+								<li>Delivery Charge<span>39.00 THB</span></li> :
+								<li>Delivery Charge<span>0.00 THB</span></li>
 								}
 							</ul>
 							<hr/>
 							<ul>
 								{ this.state.orderPrice ?
-								<li className="price">Total<span>{this.props.priceFormat(this.state.orderPrice + 39)} THB</span><p>(VAT incl.)</p></li> :
-								<li className="price">Total<span>0 THB</span><p>(VAT incl.)</p></li>
+								<li className="price">Total<span>{this.props.priceFormat(this.state.orderPrice + 39)}.00 THB</span><p>(VAT incl.)</p></li> :
+								<li className="price">Total<span>0.00 THB</span><p>(VAT incl.)</p></li>
 								}
 							</ul>
 						</div>
