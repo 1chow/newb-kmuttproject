@@ -86,16 +86,18 @@ class bidForm extends Component {
 		else {
 			let bid_ = bid.value
 			this.setState({current: this.bid.value})
-			let getCurrent = "https://us-central1-auctkmutt.cloudfunctions.net/getCurrent?itemId="+this.props.item._id
-			fetch(getCurrent)
-				.then( res => res.json())
-				.then( json => {
-					if(bid_ < (json.current + this.state.bidStep)){
-						this.props.recieve()
-						this.bid.value = this.props.newcurrent + this.state.bidStep;
-						open('alert','bad','Your bid Lost ! Next minimum bid is ' + (this.props.newcurrent + this.props.bidStep_) + '฿','fa-thumbs-down')
-					} else this.setState({validates: json})
+			if(bid_ < (this.props.newcurrent + this.props.bidStep_)){
+				this.props.recieve()
+				this.bid.value = this.props.newcurrent + this.state.bidStep;
+				open('alert','bad','Your bid Lost ! Next minimum bid is ' + (this.props.newcurrent + this.props.bidStep_) + '฿','fa-thumbs-down')
+			} else {
+				let getCurrent = "https://us-central1-auctkmutt.cloudfunctions.net/getCurrent?itemId="+this.props.item._id
+				fetch(getCurrent)
+					.then( res => res.json())
+					.then( json => {
+						 this.setState({validates: json})
 				})
+			}
 		}
 	}
 
@@ -126,6 +128,7 @@ class bidForm extends Component {
 
 	handleBlur = (event) => {
 	  if (event.target.value < this.props.newcurrent + this.props.bidStep_){
+			this.props.open('alert','bad','Your bid Lost ! Next minimum bid is ' + (this.props.newcurrent + this.props.bidStep_) + '฿','fa-thumbs-down')
 			event.target.value = this.props.newcurrent + this.props.bidStep_
 		}
 	}
