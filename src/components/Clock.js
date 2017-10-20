@@ -43,7 +43,7 @@ class Clock2 extends React.Component {
 
   render() {
     return  (
-      <span className={"timecount " + (this.state.hotTime ? 'red' : 'green')}>
+      <span className={"timecount time-auct-from " + (this.state.hotTime ? 'red' : 'green')}>
           <ul className="post-box-time day">
             <li>{this.props.secondsToHms(this.props.timeNow,'day')}<span className="info">day</span></li>
           </ul>

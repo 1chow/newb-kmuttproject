@@ -196,7 +196,7 @@ i.alert{color: #ffae00;}
 .post-box-step li{width: 50%;display: inline-block;line-height: 0.9em;padding: 0 10px;font-weight: 600;text-align: center;font-size: 1.25em;color: #126195;border-right: 1px solid #8a8a8a;}
 .post-box-step li:last-child{border-right: 0;}
 .post-box-step span.info{display: block;font-size: 0.6em;font-weight: 100;line-height: 1;color: #3b3b3b;}
-.post-box-time{list-style: none;color: #fff;margin: 0;font-size: 1.33em;line-height: 1;padding: 0;display: inline-block;width: calc(74.25% - 5px);background: #14679e;padding: 7px 5px;height: 1.5em;text-align: center;}
+.post-box-time{list-style: none;color: #fff;margin: 0;font-size: 6.25vw;line-height: 1;padding: 0;display: inline-block;width: calc(74.25% - 5px);background: #14679e;padding: 7px 5px;height: 1.5em;text-align: center;}
 .post-box-time li{display: inline-block;position: relative;text-align: center;font-size: 0.8em;vertical-align: top;line-height: 1em;}
 .post-box-time li span.info{display: block;font-size: 0.375em;line-height: 1.25em;}
 
@@ -474,6 +474,14 @@ button.user-edit{position: absolute;right: 15px;bottom: 35px;color: #777;font-si
 
 @media screen and (min-width: 380px) {
 .post-box-content span.timecount{font-size: 5.5vw}
+.post-box-time{}
+span.time-auct-from .post-box-time{}
+}
+
+@media screen and (max-width: 639px) {
+span.time-auct-from .post-box-time{
+    font-size: 10vw;
+}
 }
 
 @media screen and (min-width: 640px) {
@@ -488,7 +496,9 @@ button.user-edit{position: absolute;right: 15px;bottom: 35px;color: #777;font-si
 .post-box-content p{font-size: 0.8em;}
 .home-cat{font-size: 1em;}
 .home-cat ul{margin: 0;padding: 0 0 15px;}
-
+.post-box-time{
+    font-size: 4.125vw;
+}
 
 .title-bar{font-size: 1em;}
 
@@ -564,7 +574,9 @@ footer .footer-r{text-align: right;font-size: 1em;}
 .item-warper .item-box-list {bottom: 0;}
 .item-warper .item-box-list img{ margin-left: 15px;}
 .item-warper .item img {max-width: 500px;}
-
+.post-box-time{
+    font-size: 1.2em;
+}
 .toggle{height: auto;position: fixed;width: 100%;top: -105vh;z-index: 10100;background: rgba(255, 255, 255, 0.95);box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);padding: 50px 0 0px 0;transition: all 0.35s cubic-bezier(0.88, -0.01, 0.12, 0.98);}
 
 }
@@ -574,6 +586,9 @@ footer .footer-r{text-align: right;font-size: 1em;}
 .home-cat ul{padding: 5px 0 1.33em;}
 .modal-core .post-box{padding: 15px;}
 .auct-from-text {}
+.post-box-time{
+    font-size: 1.33em;
+}
 .auct-from-time { font-size: 0.8em;}
 }
 

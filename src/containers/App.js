@@ -33,6 +33,7 @@ export default class App extends Component {
 			typeModal: 'checkout',
 			isLogin: false,
 			User: "Guest",
+			Username: '',
 			profilePicture: null,
 			role:null,
 			feel:null,
@@ -54,7 +55,8 @@ export default class App extends Component {
 							User: user.email,
 							profilePicture: user.photoUrl,
 							role:user.role,
-							userUID: user.uid
+							userUID: user.uid,
+							Username:user.displayName
 						})
 				})
 				db.child(`orders/${user.uid}/orderList`).on('value', dataSnapshot => {
@@ -83,7 +85,8 @@ export default class App extends Component {
 					User: "Guest",
 					profilePicture:null,
 					role:null,
-					userUID:''
+					userUID:'',
+					Username: '',
 				})
 			}
 		})
@@ -317,7 +320,7 @@ export default class App extends Component {
 
 	priceFormat = (price) => {
 		var prices = price.toString().split(".");
-	    prices[0] = prices[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		prices[0] = prices[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	    return prices.join(".");
 	}
 
@@ -504,6 +507,11 @@ export default class App extends Component {
 					chartNow={this.state.chartNow}
 					userUID={this.state.userUID}
 					convertTime={this.state.convertTime}		
+					convertTimeM={this.convertTimeM}
+					Username={this.state.Username}
+					profilePicture={this.state.profilePicture}
+					priceFormat={this.priceFormat}		
+
 				/>
 			</div>
 		) : <div className='preload-gavel'><img src={require("../images/loading.png")} alt="Loading"></img></div>

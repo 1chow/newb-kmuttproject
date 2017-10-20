@@ -46,3 +46,7 @@
 .hidden {
     display: none;
 }
+
+.cart-username{
+    margin-left: 10px;
+}
