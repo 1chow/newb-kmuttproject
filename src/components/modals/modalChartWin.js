@@ -88,7 +88,7 @@ export default class ModalChartWin extends Component {
 												<div className="post-list-r">
 													<h3>{orderList.itemName}</h3>
 													<p className="time">Track ID :{orderList.itemId.slice(1,orderList.itemId.length)}<span>Complete : {convertTimeM(orderList.itemWinTime)}</span></p>
-													<p className="price">{orderList.itemPrice}<span style={{display: 'inline'}} className="curentcy dot">.00</span><span className="curentcy">Bath</span></p>
+													<p className="price"><span className="curentcy">฿</span>{orderList.itemPrice}<span style={{display: 'inline'}} className="curentcy dot">.00</span></p>
 													<i className="fa fa-shopping-basket fa-2x"></i>
 												</div>
 											</Link>

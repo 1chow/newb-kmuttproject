@@ -25,7 +25,7 @@ export default class App extends Component {
 		this.state = {
 			items: [],
 			categories:[],
-			orderLists:[],
+			orderLists:null,
 			current:null,
 			showModal: false,
 			showToggle: false,
@@ -42,6 +42,7 @@ export default class App extends Component {
 			userUID: '',
 			timeNows: '',
 			chartNow:[],
+			chartNotice:false,
 		};
 	}
 	componentWillMount() {
@@ -66,7 +67,10 @@ export default class App extends Component {
 						orderList['.key'] = orderList.key;
 						orderLists.push(orderList);
 					})
-					 this.setState({
+					this.state.orderLists !== null && this.setState({
+						chartNotice: true
+					})
+					this.setState({
 						orderLists: orderLists
 					})
 				})
@@ -280,7 +284,7 @@ export default class App extends Component {
 	//Modal function
 
 	handleOpenModal = type => {
-		this.setState({ showModal: true });
+		this.setState({ showModal: true,chartNotice:false });
 		this.setState({ typeModal: type });
 		document.body.style.overflow = "hidden"
 	}
@@ -393,6 +397,7 @@ export default class App extends Component {
 						isLogin={this.state.isLogin}
 						filter={this.filter} 
 						getObjects={this.handleclosetoggle}
+						chartNotice={this.state.chartNotice}
 					/>
 					<Categories 
 						categories={this.state.categories} 
@@ -531,8 +536,7 @@ export default class App extends Component {
 					convertTimeM={this.convertTimeM}
 					Username={this.state.Username}
 					profilePicture={this.state.profilePicture}
-					priceFormat={this.priceFormat}		
-
+					priceFormat={this.priceFormat}
 				/>
 			</div>
 		) : <div className='preload-gavel'><img src={require("../images/loading.png")} alt="Loading"></img></div>

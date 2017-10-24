@@ -414,9 +414,10 @@ export default class Item extends Component {
 									<tbody>
 										{ this.state.bidLists.map( (bidList,i) => {
 											let bidLenght = this.state.bidLists.length - 1
+											let nameLenght = bidList.name.length
 										return	<tr key={i} className={"bidList " + (bidList.auto === 1 ? 'bidList-none ' : '') + ((this.state.seeAutoBid && bidList.auto !== 0) ? 'bidList-show' : '')} >
 												<td width="25">{(i === 0 && bidList.name !== 'Open Bids') ? <i className="fa fa-trophy"></i> : null}</td>
-												<td width="125" style={{textAlign:"left"}}>{i !== bidLenght  ? '⁎ ' + (bidList.name).slice(1,-1) + ' ⁎' : bidList.name}<span className='bidList-auto'>{bidList.auto > 0 ? '(auto)' : ''}</span></td>
+												<td width="125" style={{textAlign:"left"}}>{i !== bidLenght  ? bidList.name.slice(0,1) + ' ⁎⁎⁎ ' + bidList.name.slice(nameLenght - 1,nameLenght) : 'Starts Bids'}<span className='bidList-auto'>{bidList.auto > 0 ? '(auto)' : ''}</span></td>
 												<td width="50"  style={{textAlign:"right"}}>{bidList.bid}<span>.00 ฿</span></td>
 												<td width="150" title={this.props.convertTimeM(bidList.bidTimestamp)} style={{fontSize:"0.66em"}}>{this.props.convertTime(bidList.bidTimestamp)}</td>
 											</tr>

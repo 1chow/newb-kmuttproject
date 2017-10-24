@@ -50,3 +50,7 @@
 .cart-username{
     margin-left: 10px;
 }
+
+.show{
+    opacity: 1 !important;
+}
