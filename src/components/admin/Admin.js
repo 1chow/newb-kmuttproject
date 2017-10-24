@@ -94,6 +94,7 @@ export default class Admin extends Component {
 									convertTimeM={this.props.convertTimeM}
 									triggler={this.props.triggler}
 									items={this.props.items}
+									onDelete={this.props.onDelete}
 								/>
 		            	}
 		            </div>            

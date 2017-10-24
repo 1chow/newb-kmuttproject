@@ -34,6 +34,7 @@ class ItemsL extends Component {
 
   removeItem(key){
     if (window.confirm("Do you want to remove this?") === true) {
+      this.props.onDelete(key)
       this.dbItems.child(key).update({
         isDelete:0,
       })

@@ -361,6 +361,25 @@ export default class App extends Component {
 			current:current,
 		})
 	}
+
+	onDelete = key => {
+		let {items} = this.state
+		var fuck = null;
+		items.filter( (item,i) => {
+			if(item._id === key){
+				fuck = i
+				return 1
+			}
+			else{
+				return -1
+			}
+		})
+		let items_ = Object.assign({},items[fuck],{isDelete:0})
+		items[fuck] = items_
+		this.setState({
+			items:items,
+		})
+	}
 	
 	render() {
 		return this.state.current !== null ? (
@@ -451,6 +470,7 @@ export default class App extends Component {
 													current={this.state.current}
 													convertTimeM={this.convertTimeM}
 													userUID={this.state.userUID}
+													onDelete={this.onDelete}
 												/>
 											) : <Redirect to={{pathname: '/', state: {from: props.location}}} />}
 										/>
@@ -466,6 +486,7 @@ export default class App extends Component {
 													items={this.state.items}
 													current={this.state.current}
 													userUID={this.state.userUID}
+													onDelete={this.onDelete}
 												/>
 											) : <Redirect to={{pathname: '/', state: {from: props.location}}} />}
 										/>
