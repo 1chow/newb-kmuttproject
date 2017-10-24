@@ -120,7 +120,7 @@ class chartNow extends Component {
 
         return (this.state.chartNow && this.state.items.length !== 0 ) ? (
         	<div className="page items post-feed">
-        		<p className="modal-chart-now-desc">You currently active bid<span>enjoy your auction !!</span></p>
+        		<p className="modal-chart-now-desc">Your currently active bid</p>
 				<TransitionGroup>
 					{this.state.items.map((item, i) => {
 							let style = {}

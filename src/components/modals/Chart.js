@@ -11,7 +11,8 @@ export default class Chart extends Component {
 	    return (
 	            <div className="modal-core modal-fw modal-chart">
 					<div className="row modal-core-head title-bar">
-						<h3><i className="fa fa-shopping-basket"></i>{'    '+this.props.Username+"'s Cart"}</h3>
+						<h3><i className="fa fa-shopping-basket"></i>Cart</h3>
+						<p className="modal-chart-name">{"" + this.props.Username}</p>
 						<button onClick={this.props.close} className="close"><i className="fa fa-times"></i></button>
 					</div>
 					<div className="row">

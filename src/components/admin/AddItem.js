@@ -422,7 +422,7 @@ class Edit extends Component {
 
   addItem = () => {
     this.dbItems.push({
-      name: this.state.productname.slice(0,50),
+      name: this.state.productname.slice(0,75),
       catagory: this.state.catagoriesselect,
       isActive: 1,
       isDelete: 1,
@@ -440,7 +440,7 @@ class Edit extends Component {
           endTime: parseInt(this.state.timeEnd.format('x'),10),
           startTime: parseInt(this.state.timeStart.format('x'),10),
           count: 0,
-          userName : '',
+          userName : 'Open Bids',
           userId : ''
       },
       img: this.state.productimageURL,
