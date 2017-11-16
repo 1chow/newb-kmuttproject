@@ -370,7 +370,10 @@ export default class Item extends Component {
 									<p className="time">Place Your Bid</p>
 									<BidForm recieve={this.recieve} msg={this.handleMsg} waiting={this.waiting} wait={this.state.wait} newcurrent={this.state.newcurrent} mfkCurrent={this.props.current} open={this.props.triggler} item={this.state.item[0]} params={this.props.match.params.id} bidStep_={this.state.bidStep_} />
 									{ this.props.userUID !== this.state.own ?
-										<p className="helper">Minimum Incress Bidding ฿{this.state.bidStep_ }.00.<br/>Please Enter ฿ {this.state.newcurrent + this.state.bidStep_ }.00 or more.</p>
+										this.state.bidStep_ !== 0 ?
+											<p className="helper">Minimum Incress Bidding ฿{this.state.bidStep_ }.00.<br/>Please Enter ฿ {this.state.newcurrent + this.state.bidStep_ }.00 or more.</p>
+										 		:
+											<p className="helper">Please Enter ฿ {this.state.newcurrent + this.state.bidStep_ }.00 or more.</p>
 										:
 										<p className="helper">Your Max Bids ฿ {this.state.maxBid}.00</p>
 									}
@@ -417,7 +420,7 @@ export default class Item extends Component {
 											let nameLenght = bidList.name.length
 										return	<tr key={i} className={"bidList " + (bidList.auto === 1 ? 'bidList-none ' : '') + ((this.state.seeAutoBid && bidList.auto !== 0) ? 'bidList-show' : '')} >
 												<td width="25">{(i === 0 && bidList.name !== 'Open Bids') ? <i className="fa fa-trophy"></i> : null}</td>
-												<td width="125" style={{textAlign:"left"}}>{i !== bidLenght  ? bidList.name.slice(0,1) + ' ⁎⁎⁎ ' + bidList.name.slice(nameLenght - 1,nameLenght) : 'Starts Bids'}<span className='bidList-auto'>{bidList.auto > 0 ? '(auto)' : ''}</span></td>
+												<td width="125" style={{textAlign:"left"}}>{i !== bidLenght  ? bidList.name.slice(0,1) + ' *** ' + bidList.name.slice(nameLenght - 1,nameLenght) : 'Open Bids'}<span className='bidList-auto'>{bidList.auto > 0 ? '(auto)' : ''}</span></td>
 												<td width="50"  style={{textAlign:"right"}}>{bidList.bid}<span>.00 ฿</span></td>
 												<td width="150" title={this.props.convertTimeM(bidList.bidTimestamp)} style={{fontSize:"0.66em"}}>{this.props.convertTime(bidList.bidTimestamp)}</td>
 											</tr>

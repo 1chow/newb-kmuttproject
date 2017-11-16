@@ -476,6 +476,7 @@ export default class App extends Component {
 													convertTimeM={this.convertTimeM}
 													userUID={this.state.userUID}
 													onDelete={this.onDelete}
+													{...props}
 												/>
 											) : <Redirect to={{pathname: '/', state: {from: props.location}}} />}
 										/>
@@ -492,6 +493,7 @@ export default class App extends Component {
 													current={this.state.current}
 													userUID={this.state.userUID}
 													onDelete={this.onDelete}
+													{...props}
 												/>
 											) : <Redirect to={{pathname: '/', state: {from: props.location}}} />}
 										/>

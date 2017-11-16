@@ -80,7 +80,12 @@ class RecentChart extends Component {
 			return chartNow.indexOf(a.itemId) !== -1
 		})
         newcurrents.length !== null && this.setState({newcurrent: newcurrents})
-    }
+	}
+	
+	linkToItemById = (e,itemId) => {
+		e.preventDefault()
+		this.props.history.push('/item/'+itemId)
+	}
     
     render() {
 		let {chartNow} = this.props
@@ -106,7 +111,7 @@ class RecentChart extends Component {
 						</tr>
 						{this.state.items.map((item,i) => {
 							return (
-							<tr key={i}>
+							<tr key={i} onClick={(e) => this.linkToItemById(e,item._id)}>
 								<td>{(i+1) + ")"}</td> 
 	                          	<td className="thump">
 	                              <Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}><img className="admin-table-thump" src={item.img} alt="PreviewPic" />

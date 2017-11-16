@@ -88,6 +88,7 @@ export default class Admin extends Component {
 									current={this.props.current} 
 									convertTimeM={this.props.convertTimeM}
 									userUID={this.props.userUID}
+									history={this.props.history}
 								/> 
 							:
 								<ItemsL
@@ -95,6 +96,7 @@ export default class Admin extends Component {
 									triggler={this.props.triggler}
 									items={this.props.items}
 									onDelete={this.props.onDelete}
+									history={this.props.history}
 								/>
 		            	}
 		            </div>            
