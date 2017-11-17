@@ -568,7 +568,8 @@ const mailTransport = nodemailer.createTransport(
 
 				  	db.ref('/orders/' + userId ).update({
 				  		orderPrice: totalPrice,// sumPrice
-				  		orderCount : parseInt(count_)
+						  orderCount : parseInt(count_),
+						  isRead: 0
 					})
 
 					db.ref('/orders/' + userId + '/orderList').push({

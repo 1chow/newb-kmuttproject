@@ -29,7 +29,7 @@ class Header extends React.Component {
 										
 									</button>
 								}
-									<b className={"alert-top-btn " + (this.props.chartNotice ? "show" : null)} id="b-cart">N</b>
+									<b className={"alert-top-btn " + (this.props.isRead === 0 ? "show" : null)} id="b-cart">N</b>
 								{ this.props.isLogin === true ?
 									<button className="profile-botton" onClick={this.props.toggle}>
 										<span className="has-tip bottom" data-disable-hover="false">

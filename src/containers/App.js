@@ -42,7 +42,7 @@ export default class App extends Component {
 			userUID: '',
 			timeNows: '',
 			chartNow:[],
-			chartNotice:false,
+			isRead:null
 		};
 	}
 	componentWillMount() {
@@ -67,11 +67,13 @@ export default class App extends Component {
 						orderList['.key'] = orderList.key;
 						orderLists.push(orderList);
 					})
-					this.state.orderLists !== null && this.setState({
-						chartNotice: true
-					})
 					this.setState({
 						orderLists: orderLists
+					})
+				})
+				db.child(`orders/${user.uid}`).on('value', dataSnapshot => {
+					this.setState({
+						isRead: dataSnapshot.val().isRead
 					})
 				})
 				db2.ref('/users/' + user.uid + '/now').on('value', dataSnapshot => {
@@ -91,6 +93,7 @@ export default class App extends Component {
 					role:null,
 					userUID:'',
 					Username: '',
+					isRead:null
 				})
 			}
 		})
@@ -284,9 +287,12 @@ export default class App extends Component {
 	//Modal function
 
 	handleOpenModal = type => {
-		this.setState({ showModal: true,chartNotice:false });
+		this.setState({ showModal: true});
 		this.setState({ typeModal: type });
 		document.body.style.overflow = "hidden"
+		this.state.userUID && db2.ref(`orders/${this.state.userUID}`).update({
+			isRead: 1
+		})
 	}
 	handleCloseModal = () => {
 		this.setState({ showModal: false });
@@ -397,7 +403,7 @@ export default class App extends Component {
 						isLogin={this.state.isLogin}
 						filter={this.filter} 
 						getObjects={this.handleclosetoggle}
-						chartNotice={this.state.chartNotice}
+						isRead={this.state.isRead}
 					/>
 					<Categories 
 						categories={this.state.categories} 
