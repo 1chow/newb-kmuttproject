@@ -13,7 +13,7 @@ class AddCatagoriy extends Component {
 
   handleNewItemSubmit = (e) => {
     e.preventDefault();
-      if (this.state.newitemtext && this.state.newitemtext.trim().length !== 0 && this.state.newitemtext.trim().length <= 12) {
+      if (this.state.newitemtext && this.state.newitemtext.trim().length !== 0 && this.state.newitemtext.trim().length <= 20) {
             if (this.state.icon && this.state.icon.trim().length !== 0){
               this.setState({
                 Error: null,

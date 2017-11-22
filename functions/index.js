@@ -44,7 +44,8 @@ const mailTransport = nodemailer.createTransport(
 
 			  		 var data = snapshot.val();
 			  		 var active = data.isActive;
-			  		 var timeEnd = data.bid.endTime;  		 
+			  		 var timeEnd = data.bid.endTime;
+			  		 var timeStart = data.bid.startTime;  		 
 			  		 	
 			  		 	var tOut = timeEnd - data.getTime ;
 		  		 		if ( tOut <= 0 && active != 0){
@@ -53,6 +54,14 @@ const mailTransport = nodemailer.createTransport(
 
 			  				})
 			  				data['isActive'] = 0;
+			  			}
+
+			  			if ( timeStart <= data.getTime && active === 0){
+			  				db.ref('/items/'+ itemKey ).update({
+			  					isActive :  1
+
+			  				})
+			  				data['isActive'] = 1;
 			  			}
 
 				  		var helpp = {
@@ -577,7 +586,8 @@ const mailTransport = nodemailer.createTransport(
 
 				  	db.ref('/orders/' + userId ).update({
 				  		orderPrice: totalPrice,// sumPrice
-				  		orderCount : parseInt(count_)
+						  orderCount : parseInt(count_),
+						  isRead: 0
 					})
 
 					db.ref('/orders/' + userId + '/orderList').push({

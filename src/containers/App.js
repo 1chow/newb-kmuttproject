@@ -25,7 +25,7 @@ export default class App extends Component {
 		this.state = {
 			items: [],
 			categories:[],
-			orderLists:[],
+			orderLists:null,
 			current:null,
 			showModal: false,
 			showToggle: false,
@@ -42,6 +42,7 @@ export default class App extends Component {
 			userUID: '',
 			timeNows: '',
 			chartNow:[],
+			isRead:null
 		};
 	}
 	componentWillMount() {
@@ -66,9 +67,18 @@ export default class App extends Component {
 						orderList['.key'] = orderList.key;
 						orderLists.push(orderList);
 					})
-					 this.setState({
+					this.setState({
 						orderLists: orderLists
 					})
+				})
+				db.child(`orders/${user.uid}`).on('value', dataSnapshot => {
+					dataSnapshot.val() !== null && (
+						dataSnapshot.val().isRead !== null && (
+							this.setState({
+								isRead: dataSnapshot.val().isRead
+							})
+						)
+					)
 				})
 				db2.ref('/users/' + user.uid + '/now').on('value', dataSnapshot => {
 					let table_ = []
@@ -87,6 +97,7 @@ export default class App extends Component {
 					role:null,
 					userUID:'',
 					Username: '',
+					isRead:null
 				})
 			}
 		})
@@ -145,6 +156,7 @@ export default class App extends Component {
 				let timeNows =[]
 				json.forEach( (object,i) => {
 					let timeNow_ = ((object.bid.endTime - object.timeNow)/1000)
+					let duration_ = ((object.bid.endTime - object.bid.startTime)/1000)
 					let id_ = object._id
 					let catagory_ = object.catagory
 					let isActive_ = object.isActive
@@ -152,6 +164,7 @@ export default class App extends Component {
 					let endTime_ = object.bid.endTime
 					let timeNows_ = {
 						timeNow  : timeNow_,
+						duration : duration_,
 						_id  	 : id_,
 						catagory : catagory_,
 						isActive : isActive_,
@@ -261,9 +274,15 @@ export default class App extends Component {
 					this.hide(i,timeNow._id)
 					timeNow.isActive = 0
 				}
-			} else { timeNow_ = timeNow.timeNow - 1 }
+			} else { 
+				if(timeNow.isActive === 0){
+					timeNow.isActive = 1
+					timeNow_ = timeNow.duration - 1 
+				} else timeNow_ = timeNow.timeNow - 1 
+			}
 			let timeNows_ = {
 				timeNow  : timeNow_,
+				duration : timeNow.duration,
 				_id : timeNow._id,
 				catagory : timeNow.catagory,
 				isActive : timeNow.isActive,
@@ -280,9 +299,12 @@ export default class App extends Component {
 	//Modal function
 
 	handleOpenModal = type => {
-		this.setState({ showModal: true });
+		(this.state.userUID && this.state.isRead !== null) && db2.ref(`orders/${this.state.userUID}`).update({
+			isRead: 1
+		});
+		this.setState({ showModal: true});
 		this.setState({ typeModal: type });
-		document.body.style.overflow = "hidden"
+		document.body.style.overflow = "hidden";
 	}
 	handleCloseModal = () => {
 		this.setState({ showModal: false });
@@ -393,6 +415,7 @@ export default class App extends Component {
 						isLogin={this.state.isLogin}
 						filter={this.filter} 
 						getObjects={this.handleclosetoggle}
+						isRead={this.state.isRead}
 					/>
 					<Categories 
 						categories={this.state.categories} 
@@ -471,6 +494,7 @@ export default class App extends Component {
 													convertTimeM={this.convertTimeM}
 													userUID={this.state.userUID}
 													onDelete={this.onDelete}
+													{...props}
 												/>
 											) : <Redirect to={{pathname: '/', state: {from: props.location}}} />}
 										/>
@@ -487,6 +511,7 @@ export default class App extends Component {
 													current={this.state.current}
 													userUID={this.state.userUID}
 													onDelete={this.onDelete}
+													{...props}
 												/>
 											) : <Redirect to={{pathname: '/', state: {from: props.location}}} />}
 										/>
@@ -531,8 +556,7 @@ export default class App extends Component {
 					convertTimeM={this.convertTimeM}
 					Username={this.state.Username}
 					profilePicture={this.state.profilePicture}
-					priceFormat={this.priceFormat}		
-
+					priceFormat={this.priceFormat}
 				/>
 			</div>
 		) : <div className='preload-gavel'><img src={require("../images/loading.png")} alt="Loading"></img></div>

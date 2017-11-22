@@ -50,6 +50,11 @@ class ItemsL extends Component {
     )
   }
 
+  linkToItemById = (e,itemId) => {
+      e.preventDefault()
+      this.props.history.push('/item/'+itemId)
+  }
+
   render() {
     return this.state.items ? (
       <div className="row">
@@ -76,7 +81,7 @@ class ItemsL extends Component {
                 </tr>
                 {this.state.items.map((item,i) => {
                     return ([
-                      <tr key={i}>
+                      <tr key={i} onClick={(e) => this.linkToItemById(e,item._id)}>
                           { item.isActive === 1 ?
                             <td style={{color:'#22bb5b'}}><i className={"fa fa-check-circle-o fa-2x"}></i><p className="p-small" style={{color:'#22bb5b'}}>Now Bids</p></td> 
                             :
@@ -103,16 +108,16 @@ class ItemsL extends Component {
                           </td>
                           <td className="show-for-large td-time"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{this.props.convertTimeM(item.bid.startTime)}</Link></td>
                           <td className="show-for-large td-time"><Link style={{color:'#5e5e5e'}} to={'/item/'+item._id}>{this.props.convertTimeM(item.bid.endTime)}</Link></td>
-                          <td><button onClick={() => this.removeItem(item._id)} ><i className="fa fa-trash"></i></button></td>
+                          <td onClick={e => e.stopPropagation()}><button onClick={() => this.removeItem(item._id)} ><i className="fa fa-trash"></i></button></td>
 
                           { item.isActive === 1 ?
-                            <td><button onClick={() => this.handleEdit(i)} ><i className="fa fa-edit fa-edit-admin"></i></button></td>
+                            <td onClick={e => e.stopPropagation()}><button onClick={() => this.handleEdit(i)} ><i className="fa fa-edit fa-edit-admin"></i></button></td>
                           :
                             <td><p className="p-small" style={{color:'#ff0000'}}>Time Out</p></td> 
                           }
                       </tr>,
                       <tr className={"admin-iteml-editable "+(this.state.activeKey === i ? null : 'none')}>
-                        <td colSpan="10">
+                        <td colSpan="12">
                         {this.state.activeKey === i &&
                           <Additem 
                             triggler={this.props.triggler}

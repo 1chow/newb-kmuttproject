@@ -151,7 +151,7 @@ class chartNow extends Component {
                                         <p className="desc">{item.desc.short.slice(0,100)}..</p>
                                         <Clock secondsToHms={this.props.secondsToHms} timeNows={this.state.timeNows[i]}  />
                                         { this.state.newcurrent[i] && 
-                                            <p className="price">{this.state.newcurrent[i].current}<span className="curentcy dot">.00</span><span className="curentcy">Bath</span></p>
+                                            <p className="price"><span className="curentcy">฿</span>{this.state.newcurrent[i].current}<span className="curentcy dot">.00</span></p>
                                         }
                                         { this.state.newcurrent[i].own === this.props.userUID ?
                                         <p className="modal-chart-now-status" style={{color : '#1B5E20',background : '#B9F6CA'}}><i className="fa fa-clock-o "></i> now you win</p>
