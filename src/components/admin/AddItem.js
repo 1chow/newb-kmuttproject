@@ -58,7 +58,8 @@ class Edit extends Component {
       spec_detail2:'',
       spec_detail3:'',
       spec_conditon:'',
-      timeStart: moment(),
+      timeCondition: 'now',
+      timeStart: moment().add(10, 'minutes'),
       timeEnd: moment().add(1, 'days'),
       boundedTime:'',
       catagories:[],
@@ -193,8 +194,8 @@ class Edit extends Component {
                                                   this.state.productimageURL3,
                                                   this.state.productimageURL4
                                                 )
-    let test_timestart = this.timestartValidate(this.state.timeStart)
-    let test_timeend = this.timeendValidate(this.state.timeEnd)
+    let test_timestart = this.state.timeCondition === 'more' ?  this.timestartValidate(this.state.timeStart) : true
+    let test_timeend = this.state.timeCondition === 'more' ? this.timeendValidate(this.state.timeEnd) : this.timeendValidateIfNotMore(this.state.timeEnd,this.state.timeCondition)
     let test_bidstep = this.bidstepValidate(this.state.bidStep,this.state.firstbit)
     let test_spec = this.specValidate(this.state.specific)
     let isValid = test_name        &&
@@ -274,6 +275,10 @@ class Edit extends Component {
         this.setState({timestartErr:"Pls select start time"})
         this.timerHandle_timestart = setTimeout(() => this.setState({timestartErr:null}),10000)
         return false
+      } else if(input <= moment()){
+        this.setState({timestartErr:"Time start just immediatly"})
+        this.timerHandle_timestart = setTimeout(() => this.setState({timestartErr:null}),10000)
+        return false
       } else return true
   }
 
@@ -287,6 +292,47 @@ class Edit extends Component {
       this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
       return false
     } else return true
+  }
+
+  timeendValidateIfNotMore = (timeEnd,timeCondition) => {
+    switch(timeCondition){
+      case 'now' :
+        if(timeEnd <= moment()){
+          this.setState({timeendErr:"Time start <= Time end"})
+          this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
+          return false
+        } else return true
+      case '10minutes' :
+        if(timeEnd <= moment().add(10, 'minutes')){
+          this.setState({timeendErr:"Time start <= Time end"})
+          this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
+          return false
+        } else return true
+      case '30minutes' :
+        if(timeEnd <= moment().add(30, 'minutes')){
+          this.setState({timeendErr:"Time start <= Time end"})
+          this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
+          return false
+        } else return true
+      case '1hours' :
+        if(timeEnd <= moment().add(1, 'hours')){
+          this.setState({timeendErr:"Time start <= Time end"})
+          this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
+          return false
+        } else return true
+      case '6hours' :
+        if(timeEnd <= moment().add(6, 'hours')){
+          this.setState({timeendErr:"Time start <= Time end"})
+          this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
+          return false
+        } else return true
+      default :
+        if(timeEnd <= moment()){
+          this.setState({timeendErr:"Time start <= Time end"})
+          this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
+          return false
+        } else return true
+    }
   }
 
 
@@ -420,11 +466,31 @@ class Edit extends Component {
     return re.test(pw);
   }
 
+  filterTimeStart = timeCondition => {
+    switch(timeCondition){
+      case 'now' :
+        return parseInt(moment().format('x'),10)
+      case '10minutes' :
+        return parseInt(moment().add(10, 'minutes').format('x'),10)
+      case '30minutes' :
+        return parseInt(moment().add(30, 'minutes').format('x'),10)
+      case '1hours' :
+        return parseInt(moment().add(1, 'hours').format('x'),10)
+      case '6hours' :
+        return parseInt(moment().add(6, 'hours').format('x'),10)
+      case 'more' :
+        return parseInt(this.state.timeStart.format('x'),10)
+      default :
+      return parseInt(moment().format('x'),10)
+    }
+  }
+
   addItem = () => {
+    let timeCondition = this.filterTimeStart(this.state.timeCondition)
     this.dbItems.push({
       name: this.state.productname.slice(0,75),
       catagory: this.state.catagoriesselect,
-      isActive: 1,
+      isActive: this.state.timeCondition === 'now' ? 1 : 0,
       isDelete: 1,
       desc:{
             short: this.state.desc.slice(0,350),
@@ -434,11 +500,11 @@ class Edit extends Component {
       bid:{
           current : parseInt(this.state.firstbit,10),
           maxBid : parseInt((this.state.firstbit - this.state.bidStep),10),
-          maxBidTime : parseInt(this.state.timeStart.format('x'),10),
+          maxBidTime : timeCondition,
           openBid : parseInt(this.state.firstbit,10),
           bidStep: parseInt(this.state.bidStep,10),
           endTime: parseInt(this.state.timeEnd.format('x'),10),
-          startTime: parseInt(this.state.timeStart.format('x'),10),
+          startTime: timeCondition,
           count: 0,
           userName : 'Open Bids',
           userId : ''
@@ -458,7 +524,7 @@ class Edit extends Component {
             userId : '',
             userName : 'Open Bids',
             bid : parseInt(this.state.firstbit,10),
-            bidTimestamp : this.state.timeStart.format('x'),
+            bidTimestamp : timeCondition,
             auto : 0
           })
           .then(   
@@ -496,7 +562,8 @@ class Edit extends Component {
                     more : ''
                   },
                 ],
-                timeStart: moment(),
+                timeCondition: 'now',
+                timeStart: moment().add(10, 'minutes'),
                 timeEnd: moment().add(1, 'days'),
                 boundedTime:'',
                 productnameErr: null,
@@ -944,17 +1011,32 @@ class Edit extends Component {
                   <label>Time Start
                   {
                     !name ? 
-                    <DatetimePickerTrigger
-                      shortcuts={shortcuts} 
-                      moment={this.state.timeStart}
-                      onChange={this.handleChange}
-                      closeOnSelectDay="true"
-                      >
-                      <input name="timeStart" readOnly type="text" value={this.state.timeStart.format('YYYY-MM-DD HH:mm')} />
-                    </DatetimePickerTrigger> : 
-                    <div className="input-group">
-                      <p>{ this.state.timeStart.format('YYYY-MM-DD HH:mm') }</p>
-                    </div>
+                        this.state.timeCondition === 'more' ? 
+                          <div className="relative">
+                            <DatetimePickerTrigger
+                              shortcuts={shortcuts} 
+                              moment={this.state.timeStart}
+                              onChange={this.handleChange}
+                              closeOnSelectDay="true"
+                              >
+                              <input name="timeStart" readOnly type="text" value={this.state.timeStart.format('YYYY-MM-DD HH:mm')} />
+                            </DatetimePickerTrigger> 
+                            <i onClick={() => this.setState({timeCondition:'now'})} className="fa fa-times h-close"></i>
+                          </div>
+                         :
+                          <select id="select" required onChange={ e => this.setState({[e.target.name]: e.target.value})} 
+                            value={ this.state.timeCondition } name="timeCondition">
+                            <option value='now'>Now</option>
+                            <option value='10minutes'>10 minutes</option>
+                            <option value='30minutes'>30 minutes</option>
+                            <option value='1hours'>1 Hours</option>
+                            <option value='6hours'>6 Hours</option>
+                            <option value='more'>More...</option>
+                          </select>
+                      : 
+                      <div className="input-group">
+                        <p>{ this.state.timeStart.format('YYYY-MM-DD HH:mm') }</p>
+                      </div>
                   }     
                   </label>
                   { this.state.timestartErr &&
