@@ -121,6 +121,15 @@ const mailTransport = nodemailer.createTransport(
 
 			  				}
 
+			  				var tStart = childData.bid.startTime - getTime ;
+			  		 		if ( tStart >= 0 && active == 0) {
+				  				db.ref('/items/'+ key_ ).update({
+				  					isActive :  1
+				  				})
+				  				childData['isActive'] = 1;
+
+			  				} 
+
 			  				arrays.push(childData);
 
 			  				//childData['bidList'] = listArrays;

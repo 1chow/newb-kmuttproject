@@ -370,8 +370,12 @@ export default class Item extends Component {
 								<div className="medium-12 large-6 columns auct-from-bit">
 									<p className="time">Place Your Bid</p>
 									<BidForm recieve={this.recieve} msg={this.handleMsg} waiting={this.waiting} wait={this.state.wait} newcurrent={this.state.newcurrent} mfkCurrent={this.props.current} open={this.props.triggler} item={this.state.item[0]} params={this.props.match.params.id} bidStep_={this.state.bidStep_} />
-									{ this.props.userUID !== this.state.own ?
-										<p className="helper">Minimum Incress Bidding ฿{this.state.item[0].bid.bidStep}.00<br/>Please Enter ฿ {this.state.newcurrent + this.state.bidStep_ }.00 or more.</p>
+									{ this.props.userUID !== this.state.own ?(
+											this.state.bidStep_ === 0 ?
+											<p className="helper">Please Enter ฿ {this.state.newcurrent + this.state.bidStep_ }.00 or more.</p>
+												:
+											<p className="helper">Minimum Incress Bidding ฿{this.state.bidStep_}.00<br/>Please Enter ฿ {this.state.newcurrent + this.state.bidStep_ }.00 or more.</p>
+										)
 										:
 										<p className="helper">Your Max Bids ฿ {this.state.maxBid}.00</p>
 									}
