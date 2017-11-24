@@ -56,13 +56,7 @@ const mailTransport = nodemailer.createTransport(
 			  				data['isActive'] = 0;
 			  			}
 
-			  			if ( timeStart <= data.getTime && active === 0){
-			  				db.ref('/items/'+ itemKey ).update({
-			  					isActive :  1
-
-			  				})
-			  				data['isActive'] = 1;
-			  			}
+		
 
 				  		var helpp = {
 				  			 	_id: snapshot.key,
@@ -129,15 +123,6 @@ const mailTransport = nodemailer.createTransport(
 				  				childData['isActive'] = 0;
 
 			  				}
-
-			  				var tStart = childData.bid.startTime - getTime ;
-			  		 		if ( tStart >= 0 && active == 0) {
-				  				db.ref('/items/'+ key_ ).update({
-				  					isActive :  1
-				  				})
-				  				childData['isActive'] = 1;
-
-			  				} 
 
 			  				arrays.push(childData);
 

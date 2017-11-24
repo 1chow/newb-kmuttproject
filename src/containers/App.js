@@ -276,8 +276,14 @@ export default class App extends Component {
 				}
 			} else { 
 				if(timeNow.isActive === 0){
-					timeNow.isActive = 1
-					timeNow_ = timeNow.duration - 1 
+					if (timeNow.timeNow <= timeNow.duration) {
+						timeNow.isActive = 1
+						timeNow_ = timeNow.duration - 1
+						this.startAuct(i,timeNow._id)
+						db2.ref(`items/${timeNow._id}`).update({
+							isActive: 1
+						});
+					} else timeNow_ = timeNow.timeNow - 1 
 				} else timeNow_ = timeNow.timeNow - 1 
 			}
 			let timeNows_ = {
@@ -376,6 +382,28 @@ export default class App extends Component {
 		})
 		let items_ = Object.assign({},items[fuck],{isActive:0})
 		let current_ = Object.assign({},current[key],{isActive:0})
+		items[fuck] = items_
+		current[key] = current_
+		this.setState({
+			items:items,
+			current:current,
+		})
+	}
+
+	startAuct = (key,id) => {
+		let {items, current} = this.state
+		var fuck = null;
+		items.filter( (item,i) => {
+			if(item._id === id){
+				fuck = i
+				return 1
+			}
+			else{
+				return -1
+			}
+		})
+		let items_ = Object.assign({},items[fuck],{isActive:1})
+		let current_ = Object.assign({},current[key],{isActive:1})
 		items[fuck] = items_
 		current[key] = current_
 		this.setState({

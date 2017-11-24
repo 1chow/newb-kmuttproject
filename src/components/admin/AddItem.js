@@ -118,7 +118,6 @@ class Edit extends Component {
 
   componentWillUnmount() {
     firebase.database().ref().child('catagories').off()
-    firebase.database().ref().child('items').off()
     if (this.timerHandle_name) {               
 			clearTimeout(this.timerHandle_name);     
 			this.timerHandle_name = 0;                
