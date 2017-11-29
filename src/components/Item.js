@@ -374,7 +374,7 @@ export default class Item extends Component {
 											this.state.bidStep_ === 0 ?
 											<p className="helper">Please Enter ฿ {this.state.newcurrent + this.state.bidStep_ }.00 or more.</p>
 												:
-											<p className="helper">Minimum Incress Bidding ฿{this.state.bidStep_}.00<br/>Please Enter ฿ {this.state.newcurrent + this.state.bidStep_ }.00 or more.</p>
+											<p className="helper">Minimum Increase Bidding ฿{this.state.bidStep_}.00<br/>Please Enter ฿ {this.state.newcurrent + this.state.bidStep_ }.00 or more.</p>
 										)
 										:
 										<p className="helper">Your Max Bids ฿ {this.state.maxBid}.00</p>

@@ -966,7 +966,7 @@ class Edit extends Component {
                       }
                 </div>
                 <div className="small-12 columns">
-                  <label>First Bit
+                  <label>Open Bid
                   {name ? 
                     <div className="input-group">
                       <p>{ this.state.firstbit }.00 ฿</p>
@@ -995,7 +995,7 @@ class Edit extends Component {
                     <div className="input-group mb-45">
                         <span className="input-group-label">฿</span>
                         <input className="input-group-field text-right" placeholder="0.00" type="number" pattern="[0-9]*" onChange={ this.onNewItemChange } value={ this.state.bidStep } name="bidStep"/>
-                        <p className="text-desc-input">Use non-negative value and maximum 10% of first bit</p>
+                        <p className="text-desc-input">Use non-negative value and maximum 10% of first bid</p>
                     </div>
                   }
                   </label>
