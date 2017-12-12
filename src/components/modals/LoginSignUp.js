@@ -98,7 +98,7 @@ export default class LoginSignUp extends Component {
 			this.timerHandle4 = setTimeout(() => {this.setState({user:null});this.timerHandle4 = 0;},5000)
 			return false
 		} else if(input.trim().length >= 50) {
-			this.setState({user:"length >= 50",isAuthen:false})
+			this.setState({user:"Maximum username was 50 characters",isAuthen:false})
 			this.timerHandle4 = setTimeout(() => {this.setState({user:null});this.timerHandle4 = 0;},5000)
 			return false
 		} else if(this.regCharacter(input.trim()) === false) {
@@ -114,7 +114,7 @@ export default class LoginSignUp extends Component {
 			this.timerHandle = setTimeout(() => {this.setState({email:null});this.timerHandle = 0;},5000)
 			return false
 		} else if(input.trim().length >= 70) {
-			this.setState({email:"length >= 70",isAuthen:false})
+			this.setState({email:"Maximum E-mail was 70 characters",isAuthen:false})
 			this.timerHandle = setTimeout(() => {this.setState({email:null});this.timerHandle = 0;},5000)
 			return false
 		} else if(this.regEmail(input.trim()) === false) {
@@ -134,7 +134,7 @@ export default class LoginSignUp extends Component {
 			this.timerHandle2 = setTimeout(() => {this.setState({pw:null});this.timerHandle2 = 0;},5000)
 			return false
 		} else if(input.trim().length >= 30) {
-			this.setState({pw:"Password so long",isAuthen:false})
+			this.setState({pw:"Maximum password was 30 characters",isAuthen:false})
 			this.timerHandle2 = setTimeout(() => {this.setState({pw:null});this.timerHandle2 = 0;},5000)
 			return false
 		} else if(this.regCharacter(input.trim()) === false) {
@@ -154,7 +154,7 @@ export default class LoginSignUp extends Component {
 			this.timerHandle3 = setTimeout(() => {this.setState({_pw:null});this.timerHandle3 = 0;},5000)
 			return false
 		} else if(input.trim().length >= 30) {
-			this.setState({_pw:"Password so long",isAuthen:false})
+			this.setState({_pw:"Maximum password was 30 characters",isAuthen:false})
 			this.timerHandle3 = setTimeout(() => {this.setState({_pw:null});this.timerHandle3 = 0;},5000)
 			return false
 		} else if(this.regCharacter(input.trim()) === false) {

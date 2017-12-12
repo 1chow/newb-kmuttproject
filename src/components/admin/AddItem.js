@@ -287,7 +287,7 @@ class Edit extends Component {
       this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
       return false
     } else if(input <= this.state.timeStart){
-      this.setState({timeendErr:"Time start <= Time end"})
+      this.setState({timeendErr:"Start time must be before the End time"})
       this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
       return false
     } else return true
@@ -297,37 +297,37 @@ class Edit extends Component {
     switch(timeCondition){
       case 'now' :
         if(timeEnd <= moment()){
-          this.setState({timeendErr:"Time start <= Time end"})
+          this.setState({timeendErr:"Start time must be before the End time"})
           this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
           return false
         } else return true
       case '10minutes' :
         if(timeEnd <= moment().add(10, 'minutes')){
-          this.setState({timeendErr:"Time start <= Time end"})
+          this.setState({timeendErr:"Start time must be before the End time"})
           this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
           return false
         } else return true
       case '30minutes' :
         if(timeEnd <= moment().add(30, 'minutes')){
-          this.setState({timeendErr:"Time start <= Time end"})
+          this.setState({timeendErr:"Start time must be before the End time"})
           this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
           return false
         } else return true
       case '1hours' :
         if(timeEnd <= moment().add(1, 'hours')){
-          this.setState({timeendErr:"Time start <= Time end"})
+          this.setState({timeendErr:"Start time must be before the End time"})
           this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
           return false
         } else return true
       case '6hours' :
         if(timeEnd <= moment().add(6, 'hours')){
-          this.setState({timeendErr:"Time start <= Time end"})
+          this.setState({timeendErr:"Start time must be before the End time"})
           this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
           return false
         } else return true
       default :
         if(timeEnd <= moment()){
-          this.setState({timeendErr:"Time start <= Time end"})
+          this.setState({timeendErr:"Start time must be before the End time"})
           this.timerHandle_timeend = setTimeout(() => this.setState({timeendErr:null}),10000)
           return false
         } else return true
@@ -442,19 +442,19 @@ class Edit extends Component {
   
   firstbitValidate = input => {
     if(String(input).trim().length === 0){
-      this.setState({firstbitErr:"Firstbit was empty"})
+      this.setState({firstbitErr:"Openbid was empty"})
       this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
       return false
     } else if(String(input).trim().length >= 10) {
-      this.setState({firstbitErr:"length >= 10"})
+      this.setState({firstbitErr:"Maximum Openbid was 10 digits"})
       this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
       return false
     } else if(input < 1) {
-      this.setState({firstbitErr:"Firstbit must be at least 1.00 ฿"})
+      this.setState({firstbitErr:"Openbid must be at least 1.00 ฿"})
       this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
       return false
     } else if(input%Math.floor(input) !== 0) {
-      this.setState({firstbitErr:"Firstbit must be Integer"})
+      this.setState({firstbitErr:"Openbid must be Integer"})
       this.timerHandle_firstbit = setTimeout(() => this.setState({firstbitErr:null}),10000)
       return false
     } else return true
@@ -838,7 +838,6 @@ class Edit extends Component {
   }))
   }
 
-
   render() {
     let { name } = this.props
     const shortcuts = {
@@ -927,21 +926,23 @@ class Edit extends Component {
                               <div key={index} className="small-12 columns relative">
                                 <div className="small-4 columns">
                                  { spec.name !== 'More...' ?
-                                  <select id="select" required onChange={e => this.onChangeSpec(e,index)} 
-                                    value={spec.name} name="name">
-                                    <option value=''>Select Specification</option>
-                                    {
-                                      this.props.select.map( (select,i) => {
-                                        return ( 
-                                          <option key={i} value={select}>{select}</option>
-                                        )
-                                      })
-                                    }
-                                  </select> :
-                                  <div className="relative">
-                                    <input type="text" placeholder="Specification" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={e => this.onChangeSpec(e,index)} value={spec.more} name="more"/>
-                                    <i onClick={(e) => this.toggleSpecName(e,index)} className="fa fa-times h-close"></i>
-                                  </div>    
+                                    <select id="select" required onChange={e => this.onChangeSpec(e,index)} 
+                                      value={spec.name} name="name">
+                                      <option value=''>Select Specification</option>
+                                      {
+                                        this.props.select
+                                          .map( (select,i) => {
+                                          return ( 
+                                            <option key={i} value={select}>{select}</option>
+                                          )
+                                        })
+                                      }
+                                    </select>
+                                     :
+                                    <div className="relative">
+                                      <input type="text" placeholder="Specification" aria-describedby="help-signup" required pattern="text" id="p_name" onChange={e => this.onChangeSpec(e,index)} value={spec.more} name="more"/>
+                                      <i onClick={(e) => this.toggleSpecName(e,index)} className="fa fa-times h-close"></i>
+                                    </div>    
                                 }
                                 </div> 
                                 <div className="small-8 columns relative">

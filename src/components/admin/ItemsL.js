@@ -63,7 +63,18 @@ class ItemsL extends Component {
               <p>Manage your products.</p>
               <div className="hr-text-center"><hr/></div>
           </div>
-          <div className="row auct-from-warp admin-table">
+          {
+            this.state.items.length === 0 ? (
+              <div className="row">
+                <div className="page-404-container">
+                  <div className="page-404">
+                    <h4>Selling Items</h4>
+                    <p className="quote">Items Lists Was Empty.</p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="row auct-from-warp admin-table">
               <table className="hover">
                 <tbody>
                 <tr>
@@ -143,6 +154,8 @@ class ItemsL extends Component {
                 </tbody>
               </table>
             </div>
+            )
+          }
        </div>
     ) : <div className="row">
         <div className="small-12 columns">

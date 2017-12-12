@@ -122,12 +122,8 @@ export default class Sellingareas extends Component {
 		window.scrollTo(0,0);
 	}
 
-	handleHeight = () => {
-		
-	}
-
 	render() {
-		return (
+		return this.state.items.length !== 0 ? (
 			<div className="page items post-feed">
 				<TransitionGroup>
 					{this.state.items.map((item, i) => {
@@ -161,6 +157,15 @@ export default class Sellingareas extends Component {
 						) : null
 					})}
 				</TransitionGroup>
+			</div>
+		) : (
+			<div className="row">
+				<div className="page-404-container">
+					<div className="page-404">
+						<h4>{this.props.isActive === 'default' ? 'Last Ending' : this.props.isActive}</h4>
+						<p className="quote">Items Lists Was Empty.</p>
+					</div>
+				</div>
 			</div>
 		)
 	}

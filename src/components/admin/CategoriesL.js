@@ -51,10 +51,6 @@ class CategoriesL extends Component {
         this.props.triggler('alert','good','Your catagory was delete','fa-check-circle')
       } else this.props.triggler('alert','bad','That catagory was Item','fa-exclamation')
     } 
-    
-       
-    
-    
   }
 
   render() {

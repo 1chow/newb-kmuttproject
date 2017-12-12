@@ -81,7 +81,7 @@ class bidForm extends Component {
 			this.props.recieve()
 			this.setState({bidStep_:this.state.bidStep})
 			this.bid.value = this.props.newcurrent + this.state.bidStep;
-			open('alert','bad','Bad Request, Please try agin','fa-exclamation-triangle')
+			open('alert','bad','The data sent in the request had errors. Fields failed to validate correctly.','fa-exclamation-triangle')
 		}
 		else {
 			let bid_ = bid.value

@@ -54,7 +54,16 @@ const mailTransport = nodemailer.createTransport(
 
 			  				})
 			  				data['isActive'] = 0;
-			  			}
+						  }
+						  
+						if ( timeStart <= data.getTime && active === 0){
+							db.ref('/items/'+ itemKey ).update({
+								isActive :  1
+
+							})
+							data['isActive'] = 1;
+						}
+							
 
 		
 
