@@ -123,7 +123,7 @@ export default class Sellingareas extends Component {
 	}
 
 	render() {
-		return this.state.items.length !== 0 ? (
+		return this.state.newcurrent.length !== 0 ? (
 			<div className="page items post-feed">
 				<TransitionGroup>
 					{this.state.items.map((item, i) => {
