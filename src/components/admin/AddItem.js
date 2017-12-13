@@ -226,6 +226,10 @@ class Edit extends Component {
     let nameTest = spec.filter( a => a.name.trim().length !== 0)
     let hasMore = spec.filter( a => a.name === 'More...')
     let moreTest = spec.filter( a => a.more.trim().length !== 0) || null
+    let duplicateBrand = this.state.specific.filter(a => a.name === 'Brand')
+    let duplicateHeight = this.state.specific.filter(a => a.name === 'Height')
+    let duplicateWeight = this.state.specific.filter(a => a.name === 'Weight')
+    let duplicateColor = this.state.specific.filter(a => a.name === 'Color')
     if(spec[0].detail.length === 0){
       this.setState({specErr:"Specification condition was empty"})
       this.timerHandle_spec = setTimeout(() => this.setState({specErr:null}),10000)
@@ -240,6 +244,10 @@ class Edit extends Component {
       return false
     } else if(hasMore.length > 0 && moreTest.length !== hasMore.length){
       this.setState({specErr:"Some specification name was empty"})
+      this.timerHandle_spec = setTimeout(() => this.setState({specErr:null}),10000)
+      return false
+    } else if(duplicateBrand.length > 1 || duplicateHeight.length > 1 || duplicateWeight.length > 1 || duplicateColor.length > 1){
+      this.setState({specErr:"Some specification name was duplicate value"})
       this.timerHandle_spec = setTimeout(() => this.setState({specErr:null}),10000)
       return false
     } else return true

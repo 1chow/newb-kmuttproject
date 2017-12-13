@@ -127,7 +127,11 @@ class bidForm extends Component {
 	}
 
 	handleBlur = (event) => {
-	  if (event.target.value < this.props.newcurrent + this.props.bidStep_){
+		if(event.target.value.length >= 10 || event.target.value === 'e' || event.target.value%Math.floor(event.target.value) !== 0) {
+			this.props.open('alert','bad','The data sent in the request had errors. Fields failed to validate correctly.','fa-exclamation-triangle')
+			event.target.value = this.props.newcurrent + this.props.bidStep_
+		}
+	  	else if (event.target.value < this.props.newcurrent + this.props.bidStep_){
 			this.props.open('alert','bad','Your bid Lost ! Next minimum bid is ' + (this.props.newcurrent + this.props.bidStep_) + '฿','fa-thumbs-down')
 			event.target.value = this.props.newcurrent + this.props.bidStep_
 		}

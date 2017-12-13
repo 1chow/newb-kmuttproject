@@ -81,7 +81,7 @@ export default class LoginSignUp extends Component {
 				if (uName === uName_) {
 					matchU.push(uName)
 				}
-			})//child
+			})
 			if (matchU.length > 0) {					
 				this.setState({_pw: 'Username already been used'})
 			} else {
@@ -264,12 +264,6 @@ export default class LoginSignUp extends Component {
 									</div>
 								}
 								<div className="small-12 columns">
-									{ this.props.type === 'login' &&
-										<div>
-											<input id="remember" type="checkbox"></input>
-											<label htmlFor="checkbox1">Remember Me Pls.</label>
-										</div>
-									}
 									<br></br>
 									{this.props.type === 'login' ?
 										( this.state.isAuthen === true ?

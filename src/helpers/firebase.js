@@ -23,7 +23,8 @@ export function auth (email, pw, displayName) {
             email: user.email,
             uid: user.uid,
             photoUrl: 'https://via.placeholder.com/500/5c5c5c/ffffff?text='+firstName,
-            role: 'member'
+            role: 'member',
+            address:'Enter your address'
         })
         .then(user.updateProfile({
           displayName: displayName,
